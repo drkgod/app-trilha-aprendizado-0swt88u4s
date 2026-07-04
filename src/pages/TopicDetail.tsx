@@ -13,6 +13,7 @@ import {
   Loader2,
   CheckSquare,
   Square,
+  AlertCircle,
 } from 'lucide-react'
 import { useAppStore } from '@/hooks/use-app-store'
 import { trails } from '@/data/trails'
@@ -44,6 +45,7 @@ export default function TopicDetail() {
   const completed = isTopicCompleted(topic.id)
 
   const handleToggle = async () => {
+    if (!completed && !allStepsChecked) return
     setToggling(true)
     try {
       await toggleTopic(topic, trail.id)
@@ -59,6 +61,9 @@ export default function TopicDetail() {
   const toggleStep = (index: number) => {
     setCheckedSteps((prev) => ({ ...prev, [index]: !prev[index] }))
   }
+
+  const allStepsChecked = topic.practiceSteps.every((_, idx) => checkedSteps[idx] === true)
+  const canComplete = completed || allStepsChecked
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-fade-in-up pb-20 lg:pb-0">
@@ -195,11 +200,13 @@ export default function TopicDetail() {
       <div className="relative">
         <button
           onClick={handleToggle}
-          disabled={toggling}
+          disabled={toggling || !canComplete}
           className={`w-full py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
             completed
               ? 'bg-secondary text-muted-foreground hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 border border-border'
-              : 'bg-primary text-primary-foreground glow-green hover:bg-primary/90'
+              : allStepsChecked
+                ? 'bg-primary text-primary-foreground glow-green hover:bg-primary/90'
+                : 'bg-secondary/50 text-muted-foreground cursor-not-allowed opacity-60 border border-border'
           }`}
         >
           {toggling ? (
@@ -208,9 +215,14 @@ export default function TopicDetail() {
             <>
               <CheckCircle2 size={18} /> Concluído — clique para desmarcar
             </>
-          ) : (
+          ) : allStepsChecked ? (
             <>
               <Circle size={18} /> Marcar como concluído (+{topic.xp} XP)
+            </>
+          ) : (
+            <>
+              <AlertCircle size={18} /> Conclua todos os passos práticos acima para liberar (+
+              {topic.xp} XP)
             </>
           )}
         </button>
