@@ -27,6 +27,11 @@ export default function TopicDetail() {
   // Interactive local steps checklist state
   const [checkedSteps, setCheckedSteps] = useState<Record<number, boolean>>({})
 
+  // Reset checklist when topic changes (call hook unconditionally at the top)
+  useEffect(() => {
+    setCheckedSteps({})
+  }, [topicId])
+
   const trail = trails.find((t) => t.id === trailId)
   if (!trail) return <Navigate to="/" replace />
 
@@ -37,11 +42,6 @@ export default function TopicDetail() {
   const prevTopic = topicIndex > 0 ? trail.topics[topicIndex - 1] : null
   const nextTopic = topicIndex < trail.topics.length - 1 ? trail.topics[topicIndex + 1] : null
   const completed = isTopicCompleted(topic.id)
-
-  // Reset checklist when topic changes
-  useEffect(() => {
-    setCheckedSteps({})
-  }, [topicId])
 
   const handleToggle = async () => {
     setToggling(true)
