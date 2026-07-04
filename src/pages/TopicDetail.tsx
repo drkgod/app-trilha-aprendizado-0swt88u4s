@@ -14,9 +14,12 @@ import {
   CheckSquare,
   Square,
   AlertCircle,
+  X,
+  HelpCircle,
 } from 'lucide-react'
 import { useAppStore } from '@/hooks/use-app-store'
 import { trails } from '@/data/trails'
+import { getQuizForTopic } from '@/data/quizzes'
 import { useState, useEffect } from 'react'
 
 export default function TopicDetail() {
@@ -28,9 +31,19 @@ export default function TopicDetail() {
   // Interactive local steps checklist state
   const [checkedSteps, setCheckedSteps] = useState<Record<number, boolean>>({})
 
-  // Reset checklist when topic changes (call hook unconditionally at the top)
+  // Quiz Modal state
+  const [showQuizModal, setShowQuizModal] = useState(false)
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
+  const [validated, setValidated] = useState(false)
+  const [quizErrors, setQuizErrors] = useState<Record<number, boolean>>({})
+
+  // Reset checklist and quiz when topic changes
   useEffect(() => {
     setCheckedSteps({})
+    setShowQuizModal(false)
+    setSelectedAnswers({})
+    setValidated(false)
+    setQuizErrors({})
   }, [topicId])
 
   const trail = trails.find((t) => t.id === trailId)
@@ -44,8 +57,21 @@ export default function TopicDetail() {
   const nextTopic = topicIndex < trail.topics.length - 1 ? trail.topics[topicIndex + 1] : null
   const completed = isTopicCompleted(topic.id)
 
-  const handleToggle = async () => {
-    if (!completed && !allStepsChecked) return
+  const topicQuiz = getQuizForTopic(topic.id, topic.title, trail.name)
+
+  const handleToggleClick = () => {
+    if (completed) {
+      // If already completed, just toggle off
+      performToggle()
+    } else {
+      // If completing, open the quiz first
+      if (allStepsChecked) {
+        setShowQuizModal(true)
+      }
+    }
+  }
+
+  const performToggle = async () => {
     setToggling(true)
     try {
       await toggleTopic(topic, trail.id)
@@ -55,6 +81,36 @@ export default function TopicDetail() {
       }
     } finally {
       setToggling(false)
+    }
+  }
+
+  const handleSelectAnswer = (qIdx: number, oIdx: number) => {
+    setSelectedAnswers((prev) => ({ ...prev, [qIdx]: oIdx }))
+    // Clear error for this question on edit
+    if (validated) {
+      setQuizErrors((prev) => ({ ...prev, [qIdx]: false }))
+    }
+  }
+
+  const handleValidateQuiz = () => {
+    const errors: Record<number, boolean> = {}
+    let hasError = false
+
+    topicQuiz.forEach((q, idx) => {
+      const selected = selectedAnswers[idx]
+      if (selected !== q.correctIndex) {
+        errors[idx] = true
+        hasError = true
+      }
+    })
+
+    setQuizErrors(errors)
+    setValidated(true)
+
+    if (!hasError) {
+      // All correct! Close modal and complete topic
+      setShowQuizModal(false)
+      performToggle()
     }
   }
 
@@ -199,7 +255,7 @@ export default function TopicDetail() {
       {/* Complete Button */}
       <div className="relative">
         <button
-          onClick={handleToggle}
+          onClick={handleToggleClick}
           disabled={toggling || !canComplete}
           className={`w-full py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
             completed
@@ -217,7 +273,7 @@ export default function TopicDetail() {
             </>
           ) : allStepsChecked ? (
             <>
-              <Circle size={18} /> Marcar como concluído (+{topic.xp} XP)
+              <Circle size={18} /> Validar Conhecimento para Concluir (+{topic.xp} XP)
             </>
           ) : (
             <>
@@ -268,6 +324,106 @@ export default function TopicDetail() {
           <div className="flex-1" />
         )}
       </div>
+
+      {/* Quiz Modal */}
+      {showQuizModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md overflow-y-auto">
+          <div className="glass-card max-w-2xl w-full max-h-[85vh] overflow-y-auto flex flex-col p-6 sm:p-8 space-y-6 relative border-primary/30 glow-green-sm animate-scale-up my-8">
+            {/* Close button */}
+            <button
+              onClick={() => setShowQuizModal(false)}
+              className="absolute right-4 top-4 p-2 rounded-xl hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Modal Header */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-primary">
+                <HelpCircle size={22} className="animate-pulse" />
+                <h2 className="text-lg font-bold">Questionário de Validação Técnica</h2>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed p-3.5 rounded-xl bg-primary/5 border border-primary/10">
+                💡 <span className="font-semibold text-primary">Aviso</span>: Este questionário é
+                apenas um pontapé inicial para validar seu raciocínio crítico. Estude o tema a fundo
+                antes de responder. Você precisa responder{' '}
+                <strong>todas as perguntas corretamente</strong> para concluir o tópico.
+              </p>
+            </div>
+
+            {/* Questions List */}
+            <div className="space-y-6 divide-y divide-border/40">
+              {topicQuiz.map((q, qIdx) => (
+                <div key={qIdx} className={`space-y-3 ${qIdx > 0 ? 'pt-6' : ''}`}>
+                  <h3 className="text-sm font-semibold flex gap-2">
+                    <span className="text-primary">{qIdx + 1}.</span>
+                    <span>{q.question}</span>
+                  </h3>
+                  <div className="grid grid-cols-1 gap-2">
+                    {q.options.map((option, oIdx) => {
+                      const isSelected = selectedAnswers[qIdx] === oIdx
+                      const isError = validated && quizErrors[qIdx] && isSelected
+                      const isCorrect = validated && !quizErrors[qIdx] && isSelected
+
+                      return (
+                        <button
+                          key={oIdx}
+                          onClick={() => handleSelectAnswer(qIdx, oIdx)}
+                          className={`text-left p-3.5 rounded-xl border text-xs leading-relaxed transition-all flex items-start gap-3 ${
+                            isSelected
+                              ? isError
+                                ? 'bg-red-500/10 border-red-500/40 text-red-300'
+                                : isCorrect
+                                  ? 'bg-primary/10 border-primary/40 text-primary-foreground'
+                                  : 'bg-primary/10 border-primary/40 text-primary font-medium'
+                              : 'bg-secondary/20 border-border hover:border-primary/20 hover:bg-secondary/40'
+                          }`}
+                        >
+                          <span
+                            className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 border mt-0.5 ${
+                              isSelected ? 'border-primary' : 'border-muted-foreground/30'
+                            }`}
+                          >
+                            {isSelected && <span className="w-2 h-2 rounded-full bg-primary" />}
+                          </span>
+                          <span>{option}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Feedback explanation if error */}
+                  {validated && quizErrors[qIdx] && (
+                    <div className="p-3 text-xs rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 leading-relaxed flex gap-2">
+                      <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-semibold">Incorreto:</span> {q.explanation}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Validation CTA */}
+            <div className="pt-4 flex gap-3">
+              <button
+                onClick={() => setShowQuizModal(false)}
+                className="flex-1 py-3 rounded-xl bg-secondary text-muted-foreground font-semibold text-xs border border-border hover:bg-secondary/80 transition-colors"
+              >
+                Voltar ao Conteúdo
+              </button>
+              <button
+                onClick={handleValidateQuiz}
+                disabled={Object.keys(selectedAnswers).length < topicQuiz.length}
+                className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-xs hover:bg-primary/95 transition-all disabled:opacity-50 disabled:cursor-not-allowed glow-green-sm"
+              >
+                Validar Respostas
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
