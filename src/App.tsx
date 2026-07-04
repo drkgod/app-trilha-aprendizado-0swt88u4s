@@ -1,37 +1,61 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider, useAuth } from '@/hooks/use-auth'
 import { AppProvider } from '@/hooks/use-app-store'
 import { Layout } from './components/Layout'
-import Index from './pages/Index'
-import PathDetails from './pages/PathDetails'
-import Lesson from './pages/Lesson'
+import Dashboard from './pages/Dashboard'
+import TrailView from './pages/TrailView'
+import TopicDetail from './pages/TopicDetail'
+import Achievements from './pages/Achievements'
+import TrailsList from './pages/TrailsList'
+import Admin from './pages/Admin'
+import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import { Loader2 } from 'lucide-react'
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, loading } = useAuth()
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
+}
 
 const App = () => (
-  <AppProvider>
-    <BrowserRouter>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/path/:id" element={<PathDetails />} />
-            {/* Catch-all for mockup links in layout */}
-            <Route path="/my-paths" element={<Index />} />
-            <Route path="/explore" element={<Index />} />
-            <Route path="/profile" element={<Index />} />
-          </Route>
-          {/* Lesson view is outside the main layout container to maximize space,
-              but we use a custom layout inside the Lesson component itself */}
-          <Route path="/lesson/:pathId/:lessonId" element={<Lesson />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </BrowserRouter>
-  </AppProvider>
+  <BrowserRouter>
+    <AuthProvider>
+      <AppProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/trails" element={<TrailsList />} />
+              <Route path="/trail/:trailId" element={<TrailView />} />
+              <Route path="/trail/:trailId/topic/:topicId" element={<TopicDetail />} />
+              <Route path="/achievements" element={<Achievements />} />
+              <Route path="/admin" element={<Admin />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </AppProvider>
+    </AuthProvider>
+  </BrowserRouter>
 )
 
 export default App

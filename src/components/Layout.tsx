@@ -1,119 +1,201 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Home, Compass, BookOpen, User, Search, Bell, Settings, LogOut } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
+import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import { LayoutDashboard, Map, Trophy, LogOut, Shield, Menu, X } from 'lucide-react'
+import { useAuth } from '@/hooks/use-auth'
+import { useAppStore } from '@/hooks/use-app-store'
+import { useState } from 'react'
+
+const navItems = [
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/trails', icon: Map, label: 'Trilhas' },
+  { to: '/achievements', icon: Trophy, label: 'Conquistas' },
+]
 
 export function Layout() {
+  const { user, signOut, isAdmin } = useAuth()
+  const { levelInfo, totalXP } = useAppStore()
   const location = useLocation()
-
-  const navItems = [
-    { icon: Home, label: 'Início', path: '/' },
-    { icon: BookOpen, label: 'Minhas Trilhas', path: '/my-paths' },
-    { icon: Compass, label: 'Explorar', path: '/explore' },
-    { icon: User, label: 'Perfil', path: '/profile' },
-  ]
-
-  const getPageTitle = () => {
-    if (location.pathname === '/') return 'Dashboard'
-    if (location.pathname.startsWith('/path/')) return 'Detalhes da Trilha'
-    if (location.pathname.startsWith('/lesson/')) return 'Sala de Aula'
-    return 'Trilha Learning'
-  }
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r bg-card h-full">
-        <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl">
-            T
+      <aside className="hidden lg:flex flex-col w-72 border-r border-border/50 glass-card rounded-none min-h-screen fixed left-0 top-0 z-40">
+        {/* Logo */}
+        <div className="p-6 border-b border-border/30">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <span className="text-xl">🚀</span>
+            </div>
+            <div>
+              <h1
+                className="font-bold text-lg tracking-tight"
+                style={{ fontFamily: 'Space Grotesk' }}
+              >
+                Antigravity
+              </h1>
+              <p className="text-[11px] text-muted-foreground font-medium tracking-wider uppercase">
+                Trilha de Aprendizado
+              </p>
+            </div>
           </div>
-          <span className="font-bold text-lg tracking-tight">Trilha Learning</span>
         </div>
 
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+        {/* User card */}
+        <div className="p-4 mx-4 mt-4 rounded-xl bg-secondary/30 border border-border/30">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg">
+              {levelInfo.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm truncate">{user?.name || 'Consultor'}</p>
+              <p className="text-xs text-muted-foreground">
+                Nv.{levelInfo.level} · {levelInfo.title}
+              </p>
+            </div>
+          </div>
+          {/* XP Bar */}
+          <div className="mt-3">
+            <div className="flex justify-between text-[10px] font-medium text-muted-foreground mb-1">
+              <span>{totalXP} XP</span>
+              <span>{levelInfo.progress}%</span>
+            </div>
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-primary to-emerald-400 rounded-full transition-all duration-700"
+                style={{ width: `${levelInfo.progress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 p-4 space-y-1">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? 'bg-primary/10 text-primary font-medium'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                )}
-              >
-                <item.icon size={20} className={cn(isActive && 'text-primary')} />
-                {item.label}
-              </Link>
-            )
-          })}
+                    ? 'bg-primary/10 text-primary border border-primary/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`
+              }
+            >
+              <item.icon size={18} />
+              {item.label}
+            </NavLink>
+          ))}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`
+              }
+            >
+              <Shield size={18} />
+              Admin
+            </NavLink>
+          )}
         </nav>
 
-        <div className="p-4 border-t">
-          <button className="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-muted-foreground hover:bg-muted transition-colors">
-            <Settings size={20} />
-            <span className="text-sm">Configurações</span>
-          </button>
-          <button className="flex items-center gap-3 px-4 py-2 w-full rounded-lg text-muted-foreground hover:bg-muted transition-colors mt-1">
-            <LogOut size={20} />
-            <span className="text-sm">Sair</span>
+        {/* Sign out */}
+        <div className="p-4 border-t border-border/30">
+          <button
+            onClick={signOut}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/5 w-full transition-all"
+          >
+            <LogOut size={18} />
+            Sair
           </button>
         </div>
       </aside>
 
-      {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* Header */}
-        <header className="h-16 border-b bg-card/80 backdrop-blur-sm flex items-center justify-between px-4 md:px-8 shrink-0 z-10">
-          <h1 className="font-semibold text-lg hidden sm:block">{getPageTitle()}</h1>
+      {/* Mobile Header */}
+      <header className="lg:hidden flex items-center justify-between p-4 border-b border-border/50 glass-card rounded-none sticky top-0 z-50">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">🚀</span>
+          <h1 className="font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>
+            Antigravity
+          </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-muted-foreground">Nv.{levelInfo.level}</span>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1">
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </header>
 
-          <div className="flex items-center gap-4 ml-auto w-full sm:w-auto">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Buscar aulas, trilhas..."
-                className="pl-9 bg-muted/50 border-none h-10 w-full rounded-full"
-              />
-            </div>
-
-            <button className="relative p-2 text-muted-foreground hover:bg-muted rounded-full transition-colors hidden sm:block">
-              <Bell size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full"></span>
-            </button>
-
-            <Avatar className="w-9 h-9 border cursor-pointer hidden sm:block">
-              <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=male&seed=42" />
-              <AvatarFallback>US</AvatarFallback>
-            </Avatar>
-          </div>
-        </header>
-
-        {/* Scrollable Main Area */}
-        <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
-          <Outlet />
-        </main>
-      </div>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t flex justify-around p-2 pb-safe z-50">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'flex flex-col items-center p-2 min-w-[64px] transition-colors',
-                isActive ? 'text-primary' : 'text-muted-foreground',
-              )}
+      {/* Mobile dropdown menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-x-0 top-[65px] z-40 glass-card rounded-none border-b border-border/50 p-4 space-y-1 animate-fade-in">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground'
+                }`
+              }
             >
-              <item.icon size={24} className={cn(isActive && 'animate-pop')} />
-              <span className="text-[10px] mt-1 font-medium">{item.label}</span>
-            </Link>
+              <item.icon size={18} />
+              {item.label}
+            </NavLink>
+          ))}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground"
+            >
+              <Shield size={18} /> Admin
+            </NavLink>
+          )}
+          <button
+            onClick={() => {
+              signOut()
+              setMobileMenuOpen(false)
+            }}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 w-full"
+          >
+            <LogOut size={18} /> Sair
+          </button>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <main className="flex-1 lg:ml-72">
+        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
+          <Outlet />
+        </div>
+      </main>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 glass-card rounded-none border-t border-border/50 flex z-40">
+        {navItems.map((item) => {
+          const isActive =
+            item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/'}
+              className={`flex-1 flex flex-col items-center py-3 gap-1 text-[10px] font-medium transition-colors ${
+                isActive ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <item.icon size={20} />
+              {item.label}
+            </NavLink>
           )
         })}
       </nav>
