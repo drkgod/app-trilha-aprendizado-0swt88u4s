@@ -37,10 +37,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O ecossistema do Supabase entrega de forma integrada um banco de dados relacional Postgres completo com suporte a extensões (como pgvector), autenticação de usuários, buckets de armazenamento de mídia, suporte a conexões WebSocket em tempo real e orquestrador de Edge Functions.',
     references: [
-      {
-        label: 'Supabase Arquitetura (Docs)',
-        url: 'https://supabase.com/docs/guides/architecture',
-      },
+      { label: 'Introdução ao Supabase', url: 'https://supabase.com/docs/guides/getting-started' },
     ],
     practiceSteps: [
       'Liste os 5 principais serviços do painel do Supabase.',
@@ -85,7 +82,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O Supabase fornece chaves de acesso distintas: a chave pública (`anon`) é feita para rodar no frontend e suas ações são filtradas por regras de RLS. A chave de serviço (`service_role`) ignora qualquer política de segurança do RLS — ela é a chave-mestra e deve viver protegida no backend de forma restrita.',
     references: [
-      { label: 'Autenticação e Chaves API', url: 'https://supabase.com/docs/guides/api#api-keys' },
+      { label: 'Autenticação e Chaves API', url: 'https://supabase.com/docs/guides/api' },
     ],
     practiceSteps: [
       'Localize as chaves `anon` e `service_role` nas configurações da API do projeto.',
@@ -403,7 +400,7 @@ export const supabaseTopics: Topic[] = [
     practiceSteps: [
       'Instale a CLI e crie uma Edge Function simples em TypeScript.',
       'Faça o deploy da function no projeto do Supabase.',
-      'Chame the function a partir de um endpoint do app.',
+      'Chame a function a partir de um endpoint do app.',
     ],
     projectContext:
       'Edges Functions resolvem a necessidade de backend próprio em MVPs, reduzindo custos de infra e acelerando entregas.',

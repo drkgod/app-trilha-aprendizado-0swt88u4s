@@ -12,7 +12,7 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Setup da interface de terminal do Codex.',
     concept:
       'A CLI do Codex é uma interface interativa de terminal (TUI) voltada para automação de código no ecossistema OpenAI. Ela é distribuída tanto por pacotes npm quanto por installers standalone para Windows, macOS e Linux. Exige Node.js ativo e permite orquestrar agentes e workflows complexos diretamente da linha de comando.',
-    references: [{ label: 'Codex CLI Installation', url: 'https://docs.openai.com/codex/cli' }],
+    references: [{ label: 'OpenAI Developer Docs', url: 'https://platform.openai.com/docs' }],
     practiceSteps: [
       'Instale a CLI executando `npm install -g @openai/codex-cli` ou via standalone binary.',
       'Valide a instalação executando `codex --version`.',
@@ -32,7 +32,10 @@ export const codexTopics: Topic[] = [
     concept:
       'O aplicativo desktop do Codex fornece uma central visual para controle de projetos, gerenciamento de threads de agentes ativos e visualizações de código formatadas em tempo real. Há instaladores específicos para Apple Silicon, Intel e Windows. O app gerencia repositórios locais e permite visualizar diffs estruturados de forma muito mais amigável do que a CLI tradicional.',
     references: [
-      { label: 'Codex Desktop App Guide', url: 'https://docs.openai.com/codex/desktop' },
+      {
+        label: 'OpenAI Platform Guides',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
+      },
     ],
     practiceSteps: [
       'Baixe o installer adequado para sua arquitetura (Apple Silicon vs Intel vs Windows).',
@@ -52,7 +55,12 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Integrando o Codex ao VS Code, Cursor ou Windsurf.',
     concept:
       'A extensão de IDE do Codex acopla a inteligência do agente diretamente nos editores favoritos do mercado. O painel lateral dá acesso direto ao chat do Codex e permite que ele faça edições em tempo real nos arquivos abertos, além de aceitar comandos de atalho no editor para refatorar seleções de código específicas.',
-    references: [{ label: 'Codex IDE Extension Setup', url: 'https://docs.openai.com/codex/ide' }],
+    references: [
+      {
+        label: 'OpenAI Developer platform API',
+        url: 'https://platform.openai.com/docs/api-reference',
+      },
+    ],
     practiceSteps: [
       'Procure por "Codex" no marketplace de extensões do seu editor (VS Code/Cursor).',
       'Instale e realize o vínculo de login.',
@@ -71,12 +79,10 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Diferenças de cobrança e recursos entre Plus, Pro e API.',
     concept:
       'O acesso ao Codex pode ser feito vinculando uma conta do ChatGPT (Plus, Pro, Business ou Enterprise) ou utilizando créditos via chaves de API direto. Usar chaves de API permite total customização e escalabilidade de chamadas simultâneas, enquanto os planos pagos fornecem pacotes de uso com cotas de requisições de alta prioridade.',
-    references: [
-      { label: 'Codex Subscription Plans', url: 'https://docs.openai.com/codex/billing' },
-    ],
+    references: [{ label: 'OpenAI API Pricing', url: 'https://openai.com/api/pricing' }],
     practiceSteps: [
       'Faça o login inicial no app desktop usando sua assinatura do ChatGPT.',
-      'Alterne para o método de API Key nas configurações e configure os limites de faturamento.',
+      'Alterne para o method de API Key nas configurações e configure os limites de faturamento.',
       'Identifique no console de uso o gasto gerado pelas tarefas executadas.',
     ],
     projectContext:
@@ -92,9 +98,7 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Entendendo os cenários de uso de cada interface.',
     concept:
       'O Codex atua em múltiplas frentes. O App desktop se destaca pela visualização de diffs e threads isoladas. A CLI é focada em velocidade de digitação e TUI interativa. A extensão IDE atua de forma contextual ao lado do código ativo. O Codex Cloud permite delegar tarefas pesadas de execução em servidores da OpenAI conectando repositórios Git, poupando recursos locais da máquina.',
-    references: [
-      { label: 'Codex Surfaces Comparison', url: 'https://docs.openai.com/codex/surfaces' },
-    ],
+    references: [{ label: 'OpenAI Developer Docs', url: 'https://platform.openai.com/docs' }],
     practiceSteps: [
       'Abra um mesmo repositório e execute uma tarefa simples via CLI.',
       'Rode a mesma tarefa na nuvem usando o Codex Cloud e monitore os logs remotos.',
@@ -114,7 +118,10 @@ export const codexTopics: Topic[] = [
     concept:
       'No aplicativo desktop do Codex, um "projeto" equivale a uma pasta física em sua máquina local. Uma "thread" é uma sessão isolada de conversa com o agente. Manter threads distintas para features separadas ajuda a organizar o histórico e evita que arquivos antigos poluam a janela de raciocínio atual. A sidebar exibe todo o histórico de conversas e o terminal embutido executa comandos.',
     references: [
-      { label: 'Desktop App Concepts', url: 'https://docs.openai.com/codex/desktop/concepts' },
+      {
+        label: 'OpenAI Guides - Production',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
+      },
     ],
     practiceSteps: [
       'Crie um projeto no app desktop apontando para uma pasta vazia.',
@@ -135,7 +142,10 @@ export const codexTopics: Topic[] = [
     concept:
       'O `AGENTS.md` armazena as instruções específicas de arquitetura e padrões de codificação do projeto para o Codex. Ele respeita a hierarquia: pasta global de configurações (`CODEX_HOME`) -> raiz do projeto -> subpastas específicas. O arquivo `AGENTS.override.md` pode ser criado para sobrescrever regras locais sem afetar as definições originais commitadas no repositório.',
     references: [
-      { label: 'AGENTS.md Specifications', url: 'https://docs.openai.com/codex/agents-md' },
+      {
+        label: 'OpenAI Guides - Prompting',
+        url: 'https://platform.openai.com/docs/guides/prompt-engineering',
+      },
     ],
     practiceSteps: [
       'Crie um arquivo `AGENTS.md` na raiz do seu projeto.',
@@ -157,8 +167,8 @@ export const codexTopics: Topic[] = [
       'O Codex possui recursos avançados de permissão de acesso ao sistema de arquivos e execução de comandos. O modo "work locally" isola a execução do agente em um ambiente restrito (sandbox), solicitando permissão antes de rodar qualquer comando no sistema operacional. Conhecer quando liberar ou não acesso irrestrito é crucial para segurança dos dados do cliente.',
     references: [
       {
-        label: 'Codex Sandbox and Security',
-        url: 'https://docs.openai.com/codex/security/sandbox',
+        label: 'OpenAI API Security',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
       },
     ],
     practiceSteps: [
@@ -181,8 +191,8 @@ export const codexTopics: Topic[] = [
       'Para evitar que o Codex pare constantemente solicitando confirmação de execução de tarefas básicas, você pode configurar uma lista de comandos pré-aprovados. Comandos de teste (jest, vitest), formatação (prettier, eslint) e chamadas git/gh seguras podem rodar livremente, acelerando as entregas de forma autônoma do agente.',
     references: [
       {
-        label: 'Configuring Pre-Approved Commands',
-        url: 'https://docs.openai.com/codex/security/permissions',
+        label: 'OpenAI Production Guides',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
       },
     ],
     practiceSteps: [
@@ -203,7 +213,12 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Ciclo completo de planejamento e execução.',
     concept:
       'O fluxo de trabalho ideal no Codex segue a seguinte ordem lógica: 1) Enviar o prompt descrevendo a feature; 2) O agente elabora um plano de implementação; 3) O agente executa as edições nos arquivos; 4) Você revisa o diff visual gerado; 5) Você aceita ou rejeita as mudanças em blocos. Criar commits de checkpoint no git antes e depois de cada ciclo é obrigatório.',
-    references: [{ label: 'Codex Workflow Guide', url: 'https://docs.openai.com/codex/workflow' }],
+    references: [
+      {
+        label: 'OpenAI Prompt Guides',
+        url: 'https://platform.openai.com/docs/guides/prompt-engineering',
+      },
+    ],
     practiceSteps: [
       'Inicie uma nova tarefa e peça a criação de um componente simples.',
       'Revise o plano sugerido e faça alterações pontuais.',
@@ -223,7 +238,10 @@ export const codexTopics: Topic[] = [
     concept:
       'O Codex permite alternar dinamicamente os modelos ativos e configurar o nível de raciocínio (reasoning budget). Tarefas de refatoração complexa, cálculos e design de bancos de dados exigem modelos avançados com reasoning elevado (como o o1/o3-mini), enquanto a escrita repetitiva de arquivos e rotas básicas pode rodar em modelos rápidos para otimização de custo.',
     references: [
-      { label: 'OpenAI Reasoning Models', url: 'https://docs.openai.com/models/reasoning' },
+      {
+        label: 'OpenAI Reasoning Models',
+        url: 'https://platform.openai.com/docs/guides/reasoning',
+      },
     ],
     practiceSteps: [
       'Digite `/model` na CLI e selecione um modelo com alto reasoning.',
@@ -243,7 +261,7 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Delegação de tarefas na nuvem conectando o GitHub.',
     concept:
       'O Codex Cloud conecta seus repositórios do GitHub à infraestrutura de servidores da OpenAI. Isso possibilita delegar tarefas extensas (como escrever testes automatizados para toda a aplicação) diretamente no servidor remoto. Você inicia a tarefa, acompanha os logs em tempo real pelo navegador ou console, e o Codex Cloud cria o PR de entrega sem usar o processamento da sua máquina.',
-    references: [{ label: 'Codex Cloud Guide', url: 'https://docs.openai.com/codex/cloud' }],
+    references: [{ label: 'OpenAI API Docs Overview', url: 'https://platform.openai.com/docs' }],
     practiceSteps: [
       'Conecte sua conta do GitHub ao portal do Codex Cloud.',
       'Cadastre as etapas de configuração de dependências nas configurações do repositório.',
@@ -263,7 +281,7 @@ export const codexTopics: Topic[] = [
     concept:
       'Uma vez integrado aos repositórios do cliente, é possível invocar o agente comentando `@codex` em qualquer Pull Request no GitHub. O Codex lê as alterações do arquivo referenciado, analisa o comentário explicativo com a instrução de correção (ex: "@codex corrija esse tratamento de erro para retornar 400") e realiza o push do commit de ajuste diretamente na branch associada.',
     references: [
-      { label: 'GitHub PR Integration', url: 'https://docs.openai.com/codex/github-pr' },
+      { label: 'OpenAI API Reference', url: 'https://platform.openai.com/docs/api-reference' },
     ],
     practiceSteps: [
       'Abra um Pull Request de teste no seu GitHub.',
@@ -283,9 +301,7 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Painel visual de code review e histórico.',
     concept:
       'O painel de code review do app desktop do Codex fornece ferramentas para inspecionar alterações linha a linha. É possível realizar o staging seletivo de blocos de modificações, clicar em trechos específicos e solicitar ajustes pontuais do agente no chat interno, além de possuir atalhos rápidos para reverter modificações indesejadas.',
-    references: [
-      { label: 'Desktop Code Review UI', url: 'https://docs.openai.com/codex/desktop/review' },
-    ],
+    references: [{ label: 'OpenAI Developer Docs', url: 'https://platform.openai.com/docs' }],
     practiceSteps: [
       'Após o Codex editar múltiplos arquivos, abra o painel de review.',
       'Selecione apenas as linhas de um arquivo que você deseja manter na branch.',
@@ -306,8 +322,8 @@ export const codexTopics: Topic[] = [
       'O aplicativo desktop do Codex tem suporte nativo para Git Worktrees. A sidebar de projetos permite clonar branches de tarefas em pastas paralelas automaticamente. Isso permite trabalhar em múltiplos tickets em paralelo com instâncias de agentes isolados sem colidir o estado local dos arquivos.',
     references: [
       {
-        label: 'Worktrees inside Codex App',
-        url: 'https://docs.openai.com/codex/desktop/worktrees',
+        label: 'OpenAI Production Guides',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
       },
     ],
     practiceSteps: [
@@ -330,8 +346,8 @@ export const codexTopics: Topic[] = [
       'O Codex exibe de forma clara o consumo de créditos por chamada no painel do desenvolvedor. Acompanhar a estimativa de custos é fundamental para prever faturamentos no fim do mês e diagnosticar queries ineficientes que estão consumindo muitos tokens com retornos redundantes.',
     references: [
       {
-        label: 'Billing and Consumption Control',
-        url: 'https://docs.openai.com/codex/billing/usage',
+        label: 'OpenAI API Rate Limits',
+        url: 'https://platform.openai.com/docs/guides/rate-limits',
       },
     ],
     practiceSteps: [
@@ -352,9 +368,7 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Operação rápida via atalhos do terminal.',
     concept:
       'A interface interativa de terminal (TUI) possui comandos para alternar modelos, limpar telas de chat e buscar referências de commits anteriores. Dominar estes atalhos acelera a interação diária com o agente.',
-    references: [
-      { label: 'Codex TUI Cheatsheet', url: 'https://docs.openai.com/codex/tui/shortcuts' },
-    ],
+    references: [{ label: 'OpenAI Docs', url: 'https://platform.openai.com/docs' }],
     practiceSteps: [
       'Abra a CLI e utilize os atalhos de navegação de chat.',
       'Utilize comandos rápidos para limpar a tela e pesquisar logs.',
@@ -375,8 +389,8 @@ export const codexTopics: Topic[] = [
       'Todas as threads criadas no Codex são persistidas localmente ou sincronizadas na conta na nuvem. Retomar threads de semanas atrás recupera o contexto exato do chat e os caminhos de arquivos associados, facilitando a manutenção e a continuidade de tarefas de longo prazo.',
     references: [
       {
-        label: 'Persisting and Resuming Threads',
-        url: 'https://docs.openai.com/codex/threads/history',
+        label: 'OpenAI Guides',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
       },
     ],
     practiceSteps: [
@@ -399,8 +413,8 @@ export const codexTopics: Topic[] = [
       'Embora focado em código, o Codex pode ser utilizado para estruturação de dados em formato JSON, limpeza de planilhas CSV locais, geração de diagramas em sintaxe Mermaid para documentar processos da empresa e comparação de grandes blocos de texto estruturado.',
     references: [
       {
-        label: 'Non-Code Automation with Codex',
-        url: 'https://docs.openai.com/codex/guides/text-automation',
+        label: 'OpenAI Prompting Guide',
+        url: 'https://platform.openai.com/docs/guides/prompt-engineering',
       },
     ],
     practiceSteps: [
@@ -421,7 +435,9 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Integrando ferramentas ao Codex via protocolo MCP.',
     concept:
       'Assim como no Claude Code, o Codex suporta o protocolo MCP. Conectar servidores locais e remotos expande o leque de ações do agente, permitindo que ele consulte bancos de dados, chame endpoints de teste e envie mensagens no Slack do time corporativo.',
-    references: [{ label: 'MCP Support in Codex', url: 'https://docs.openai.com/codex/mcp/setup' }],
+    references: [
+      { label: 'OpenAI Developer Docs Overview', url: 'https://platform.openai.com/docs' },
+    ],
     practiceSteps: [
       'Rode `codex mcp add` para conectar um servidor local.',
       'Verifique a lista de ferramentas expostas.',
@@ -440,7 +456,9 @@ export const codexTopics: Topic[] = [
     shortDescription: 'Gatilhos de ciclo de vida do agente.',
     concept:
       'Os hooks do Codex permitem automatizar tarefas nos eventos de início, execução de ferramentas e fim de threads de conversa. Peça para o próprio agente gerar os scripts de hooks em Node.js ou bash para otimizar os fluxos locais de commit e formatação do repositório.',
-    references: [{ label: 'Codex Lifecycle Hooks', url: 'https://docs.openai.com/codex/hooks' }],
+    references: [
+      { label: 'OpenAI Platform APIs', url: 'https://platform.openai.com/docs/api-reference' },
+    ],
     practiceSteps: [
       'Crie um hook em bash que formata o código modificado antes de salvar a thread.',
       'Valide a execução automática do script.',
@@ -460,7 +478,10 @@ export const codexTopics: Topic[] = [
     concept:
       'O arquivo `config.toml` do Codex armazena variáveis de ambiente de alta prioridade, definições de portas de escuta locais e caminhos customizados de binários de execução de linguagens de programação, fundamental para setups de ambientes corporativos complexos.',
     references: [
-      { label: 'Advanced Config TOML Settings', url: 'https://docs.openai.com/codex/config-toml' },
+      {
+        label: 'OpenAI Production Guides',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
+      },
     ],
     practiceSteps: [
       'Abra o arquivo `config.toml` nas configurações globais da sua máquina.',
@@ -482,8 +503,8 @@ export const codexTopics: Topic[] = [
       'Rodar o Codex no modo headless em ambientes de integração contínua (CI) permite automatizar auditorias de PRs, executar testes e lints de forma autônoma nos servidores de deploy da empresa a cada commit enviado.',
     references: [
       {
-        label: 'CI/CD Integration with Codex Headless',
-        url: 'https://docs.openai.com/codex/ci-cd',
+        label: 'OpenAI Production Security Guidelines',
+        url: 'https://platform.openai.com/docs/guides/production-best-practices',
       },
     ],
     practiceSteps: [
@@ -505,7 +526,7 @@ export const codexTopics: Topic[] = [
     concept:
       'Entender a fundo as diferenças entre Codex e Claude Code é obrigatório para consultores. O Claude Code se destaca pela CLI extremamente madura, velocidade e suporte a hooks. O Codex possui excelente app desktop, worktrees simplificados e integração robusta com modelos de reasoning da OpenAI. Saber orientar os clientes sobre qual ferramenta adota reduz erros de compra e fricção operacional.',
     references: [
-      { label: 'AI Code Agents Comparison', url: 'https://docs.openai.com/codex/vs-claude' },
+      { label: 'OpenAI Models Overview', url: 'https://platform.openai.com/docs/models' },
     ],
     practiceSteps: [
       'Monte uma tabela de prós e contras das duas ferramentas.',

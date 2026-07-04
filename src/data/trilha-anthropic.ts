@@ -13,11 +13,8 @@ export const claudeAiTopics: Topic[] = [
     concept:
       'A plataforma Claude.ai oferece acesso via planos Free, Pro, Team e Enterprise. Cada plano possui cotas de mensagens e janelas de resets específicas. O plano Pro dá acesso a 5x mais cota do que o Free, e os planos Team e Enterprise escalam esse teto para acomodar colaboradores de equipes grandes. Entender essas diferenças ajuda a orientar o cliente no melhor custo-benefício.',
     references: [
-      {
-        label: 'Onde usar o Claude (Planos)',
-        url: 'https://support.anthropic.com/en/articles/8114521-where-can-i-use-claude',
-      },
-      { label: 'Tabela de preços oficial', url: 'https://www.anthropic.com/claude/pricing' },
+      { label: 'Preços Oficiais do Claude', url: 'https://www.anthropic.com/claude/pricing' },
+      { label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' },
     ],
     practiceSteps: [
       'Compare as funcionalidades dos planos Pro e Team nas páginas oficiais.',
@@ -62,10 +59,7 @@ export const claudeAiTopics: Topic[] = [
     concept:
       'A funcionalidade de Projects permite agrupar conversas e carregar documentos e regras de contexto (Project Knowledge) específicos para um escopo de trabalho (ex: a documentação de um sistema do cliente). O Claude lê todo esse contexto nas conversas do projeto, eliminando a necessidade de reenviar os mesmos arquivos.',
     references: [
-      {
-        label: 'O que são Projects no Claude.ai',
-        url: 'https://support.anthropic.com/en/collections/9347525-projects',
-      },
+      { label: 'Claude para Trabalho', url: 'https://www.anthropic.com/learn/claude-for-work' },
     ],
     practiceSteps: [
       'Crie um Project no painel lateral do Claude.ai.',
@@ -85,12 +79,7 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Criação e edição de código e interfaces ricas.',
     concept:
       'Os Artifacts são painéis laterais interativos criados para exibir e editar blocos extensos de código, esquemas de bancos de dados, fluxogramas Mermaid e até protótipos de interfaces web funcionais (HTML/CSS/JS) diretamente na tela de chat.',
-    references: [
-      {
-        label: 'Como usar Artifacts no Claude.ai',
-        url: 'https://support.anthropic.com/en/articles/9487375-using-artifacts-on-claude-ai',
-      },
-    ],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Ative a funcionalidade de Artifacts nas configurações do seu perfil.',
       'Peça para o Claude criar um protótipo de dashboard de metas usando Tailwind e HTML.',
@@ -111,8 +100,8 @@ export const claudeAiTopics: Topic[] = [
       'Conversar em uma única thread por muito tempo faz o contexto acumular tokens repetidos, aumentando a probabilidade de respostas confusas e alucinações. Limpar o histórico e abrir novos chats é fundamental para manter as respostas precisas.',
     references: [
       {
-        label: 'Limites de Janela de Mensagens',
-        url: 'https://support.anthropic.com/en/articles/8114521-where-can-i-use-claude',
+        label: 'Claude Model Specs',
+        url: 'https://docs.anthropic.com/en/docs/about-claude/models',
       },
     ],
     practiceSteps: [
@@ -133,16 +122,11 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Extraindo dados de PDFs, imagens e planilhas.',
     concept:
       'O Claude.ai possui capacidade de processar arquivos complexos (como PDFs contendo tabelas financeiras, planilhas CSV com centenas de linhas e imagens com anotações de layout) extraindo dados e formatando-os.',
-    references: [
-      {
-        label: 'Tipos de arquivos suportados e upload',
-        url: 'https://support.anthropic.com/en/articles/8114521-where-can-i-use-claude#file-uploads',
-      },
-    ],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Faça upload de uma planilha complexa de dados do Excel.',
       'Peça análises de agrupamentos e estatísticas específicas dos dados das colunas.',
-      'Solicite a formatação das conclusões em tabelas limpas no chat.',
+      'Solicite a formatação das conclusões in tabelas limpas no chat.',
     ],
     projectContext:
       'Capacite o time do cliente a realizar auditorias rápidas de relatórios e contratos carregando os arquivos no Claude.',
@@ -157,12 +141,7 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Pesquisas automáticas de mercado e concorrência.',
     concept:
       'A pesquisa web integrada permite que o Claude.ai busque informações atualizadas na internet em tempo real. O modo de pesquisa detalhado (Deep Research) aprofunda essa busca de forma a pesquisar e sintetizar grandes relatórios de inteligência de mercado.',
-    references: [
-      {
-        label: 'Uso de Web Search no Claude',
-        url: 'https://support.anthropic.com/en/articles/9516315-using-web-search-in-claude-ai',
-      },
-    ],
+    references: [{ label: 'Pesquisa com Claude (Blog)', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Ative a pesquisa web e faça perguntas sobre notícias recentes da stack.',
       'Dispare uma busca sobre os principais concorrentes do seu cliente e peça a compilação de dados.',
@@ -182,10 +161,7 @@ export const claudeAiTopics: Topic[] = [
     concept:
       'A funcionalidade de memória do Claude.ai permite registrar fatos e preferências do usuário de forma global (ex: "sempre escreva código com TypeScript"). Compreender as políticas de privacidade da Anthropic sobre a retenção destes dados é obrigatório para clientes corporativos.',
     references: [
-      {
-        label: 'Configurando Memória no Claude',
-        url: 'https://support.anthropic.com/en/articles/9986349-memory-in-claude-ai',
-      },
+      { label: 'Privacidade e Confiança na Anthropic', url: 'https://www.anthropic.com/trust' },
     ],
     practiceSteps: [
       'Abra as configurações de memória da sua conta no painel.',
@@ -206,14 +182,7 @@ export const claudeAiTopics: Topic[] = [
     concept:
       'Os conectores do Claude.ai permitem buscar dados de pastas do Google Drive, canais do Slack ou caixas de entrada do Gmail diretamente nas conversas do chat, ampliando o leque de ações do assistente.',
     references: [
-      {
-        label: 'Integração Google Drive no Claude',
-        url: 'https://support.anthropic.com/en/articles/9986345-google-drive-integration-in-claude-ai',
-      },
-      {
-        label: 'Integração OneDrive no Claude',
-        url: 'https://support.anthropic.com/en/articles/9986346-microsoft-onedrive-integration-in-claude-ai',
-      },
+      { label: 'Claude para Trabalho', url: 'https://www.anthropic.com/learn/claude-for-work' },
     ],
     practiceSteps: [
       'Conecte sua conta do Google Drive no painel de conectores.',
@@ -233,12 +202,7 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Personalizando a voz e o tom das respostas.',
     concept:
       'Você pode calibrar as preferências do Claude para que ele adote tom profissional, técnico ou amigável, alinhado à voz de marca da empresa nas produções de e-mails ou relatórios.',
-    references: [
-      {
-        label: 'Personalização de Estilo do Claude',
-        url: 'https://support.anthropic.com/en/articles/9516310-customizing-claudes-style',
-      },
-    ],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Crie um style padrão para comunicação corporativa nas configurações.',
       'Gere um e-mail de aviso de manutenção de sistema usando o style ativo.',
@@ -321,12 +285,7 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Extensões e suplementos para rotinas de escritório.',
     concept:
       'Utilizar extensões e suplementos oficiais permite que equipes administrativas acelerem rotinas de digitação, montagem de apresentações em slides e análises de fórmulas no Excel.',
-    references: [
-      {
-        label: 'Extensão Oficial do Claude no Chrome',
-        url: 'https://chromewebstore.google.com/detail/claude/iffnkkcbalidkcbhdkjipnekhhklacgf',
-      },
-    ],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Instale a extensão do Chrome do Claude na sua máquina.',
       'Use o atalho de leitura em uma página longa de documentação.',
@@ -345,9 +304,9 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Desenvolvimento colaborativo de arquivos.',
     concept:
       'O Claude Cowork é uma interface otimizada para pair-programming e cocriação de código que permite trabalhar cooperativamente no mesmo bloco de texto ou código em tempo real.',
-    references: [{ label: 'Cowork com Claude (Suporte)', url: 'https://support.anthropic.com' }],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
-      'Use a interface do Cowork para escrever um script em conjunto.',
+      'Use la interface do Cowork para escrever um script em conjunto.',
       'Analise o histórico de edições do arquivo.',
       'Documente os atalhos de uso do painel.',
     ],
@@ -385,12 +344,7 @@ export const claudeAiTopics: Topic[] = [
     shortDescription: 'Diferenças de interface no celular e computador.',
     concept:
       'Os apps nativos oferecem recursos integrados como ditado por voz simplificado e atalhos rápidos de teclado locais no Desktop, úteis para alternância de janelas.',
-    references: [
-      {
-        label: 'Aplicativos Móveis e Desktop do Claude',
-        url: 'https://www.anthropic.com/news/claude-app-for-ios',
-      },
-    ],
+    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
     practiceSteps: [
       'Instale o app de celular do Claude.',
       'Use o ditado por voz para transcrever uma ideia de feature.',

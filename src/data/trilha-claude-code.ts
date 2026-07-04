@@ -13,7 +13,14 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'O Claude Code é a interface de terminal oficial da Anthropic para agentes. Ele exige Node.js 18+ instalado no sistema. Existem dois caminhos principais: a instalação global via npm (npm install -g @anthropic-ai/claude-code) ou o installer nativo compilado (para ambientes onde o Node.js não é viável). No Windows, é fortemente recomendado rodar através do WSL (Windows Subsystem for Linux) para compatibilidade nativa com ferramentas bash de terceiros, embora a execução nativa no cmd/powershell seja suportada.',
     references: [
-      { label: 'Instalação do Claude Code', url: 'https://code.claude.com/docs/getting-started' },
+      {
+        label: 'Visão Geral do Claude Code',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
+      {
+        label: 'Guia de Configuração e Instalação',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/quickstart',
+      },
     ],
     practiceSteps: [
       'Verifique se sua versão do Node é superior à 18 executando `node -v`.',
@@ -33,7 +40,10 @@ export const claudeCodeTopics: Topic[] = [
     shortDescription: 'CLI vs Desktop App vs Extensão VS Code vs Mobile/Web App.',
     concept:
       'O ecossistema Claude atua em quatro interfaces. O Claude CLI (terminal) é focado em automação, pipelines e desenvolvedores raiz. O Desktop App oferece isolamento de abas e atalhos globais. A extensão do VS Code coloca o agente diretamente na barra lateral, compartilhando o contexto do editor. A interface web/mobile é voltada para conversações gerais, análise de arquivos rápidos e interações portáteis. Cada uma possui limitações específicas, como suporte a ferramentas locais e limites de contexto.',
-    references: [{ label: 'Superfícies de Uso do Claude', url: 'https://support.anthropic.com' }],
+    references: [
+      { label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' },
+      { label: 'Claude para Trabalho', url: 'https://www.anthropic.com/learn/claude-for-work' },
+    ],
     practiceSteps: [
       'Baixe o app Desktop oficial da Anthropic.',
       'Instale a extensão do Claude no VS Code.',
@@ -53,10 +63,8 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Para utilizar o Claude Code, o usuário pode autenticar de duas formas: logando diretamente com sua conta Claude.ai (que usa o teto de mensagens do plano Pro/Max) ou inserindo uma chave de API (Console Anthropic) que cobra por tokens consumidos (pay-as-you-go). Planos Pro, Team e Enterprise fornecem cotas de uso diferenciadas (o plano Max oferece 5x a 20x mais cota). Usar chaves de API é ideal para empresas que desejam faturamento centralizado e limites elásticos.',
     references: [
-      {
-        label: 'Faturamento do Console Anthropic',
-        url: 'https://console.anthropic.com/settings/billing',
-      },
+      { label: 'Faturamento do Console Anthropic', url: 'https://console.anthropic.com' },
+      { label: 'Claude Code no GitHub', url: 'https://github.com/anthropics/claude-code' },
     ],
     practiceSteps: [
       'Gere uma chave de API de teste no Console da Anthropic.',
@@ -77,7 +85,14 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'As contas possuem limites de uso baseados em janelas de 5 horas e tetos semanais. Executar tarefas complexas que leem muitos arquivos consome esses limites exponencialmente mais rápido. O modelo Claude 3 Opus consome muito mais limites por mensagem do que o Claude 3.5 Sonnet. O Claude Code disponibiliza os comandos `/usage` e `/cost` para auditar a quantidade de tokens consumidos na sessão atual e estimar o valor gasto.',
     references: [
-      { label: 'Limites de Taxa e Cotas', url: 'https://docs.anthropic.com/en/api/rate-limits' },
+      {
+        label: 'Gerenciando Custos no Claude Code',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/manage-costs',
+      },
+      {
+        label: 'Curso Claude Code in Action',
+        url: 'https://anthropic.skilljar.com/claude-code-in-action',
+      },
     ],
     practiceSteps: [
       'Execute uma tarefa complexa no Claude CLI.',
@@ -99,9 +114,10 @@ export const claudeCodeTopics: Topic[] = [
       'A janela de contexto do Claude Code armazena o histórico da conversa, os arquivos lidos na sessão, as saídas de comandos executados no terminal e as definições de todas as ferramentas de MCP que estiverem conectadas. Quando a janela fica cheia, o modelo começa a esquecer mensagens antigas e a alucinar. O comando `/context` permite analisar detalhadamente o tamanho de cada elemento e identificar o que está "inchando" o contexto.',
     references: [
       {
-        label: 'Janelas de Contexto na API Messages',
-        url: 'https://docs.anthropic.com/en/api/messages',
+        label: 'Manual de Comandos da CLI',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/cli-reference',
       },
+      { label: 'Construindo com Claude', url: 'https://www.anthropic.com/learn/build-with-claude' },
     ],
     practiceSteps: [
       'Abra um repositório grande com o Claude Code.',
@@ -122,7 +138,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Quando o contexto está cheio, você tem três opções: `/compact` (resume o histórico mantendo as edições de arquivos e instruções cruciais, economizando espaço mas perdendo detalhes do chat), `/clear` (limpa todo o histórico e arquivos lidos, preservando apenas as regras do CLAUDE.md) ou simplesmente iniciar uma sessão nova fechando e abrindo o Claude. O auto-compact ocorre de forma autônoma nas sessões, mas compactar repetidamente deteriora o entendimento do agente sobre o projeto.',
     references: [
-      { label: 'Comandos do Claude Code CLI', url: 'https://code.claude.com/docs/cli-commands' },
+      {
+        label: 'CLI Reference - Commands',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/cli-reference',
+      },
     ],
     practiceSteps: [
       'Após 20 mensagens no chat, digite `/compact` e pergunte ao Claude o que ele lembra das primeiras instruções.',
@@ -144,8 +163,8 @@ export const claudeCodeTopics: Topic[] = [
       'O CLAUDE.md é o arquivo de configuração mais importante do projeto. Ele funciona como a memória permanente do agente e é lido automaticamente em toda inicialização de sessão. A hierarquia respeita a seguinte ordem: regras globais (`~/.claude/CLAUDE.md`) -> regras da raiz do repositório -> regras locais de subpastas. O arquivo deve descrever os comandos de build/test/lint do repositório, convenções de código adotadas, a estrutura da arquitetura em poucas linhas e proibições explícitas (ex: "nunca use Tailwind"). O comando `/init` ajuda a gerar um esqueleto inicial.',
     references: [
       {
-        label: 'Instruções de Projeto no Claude',
-        url: 'https://code.claude.com/docs/project-instructions',
+        label: 'Instruções de Projeto e Memória',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview#project-instructions-claudemd',
       },
     ],
     practiceSteps: [
@@ -166,7 +185,12 @@ export const claudeCodeTopics: Topic[] = [
     shortDescription: 'Conectando o Claude a servidores externos via protocolo MCP.',
     concept:
       'O Claude Code pode estender suas capacidades através do Model Context Protocol (MCP). O comando `claude mcp add` registra um novo servidor de ferramentas. Existem três escopos de configuração: local (configurado na máquina para um único projeto), project (salva as definições no arquivo `.mcp.json` na raiz do repositório, permitindo que todo o time herde as ferramentas ao versionar o projeto) e user (global para o usuário logado em qualquer diretório). Os servidores podem rodar localmente por stdio ou conectar-se a APIs remotas via SSE.',
-    references: [{ label: 'Configuração MCP do Claude', url: 'https://code.claude.com/docs/mcp' }],
+    references: [
+      {
+        label: 'Conectando Claude ao MCP',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/mcp',
+      },
+    ],
     practiceSteps: [
       'Rode `claude mcp add sqlite sqlite3 /caminho/do/banco.db` para criar uma conexão local.',
       'Inspecione o arquivo `.mcp.json` criado na raiz do seu projeto.',
@@ -187,8 +211,8 @@ export const claudeCodeTopics: Topic[] = [
       'Debugar MCPs é uma habilidade crítica. Problemas comuns incluem servidores que não inicializam devido a caminhos errados de binários, falhas de autenticação de chaves de API em servidores remotos, e loops em chamadas que incharam o contexto. O comando `/mcp` exibe o status de todos os servidores configurados (ativos, inativos ou falhando). Analisar os logs em tempo real e inspecionar a saída padrão do processo do servidor (stdio) ajuda a isolar erros sintáticos de ambiente.',
     references: [
       {
-        label: 'Guia de Debug Model Context Protocol',
-        url: 'https://modelcontextprotocol.io/docs/tools/debugging',
+        label: 'Model Context Protocol (MCP) Docs',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/mcp',
       },
     ],
     practiceSteps: [
@@ -211,8 +235,8 @@ export const claudeCodeTopics: Topic[] = [
       'Por padrão, o Claude Code solicita autorização toda vez que precisa ler um arquivo confidencial, editar código ou rodar um comando bash. A combinação `shift+tab` ativa a auto-aceitação temporária na sessão. O comando `/permissions` permite definir regras granulares, como listar comandos pré-aprovados (allowlist) e bloquear explicitamente comandos de alto risco (denylist). O uso de `--dangerously-skip-permissions` desativa toda a segurança, útil apenas em ambientes controlados como containers isolados de CI/CD.',
     references: [
       {
-        label: 'Segurança e Controle do Claude Code',
-        url: 'https://code.claude.com/docs/security',
+        label: 'Segurança e Permissões no Claude',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/advanced-setup#security-and-permissions',
       },
     ],
     practiceSteps: [
@@ -234,7 +258,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'O Plan Mode (`claude --plan` ou digitando `/model` e ativando o modo de planejamento) instrui o agente a apenas planejar, pesquisar e detalhar as etapas lógicas de uma modificação sem realizar nenhuma alteração nos arquivos ou executar comandos destrutivos. É a ferramenta ideal para revisões de arquitetura e tarefas complexas, permitindo que o consultor revise e altere a estratégia de implementação antes que qualquer código seja de fato escrito.',
     references: [
-      { label: 'Modos de Execução do Claude', url: 'https://code.claude.com/docs/usage-modes' },
+      {
+        label: 'Modo de Planejamento (Plan Mode)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
     ],
     practiceSteps: [
       'Abra um repositório e chame o Claude Code com `claude --plan`.',
@@ -255,7 +282,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Atalhos e comandos agilizam a produtividade no terminal: `/model` (troca o LLM ativo), `/resume` (escolhe uma sessão antiga), `/init` (inicializa regras do repo), `/agents` (gerencia subagentes em execução), `/hooks` (gerencia scripts automáticos). Pressionar a tecla `Esc` interrompe o pensamento do modelo; pressionar `Esc` duas vezes navega pelo histórico de prompts. O prefixo `!` permite que você execute comandos bash locais sem precisar sair da interface do Claude.',
     references: [
-      { label: 'Guia de Referência da CLI', url: 'https://code.claude.com/docs/cli-cheatsheet' },
+      {
+        label: 'Referência de Comandos da CLI',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/cli-reference',
+      },
     ],
     practiceSteps: [
       'Digite `/model` e alterne entre Claude 3.5 Sonnet e Claude 3.5 Haiku.',
@@ -277,8 +307,8 @@ export const claudeCodeTopics: Topic[] = [
       'O Claude CLI armazena o histórico completo de todas as conversas realizadas em diretórios locais. O comando `claude --continue` retoma a última sessão ativa naquele repositório. O comando `claude --resume` lista as sessões recentes, exibindo o dia, a hora e o último prompt enviado, permitindo que você reative o histórico exato sem perder os arquivos que estavam carregados no contexto.',
     references: [
       {
-        label: 'Gerenciamento de Sessões e Histórico',
-        url: 'https://code.claude.com/docs/sessions',
+        label: 'Gerenciando Sessões de Chat',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/cli-reference',
       },
     ],
     practiceSteps: [
@@ -300,7 +330,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Você pode criar comandos personalizados adicionando scripts ou arquivos markdown no diretório `.claude/commands/` do projeto. O Claude Code lê essa pasta e adiciona novos comandos que aceitam `$ARGUMENTS` dinâmicos. Isso é extremamente útil para criar comandos padronizados como `/review` (que analisa o git diff do repositório) ou `/document` (que gera documentação para arquivos selecionados).',
     references: [
-      { label: 'Criando Custom Commands', url: 'https://code.claude.com/docs/custom-commands' },
+      {
+        label: 'Custom Commands (Claude Code)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
     ],
     practiceSteps: [
       'Crie a pasta `.claude/commands/` na raiz do seu projeto.',
@@ -321,7 +354,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Ao invocar `/agents` ou pedir ao Claude para criar um agente secundário, ele instancia um "Subagent" com prompt de sistema isolado e ferramentas específicas. O contexto de conversação do subagente é independente da sessão principal, impedindo que o histórico do chat principal fique inflado de código desnecessário. O subagente conclui sua tarefa isoladamente e devolve apenas o resultado final para o agente principal.',
     references: [
-      { label: 'Arquitetura de Subagentes', url: 'https://code.claude.com/docs/subagents' },
+      {
+        label: 'Sub-agents e Contextos Isolados',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
     ],
     practiceSteps: [
       'Abra o Claude CLI e peça para ele criar um subagente especializado em testes unitários.',
@@ -342,7 +378,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'As Skills no Claude Code são configuradas escrevendo arquivos estruturados no formato `SKILL.md`. Diferente de comandos e MCPs, uma skill encapsula conhecimento procedural complexo e boas práticas de modelagem que você ensina ao agente (ex: "como mapear fluxos de banco com o Supabase"). O agente carrega a skill sob demanda quando detecta que a tarefa atual precisa daquela expertise.',
     references: [
-      { label: 'O que são e como funcionam Skills', url: 'https://code.claude.com/docs/skills' },
+      {
+        label: 'Estendendo o Claude com Skills',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/skills',
+      },
     ],
     practiceSteps: [
       'Crie um arquivo `SKILL.md` dentro de uma pasta de skills.',
@@ -363,7 +402,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Os Hooks são gatilhos que rodam de forma automática em resposta a eventos no ciclo de execução do Claude Code, como antes da chamada de uma ferramenta (`PreToolUse`), depois do uso de uma ferramenta (`PostToolUse`) ou na finalização do chat (`Stop`). Isso possibilita, por exemplo, disparar lints automáticos nos arquivos editados, rodar testes de regressão ou auditar se o agente escreveu credenciais hardcoded.',
     references: [
-      { label: 'Configurando Hooks de Execução', url: 'https://code.claude.com/docs/hooks' },
+      {
+        label: 'Gatilhos e Hooks (CLI Docs)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/cli-reference',
+      },
     ],
     practiceSteps: [
       'Crie um hook no arquivo de configurações que impede o Claude de rodar o comando `git push --force`.',
@@ -385,12 +427,12 @@ export const claudeCodeTopics: Topic[] = [
       'A família Claude 3.5 possui modelos com perfis distintos. O Claude 3.5 Sonnet é o modelo de uso geral padrão, oferecendo alta inteligência de codificação e velocidade. O Claude 3.5 Haiku é extremamente rápido e de baixo custo, ideal para scripts rápidos, refatoração de nomes e testes simples. O Claude 3 Opus é o modelo mais pesado e analítico, indicado para revisões de arquitetura e lógica matemática avançada. Mudar de modelo durante a sessão otimiza custos e cotas.',
     references: [
       {
-        label: 'Família de Modelos Claude',
+        label: 'Visão Geral de Modelos Anthropic',
         url: 'https://docs.anthropic.com/en/docs/about-claude/models',
       },
     ],
     practiceSteps: [
-      'Inicie o Claude CLI e alterne para o Haiku digitando `/model haiku`.',
+      'Insciie o Claude CLI e alterne para o Haiku digitando `/model haiku`.',
       'Peça tarefas repetitivas simples e anote a latência de resposta.',
       'Alterne para o Sonnet e compare a profundidade conceitual das respostas.',
     ],
@@ -409,7 +451,7 @@ export const claudeCodeTopics: Topic[] = [
       'O Claude Code suporta leitura visual direta. Você pode colar screenshots de telas com erro, arrastar arquivos de imagem para a CLI ou passar caminhos de imagens locais. O modelo analisa a imagem e a correlaciona com o código-fonte, tornando muito mais fácil debugar problemas de layout em CSS, replicar interfaces a partir de mockups de design ou extrair dados de diagramas estruturais.',
     references: [
       {
-        label: 'Uso de Multimodalidade e Visão na API',
+        label: 'Multimodalidade e Visão na API',
         url: 'https://docs.anthropic.com/en/docs/about-claude/vision',
       },
     ],
@@ -431,7 +473,12 @@ export const claudeCodeTopics: Topic[] = [
     shortDescription: 'Uso profissional do Git e integração com GitHub CLI.',
     concept:
       'O Claude Code vem integrado com comandos git locais e com a ferramenta de terminal do GitHub (gh CLI). O agente consegue criar branches sem colidir nomes, realizar commits com mensagens descritivas detalhadas (incluindo o que mudou e porquê), resolver conflitos de merge analisando as duas versões do arquivo, criar Pull Requests diretamente no GitHub e consultar issues abertas para criar as features associadas.',
-    references: [{ label: 'Integração de Git no Claude', url: 'https://code.claude.com/docs/git' }],
+    references: [
+      {
+        label: 'Git no Claude Code (Docs)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
+    ],
     practiceSteps: [
       'Peça ao Claude para criar um branch chamado `feature/setup-auth`.',
       'Faça alterações e ordene que ele commite as modificações com mensagens estruturadas.',
@@ -451,7 +498,7 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Os Git Worktrees permitem que você tenha múltiplos branches do mesmo repositório clonados em pastas locais separadas na sua máquina, compartilhando o mesmo repositório `.git`. Isso permite iniciar várias sessões do Claude Code em diretórios diferentes simultaneamente, trabalhando em features distintas em paralelo sem que um agente sobrescreva as edições ou o contexto do outro.',
     references: [
-      { label: 'Git Worktrees na Prática', url: 'https://git-scm.com/docs/git-worktree' },
+      { label: 'Worktrees do Git (Manual)', url: 'https://git-scm.com/docs/git-worktree' },
     ],
     practiceSteps: [
       'Crie um worktree em uma pasta paralela executando `git worktree add ../feature-b branch-b`.',
@@ -473,8 +520,8 @@ export const claudeCodeTopics: Topic[] = [
       'Trabalhar com agentes de IA exige disciplina operacional. As melhores práticas incluem: 1) Quebrar grandes problemas em tarefas minúsculas e fáceis de validar; 2) Sempre exigir um plano lógico antes de codificar grandes refatorações; 3) Usar `/clear` para iniciar novas tarefas e evitar misturar lixo de contexto; 4) Commitar checkpoints antes de deixar o agente fazer alterações grandes em arquivos complexos.',
     references: [
       {
-        label: 'Boas Práticas de Desenvolvimento com IA',
-        url: 'https://code.claude.com/docs/best-practices',
+        label: 'Boas Práticas de Uso (CLI Docs)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
       },
     ],
     practiceSteps: [
@@ -496,7 +543,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'O modo headless permite invocar o Claude Code diretamente em scripts de shell ou pipelines de integração contínua (CI/CD) sem a necessidade de uma interface de terminal interativa. A sintaxe `claude -p "instrução"` permite enviar prompts pontuais (ex: gerar documentação de um arquivo específico ou rodar uma varredura de segurança) e receber o retorno em formato estruturado (JSON ou texto limpo).',
     references: [
-      { label: 'Executando Claude no Modo Headless', url: 'https://code.claude.com/docs/headless' },
+      {
+        label: 'Executando Claude no Modo Headless',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
     ],
     practiceSteps: [
       'Crie um script em bash que chama o Claude em modo headless.',
@@ -518,8 +568,8 @@ export const claudeCodeTopics: Topic[] = [
       'O arquivo `settings.json` localizado na pasta de configurações global do Claude armazena preferências finas do sistema. É possível definir quais extensões de arquivos devem ser ignoradas na leitura padrão, configurar limites estritos de permissão para comandos automáticos, injetar variáveis de ambiente específicas para os servidores MCP e alterar o modelo padrão que o CLI inicia para economizar tokens.',
     references: [
       {
-        label: 'Configuração Avançada do settings.json',
-        url: 'https://code.claude.com/docs/settings',
+        label: 'Configurações Globais (CLI Docs)',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/advanced-setup',
       },
     ],
     practiceSteps: [
@@ -541,7 +591,10 @@ export const claudeCodeTopics: Topic[] = [
     concept:
       'Muitas empresas utilizam proxies e firewalls rígidos que interceptam requisições HTTP e quebram a conexão de agentes de inteligência artificial. Para que o Claude Code funcione nesses ambientes, é preciso configurar as variáveis de ambiente globais `HTTP_PROXY`, `HTTPS_PROXY` e importar certificados SSL corporativos customizados para que o binário do Node.js possa autenticar os endpoints da Anthropic sem erros de handshake TLS.',
     references: [
-      { label: 'Claude Code em Redes Corporativas', url: 'https://code.claude.com/docs/network' },
+      {
+        label: 'Configuração de Redes Restritas',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/advanced-setup#network-configuration',
+      },
     ],
     practiceSteps: [
       'Simule a configuração de um proxy de desenvolvimento local configurando as variáveis de ambiente `HTTP_PROXY`.',
@@ -563,8 +616,8 @@ export const claudeCodeTopics: Topic[] = [
       'Integrar o Claude Code diretamente em pipelines do GitHub Actions viabiliza fluxos avançados como: abrir uma issue e deixar o agente criar o PR de correção automaticamente, ou usar o Claude como revisor automático de Pull Requests a cada push. Utilizar a menção `@claude` nos comentários do PR instrui o agente a ler a alteração e propor as correções necessárias de forma assíncrona.',
     references: [
       {
-        label: 'GitHub Actions com Claude Code',
-        url: 'https://github.com/anthropic-ai/claude-code-action',
+        label: 'GitHub Actions integration',
+        url: 'https://github.com/marketplace/actions/claude-code-action',
       },
     ],
     practiceSteps: [

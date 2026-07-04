@@ -4,6 +4,7 @@ import { codexTopics } from './trilha-codex'
 import { claudeAiTopics } from './trilha-anthropic'
 import { githubTopics } from './trilha-github'
 import { supabaseTopics } from './trilha-supabase'
+import { trilhaFundamentos } from './trilha-fundamentos'
 
 export { type Topic, type Trail, type Priority, type TopicType, type ReferenceLink } from './types'
 
@@ -62,6 +63,17 @@ export const trails: Trail[] = [
     description:
       'Domine o backend-as-a-service Postgres — RLS, Autenticação, Storage, Realtime e Migrations.',
     topics: supabaseTopics,
+  },
+  {
+    id: 'fundamentos',
+    name: 'Fundamentos',
+    slug: 'fundamentos',
+    icon: '🌐',
+    color: '#4DD8E6',
+    colorGlow: '185 80% 60%',
+    description:
+      'Domine tokens, embeddings, busca semântica e vetorização com Supabase e pgvector.',
+    topics: trilhaFundamentos.topics,
   },
 ]
 

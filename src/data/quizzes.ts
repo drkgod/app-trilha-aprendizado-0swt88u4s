@@ -206,7 +206,7 @@ export const quizzes: Record<string, QuizQuestion[]> = {
   ],
 }
 
-// Fallback dynamic quiz generator to guarantee EVERY topic has a 3-question quiz
+// Fallback dynamic quiz generator to guarantee EVERY topic has a 5-question quiz
 export function getQuizForTopic(
   topicId: string,
   topicTitle: string,
@@ -251,6 +251,30 @@ export function getQuizForTopic(
       ],
       correctIndex: 1,
       explanation: `Diagnóstico profissional exige isolamento de hipóteses. Inspecionar logs locais, status de servidores externos (como status.anthropic.com) e checar os Advisors do console aponta a causa raiz sem código descartável.`,
+    },
+    {
+      question: `Considerando o tema "${topicTitle}", como você avalia o impacto de latência e custo ao escalar essa implementação para 10.000 usuários ativos por dia na empresa?`,
+      options: [
+        'A latência e o custo não sofrem alterações na nuvem.',
+        'A falta de mecanismos de cache (como prompt caching) e queries não otimizadas sem índices corretos gerará gargalos severos de processamento e faturamento de tokens redundantes.',
+        'O ideal é desativar todas as camadas de segurança para aliviar o servidor do cliente.',
+        'Deve-se migrar toda a base de dados relacional para planilhas locais para evitar latência.',
+      ],
+      correctIndex: 1,
+      explanation:
+        'A escalabilidade depende da eficiência do uso de cache e otimização do banco. No Supabase, índices corretos e no Claude, o Prompt Caching são chaves para otimizar tempo e orçamento.',
+    },
+    {
+      question: `Para garantir a conformidade jurídica em um projeto envolvendo "${topicTitle}", qual política de retenção de dados deve ser recomendada ao setor jurídico do cliente corporativo?`,
+      options: [
+        'Não há riscos jurídicos no uso de serviços de inteligência artificial de terceiros.',
+        'Deve-se exigir acordos comerciais (B2B) que garantam que os dados trafegados via API não sejam usados para treinar modelos públicos de IA, mantendo retenções seguras e encriptadas no banco do cliente.',
+        'Exigir que todas as chamadas sejam feitas pelo plano gratuito comum.',
+        'Permitir o vazamento de chaves service_role em repositórios abertos.',
+      ],
+      correctIndex: 1,
+      explanation:
+        'As políticas comerciais da Anthropic e OpenAI garantem que os dados trafegados nas APIs corporativas não são usados para treinar modelos. Isso é fundamental para a governança de dados.',
     },
   ]
 }

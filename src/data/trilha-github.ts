@@ -85,7 +85,7 @@ export const githubTopics: Topic[] = [
     type: 'conceito',
     shortDescription: 'Resolução manual e automatizada de conflitos de merge.',
     concept:
-      'Um conflito ocorre quando branches distintos alteram a mesma linha de um arquivo de formas diferentes. O Git suspende o merge e adiciona marcadores de conflito (`<<<<<<<`, `=======`, `>>>>>>>`) no código-fonte. O desenvolvedor deve resolver a colisão editando o arquivo manualmente e apagando os marcadores, ou abortando o processo com `git merge --abort`.',
+      'Um conflito ocorre quando branches distintas alteram a mesma linha de um arquivo de formas diferentes. O Git suspende o merge e adiciona marcadores de conflito (`<<<<<<<`, `=======`, `>>>>>>>`) no código-fonte. O desenvolvedor deve resolver a colisão editando o arquivo manualmente e apagando os marcadores, ou abortando o processo com `git merge --abort`.',
     references: [
       {
         label: 'Resolvendo Conflitos via Linha de Comando',
@@ -122,7 +122,7 @@ export const githubTopics: Topic[] = [
       'Crie um commit de reversão com `git revert`.',
     ],
     projectContext:
-      'Nunca recomende `git reset --hard` em branches públicos com outros desenvolvedores ativos. Isso desorganiza os repositórios dos colegas de equipe.',
+      'Nunca recomende `git reset --hard` em branches públicas com outros desenvolvedores ativos. Isso desorganiza os repositórios dos colegas de equipe.',
     xp: xpMap.alta,
   },
   {
@@ -207,7 +207,10 @@ export const githubTopics: Topic[] = [
     concept:
       'Como os agentes de IA leem o repositório como arquivos locais de disco, eles precisam de orientações explícitas (no CLAUDE.md/AGENTS.md) de que determinadas pastas são submódulos Git e exigem commits independentes de dois níveis.',
     references: [
-      { label: 'Git Integrations (Claude Code Docs)', url: 'https://code.claude.com/docs/git' },
+      {
+        label: 'Visão Geral do Claude Code',
+        url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview',
+      },
     ],
     practiceSteps: [
       'Crie regras claras de controle de submódulos no arquivo `CLAUDE.md`.',
@@ -232,7 +235,10 @@ export const githubTopics: Topic[] = [
         label: 'Ignorando arquivos no Git',
         url: 'https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository#_ignoring',
       },
-      { label: 'Ferramenta git-filter-repo', url: 'https://github.com/newren/git-filter-repo' },
+      {
+        label: 'Removendo Dados Sensíveis de Repos',
+        url: 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository',
+      },
     ],
     practiceSteps: [
       'Crie um arquivo `.gitignore` e ignore pastas de pacotes de build e env vars.',
@@ -253,10 +259,7 @@ export const githubTopics: Topic[] = [
     concept:
       'Pull Requests (PRs) são a base do desenvolvimento colaborativo. Um PR bem descrito explica de forma objetiva o que mudou e o porquê da alteração. A escolha da estratégia de merge (merge commit, squash, rebase) determina a legibilidade final da linha do tempo do repositório.',
     references: [
-      {
-        label: 'Sobre Pull Requests (Docs)',
-        url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests',
-      },
+      { label: 'Sobre Pull Requests (Docs)', url: 'https://docs.github.com/en/pull-requests' },
     ],
     practiceSteps: [
       'Abra um Pull Request de teste no GitHub.',
@@ -381,9 +384,7 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Criação de monorepos vs multi-repos de código.',
     concept:
       'Estruturar os repositórios do projeto do cliente envolve escolher entre monorepos (uma única pasta gigante facilitando buscas, mas pesando com o tempo) ou multi-repos independentes (independência e limites claros, integrados por submódulos).',
-    references: [
-      { label: 'Repositórios no GitHub', url: 'https://docs.github.com/en/repositories' },
-    ],
+    references: [{ label: 'Repositórios no GitHub', url: 'https://docs.github.com' }],
     practiceSteps: [
       'Desenhe a arquitetura de repositórios ideal para um cliente de e-commerce.',
       'Estruture pastas fictícias para demonstrar a modularidade das APIs.',
@@ -477,7 +478,7 @@ export const githubTopics: Topic[] = [
     references: [
       {
         label: 'Gerenciamento de Acesso a Repositórios',
-        url: 'https://docs.github.com/en/organizations/managing-access-to-your-organizations-repositories/managing-member-access-to-your-organizations-repositories',
+        url: 'https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-member-access-to-your-organizations-repositories',
       },
     ],
     practiceSteps: [
