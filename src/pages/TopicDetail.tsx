@@ -9,18 +9,23 @@ import {
   BookOpen,
   Wrench,
   Briefcase,
+  ExternalLink,
   Loader2,
+  CheckSquare,
+  Square,
 } from 'lucide-react'
 import { useAppStore } from '@/hooks/use-app-store'
 import { trails } from '@/data/trails'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function TopicDetail() {
   const { trailId, topicId } = useParams()
-  const navigate = useNavigate()
   const { isTopicCompleted, toggleTopic } = useAppStore()
   const [toggling, setToggling] = useState(false)
   const [showXP, setShowXP] = useState(false)
+
+  // Interactive local steps checklist state
+  const [checkedSteps, setCheckedSteps] = useState<Record<number, boolean>>({})
 
   const trail = trails.find((t) => t.id === trailId)
   if (!trail) return <Navigate to="/" replace />
@@ -33,6 +38,11 @@ export default function TopicDetail() {
   const nextTopic = topicIndex < trail.topics.length - 1 ? trail.topics[topicIndex + 1] : null
   const completed = isTopicCompleted(topic.id)
 
+  // Reset checklist when topic changes
+  useEffect(() => {
+    setCheckedSteps({})
+  }, [topicId])
+
   const handleToggle = async () => {
     setToggling(true)
     try {
@@ -44,6 +54,10 @@ export default function TopicDetail() {
     } finally {
       setToggling(false)
     }
+  }
+
+  const toggleStep = (index: number) => {
+    setCheckedSteps((prev) => ({ ...prev, [index]: !prev[index] }))
   }
 
   return (
@@ -96,31 +110,84 @@ export default function TopicDetail() {
 
       {/* Content sections */}
       <div className="space-y-4">
-        {/* What to learn */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-3">
+        {/* Concept / Explain */}
+        <div className="glass-card p-6 space-y-3">
+          <div className="flex items-center gap-2">
             <BookOpen size={18} className="text-primary" />
-            <h2 className="font-semibold">O que aprender</h2>
+            <h2 className="font-semibold text-base">Conceito e Explicação</h2>
           </div>
-          <p className="text-muted-foreground leading-relaxed text-sm">{topic.description}</p>
+          <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
+            {topic.concept}
+          </p>
         </div>
 
-        {/* Practice */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Wrench size={18} className="text-amber-400" />
-            <h2 className="font-semibold">Exercício Prático</h2>
+        {/* References / Documentation Links */}
+        {topic.references && topic.references.length > 0 && (
+          <div className="glass-card p-6 space-y-3">
+            <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+              Leituras Recomendadas
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {topic.references.map((ref, idx) => (
+                <a
+                  key={idx}
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-xs font-semibold hover:border-primary/45 hover:bg-secondary transition-all"
+                >
+                  <span>{ref.label}</span>
+                  <ExternalLink size={12} className="text-muted-foreground" />
+                </a>
+              ))}
+            </div>
           </div>
-          <p className="text-muted-foreground leading-relaxed text-sm">{topic.practiceHint}</p>
+        )}
+
+        {/* Step-by-Step Practice */}
+        <div className="glass-card p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <Wrench size={18} className="text-amber-400" />
+            <h2 className="font-semibold text-base">Passo a Passo Prático</h2>
+          </div>
+          <div className="space-y-2.5">
+            {topic.practiceSteps.map((step, idx) => {
+              const isChecked = checkedSteps[idx] || false
+              return (
+                <div
+                  key={idx}
+                  onClick={() => toggleStep(idx)}
+                  className={`p-3.5 rounded-xl border transition-all flex items-start gap-3 cursor-pointer ${
+                    isChecked
+                      ? 'bg-primary/5 border-primary/20 text-muted-foreground'
+                      : 'bg-secondary/30 border-border/60 hover:border-border text-foreground'
+                  }`}
+                >
+                  <button className="mt-0.5 flex-shrink-0 text-primary">
+                    {isChecked ? (
+                      <CheckSquare size={18} />
+                    ) : (
+                      <Square size={18} className="text-muted-foreground" />
+                    )}
+                  </button>
+                  <p className={`text-sm leading-relaxed ${isChecked ? 'line-through' : ''}`}>
+                    {step}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         {/* Project Context */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="glass-card p-6 space-y-3">
+          <div className="flex items-center gap-2">
             <Briefcase size={18} className="text-blue-400" />
-            <h2 className="font-semibold">Na Prática do Projeto</h2>
+            <h2 className="font-semibold text-base">Na Prática do Projeto / Consultoria</h2>
           </div>
-          <p className="text-muted-foreground leading-relaxed text-sm">{topic.projectContext}</p>
+          <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-muted-foreground text-sm leading-relaxed">
+            {topic.projectContext}
+          </div>
         </div>
       </div>
 
