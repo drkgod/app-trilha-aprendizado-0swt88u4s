@@ -5,6 +5,7 @@ import { claudeAiTopics } from './trilha-anthropic'
 import { githubTopics } from './trilha-github'
 import { supabaseTopics } from './trilha-supabase'
 import { trilhaFundamentos } from './trilha-fundamentos'
+import { consultoriaTopics } from './trilha-consultoria'
 
 export { type Topic, type Trail, type Priority, type TopicType, type ReferenceLink } from './types'
 
@@ -74,6 +75,17 @@ export const trails: Trail[] = [
     description:
       'Domine tokens, embeddings, busca semântica e vetorização com Supabase e pgvector.',
     topics: trilhaFundamentos.topics,
+  },
+  {
+    id: 'consultoria',
+    name: 'Consultoria na Prática',
+    slug: 'consultoria',
+    icon: '🧭',
+    color: '#FBD65C',
+    colorGlow: '45 94% 67%',
+    description:
+      'Mapeamento de processos, Antigravity, setup padrão e a simulação end-to-end da consultoria.',
+    topics: consultoriaTopics,
   },
 ]
 

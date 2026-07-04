@@ -1,9 +1,11 @@
 export type Priority = 'alta' | 'media' | 'baixa'
-export type TopicType = 'conceito' | 'pratica' | 'quiz'
+export type TopicType = 'conceito' | 'pratica' | 'missao' | 'boss'
+export type RefKind = 'doc' | 'curso' | 'video' | 'artigo' | 'tool'
 
 export interface ReferenceLink {
   label: string
   url: string
+  kind: RefKind
 }
 
 export interface QuizQuestion {
@@ -20,11 +22,21 @@ export interface Topic {
   priority: Priority
   type: TopicType
   shortDescription: string
-  concept: string // detailed conceptual explanation
-  references: ReferenceLink[] // official documentation links
-  practiceSteps: string[] // step-by-step guide
-  projectContext: string // how to apply in projects/consulting
+  /** Parágrafo denso de abertura — o "por que isso importa" para um consultor sênior. */
+  concept: string
+  /** Blocos de aprofundamento técnico, cada string é um parágrafo/bullet denso. */
+  deepDive: string[]
+  /** Erros clássicos e pegadinhas de campo. */
+  pitfalls: string[]
+  /** Checklist de prática — passos verificáveis. */
+  practiceSteps: string[]
+  /** Como isso aparece num projeto real de consultoria (mapeamento de processos, criação de projetos com IA). */
+  projectContext: string
+  /** Curadoria de materiais — docs oficiais, cursos, artigos. */
+  references: ReferenceLink[]
   xp: number
+  /** Estimativa de minutos de estudo. */
+  estMinutes: number
 }
 
 export interface Trail {
@@ -34,6 +46,7 @@ export interface Trail {
   icon: string
   color: string
   colorGlow: string
+  tagline: string
   description: string
   topics: Topic[]
 }

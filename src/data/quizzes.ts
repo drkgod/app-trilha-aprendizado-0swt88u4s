@@ -204,6 +204,252 @@ export const quizzes: Record<string, QuizQuestion[]> = {
         'O Security Advisor varre o esquema do banco de dados e avisa sobre tabelas na base que não possuem RLS ativado, listando os riscos de vazamento.',
     },
   ],
+
+  // CONSULTORIA NA PRÁTICA
+  'co-1': [
+    {
+      question:
+        'No mapeamento de processos, por que a entrevista de descoberta deve ser feita com quem EXECUTA o processo, e não apenas com o gestor?',
+      options: [
+        'Porque o gestor não tem tempo para reuniões.',
+        'Porque quem executa conhece as exceções, gambiarras e gargalos reais que não aparecem no processo "oficial" descrito pelo gestor.',
+        'Porque o executor decide o orçamento do projeto.',
+        'Não faz diferença: o processo é o mesmo para todos.',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O processo real quase nunca é o processo documentado. As exceções e gambiarras — que só o executor conhece — são exatamente onde a automação quebra se não forem mapeadas.',
+    },
+    {
+      question:
+        'Ao classificar as etapas de um processo mapeado, qual é a tríade correta de classificação que evita a promessa irreal de "automação total"?',
+      options: [
+        'Rápida / média / lenta',
+        'Automatizável (agente executa) / assistida (humano com IA) / humana (permanece manual)',
+        'Barata / cara / gratuita',
+        'Frontend / backend / banco de dados',
+      ],
+      correctIndex: 1,
+      explanation:
+        'A tríade automatizável/assistida/humana calibra a expectativa do cliente: nem tudo vira agente, e etapas assistidas costumam gerar o maior ganho com o menor risco.',
+    },
+    {
+      question:
+        'Qual é o artefato final de um mapeamento de processos bem feito — aquele que transforma a conversa em contrato?',
+      options: [
+        'A gravação bruta das entrevistas',
+        'O mapa AS-IS + o TO-BE redesenhado + o backlog de oportunidades priorizado por impacto × esforço',
+        'Um protótipo funcional completo',
+        'A lista de softwares que o cliente usa',
+      ],
+      correctIndex: 1,
+      explanation:
+        'AS-IS mostra que você entendeu, TO-BE mostra a visão, e o backlog priorizado define o escopo dos próximos projetos — é o documento que vira proposta comercial.',
+    },
+  ],
+  'co-2': [
+    {
+      question:
+        'Um cliente tem uma dor de processo simples: consultar 20 documentos internos estáveis para responder dúvidas da equipe. Qual entregável resolve com o menor custo de arquitetura?',
+      options: [
+        'Um app completo com RAG, banco vetorial e API',
+        'Um Project no Claude.ai com os documentos no knowledge e instruções bem escritas',
+        'Fine-tuning de um modelo próprio',
+        'Um agente com 6 MCPs conectados',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Nem toda dor precisa de software: volume pequeno e estável de documentos cabe num Project. Superdimensionar arquitetura queima orçamento e credibilidade.',
+    },
+    {
+      question:
+        'O que é o "critério de pronto" numa proposta de projeto — e por que ele protege a margem da consultoria?',
+      options: [
+        'A data de entrega do projeto',
+        'Uma frase mensurável que o cliente assina ("pronto quando X acontece com Y de precisão") — sem ela, o escopo nunca fecha e o projeto nunca termina',
+        'O valor total do contrato',
+        'A lista de tecnologias usadas',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Sem critério de pronto explícito e mensurável, todo ajuste vira "faz parte do combinado". Com ele, o fim do escopo é objetivo — e mudança vira aditivo.',
+    },
+    {
+      question:
+        'Quando a estrutura de repo pai + submodules é a escolha certa na arquitetura de um projeto de cliente?',
+      options: [
+        'Sempre — é o padrão moderno',
+        'Quando módulos/libs são compartilhados entre projetos e cada projeto precisa travar a versão exata que usa',
+        'Quando o projeto tem mais de 10 arquivos',
+        'Nunca — monorepo resolve tudo',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Submodule é ponteiro pra commit específico: compartilhamento com versão travada por projeto. Projeto isolado não precisa dessa burocracia — repo simples basta.',
+    },
+  ],
+  'co-3': [
+    {
+      question:
+        'Qual é o diferencial central do Google Antigravity em relação a uma IDE com IA tradicional?',
+      options: [
+        'Ser pago e exclusivo para empresas',
+        'A visão Manager: um painel para orquestrar múltiplos agentes em paralelo, que produzem Artifacts (planos, screenshots, walkthroughs) para revisão',
+        'Funcionar apenas offline',
+        'Não usar modelos de linguagem',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O Manager é a assinatura do Antigravity: supervisão visual de vários agentes trabalhando ao mesmo tempo, com verificação via Artifacts fazendo parte do fluxo.',
+    },
+    {
+      question:
+        'Cliente pergunta "qual é a melhor ferramenta de agente de código?". Qual é a resposta de consultoria agnóstica?',
+      options: [
+        'Sempre Claude Code, sem exceção',
+        'Depende do perfil do time: terminal e automação profunda → Claude Code; delegação em nuvem e 4 superfícies → Codex; orquestração visual multi-agente → Antigravity; transição suave do VS Code → Cursor/Windsurf',
+        'A mais barata',
+        'A que tiver mais hype no momento',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Consultoria agnóstica não vende ferramenta, vende adequação: a recomendação nasce do perfil do time, do fluxo existente e do orçamento — com matriz comparativa própria.',
+    },
+  ],
+  'co-4': [
+    {
+      question: 'Por que o .gitignore precisa existir ANTES do primeiro commit no setup padrão?',
+      options: [
+        'Por estética do repositório',
+        'Porque arquivo já commitado (como .env com credenciais) não sai do histórico só com .gitignore — prevenir é a única proteção barata',
+        'Porque o GitHub exige',
+        'Para o repo ficar menor',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O .gitignore não age retroativamente: segredo commitado fica no histórico e exige revogação de chave + limpeza. No dia 1, é prevenção de graça.',
+    },
+    {
+      question: 'Qual é o teste de qualidade definitivo do template de projeto da consultoria?',
+      options: [
+        'Passar no lint',
+        'Um colega clonar e conseguir rodar uma tarefa com agente SEM fazer nenhuma pergunta — cada dúvida dele é um buraco no template',
+        'Ter mais de 50 arquivos',
+        'Usar todas as ferramentas da stack ao mesmo tempo',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Template bom elimina perguntas. O teste do clone silencioso simula exatamente o que acontece quando o time do cliente recebe o projeto.',
+    },
+    {
+      question:
+        'No setup padrão, qual é a configuração inicial correta do MCP do Supabase no repo do cliente?',
+      options: [
+        'Escopo local com acesso total a produção',
+        'Escopo project (.mcp.json versionado) em modo read-only — escrita liberada conscientemente, por tarefa, em ambiente de dev',
+        'Sem MCP: agente não pode ver banco',
+        'service_role no frontend para simplificar',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Escopo project faz o time herdar a configuração no clone; read-only elimina o risco de destruição acidental até que a escrita seja uma decisão explícita.',
+    },
+  ],
+  'co-5': [
+    {
+      question:
+        'Cliente liga em pânico: "commitei uma API key ontem no repo". Qual é a estrutura correta da sua resposta de bate-pronto?',
+      options: [
+        '"Apaga o arquivo e commita de novo que resolve."',
+        'Diagnóstico → causa → ação: a chave está comprometida onde o histórico existir; apagar do código não remove do histórico nem dos clones; REVOGAR a chave no provedor agora e só depois limpar histórico.',
+        '"Torna o repo privado que ninguém vê."',
+        '"Troca de repositório e segue o jogo."',
+      ],
+      correctIndex: 1,
+      explanation:
+        'A estrutura diagnóstico → causa → ação é o padrão das 10 respostas crônicas. Neste caso, a ação real é a revogação imediata — o resto é complemento.',
+    },
+    {
+      question:
+        '"O chat do Claude ficou lento e burro" — qual é o diagnóstico e a ação de bate-pronto?',
+      options: [
+        'Servidor da Anthropic caiu; aguardar',
+        'Conversa longa demais degradando qualidade e velocidade; abrir chat novo (o Project preserva o conhecimento)',
+        'O plano expirou; renovar assinatura',
+        'Vírus no navegador; formatar a máquina',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Conversa quilométrica é a causa nº 1 desse sintoma. Chat novo zera o peso do histórico sem perder o knowledge do Project.',
+    },
+    {
+      question:
+        'Por que vale mais decorar a ESTRUTURA das 10 respostas (diagnóstico → causa → ação) do que decorar números e detalhes?',
+      options: [
+        'Porque números impressionam menos',
+        'Porque detalhes e limites mudam toda hora — a estrutura permanece, e a resposta profissional aponta a fonte oficial para o número atual',
+        'Porque clientes não entendem números',
+        'Não vale: o certo é decorar tudo',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Preços, limites e versões mudam mensalmente. Quem domina a estrutura responde qualquer variação da pergunta; quem decora número velho responde errado com confiança.',
+    },
+  ],
+  'co-6': [
+    {
+      question: 'Qual é a causa número 1 de churn em consultoria de IA — e o antídoto?',
+      options: [
+        'Bugs no código; mais testes',
+        'Falta de adoção (o time volta ao jeito antigo); campeão interno + treinamento por perfil + métricas de adoção combinadas em contrato',
+        'Preço alto; dar desconto',
+        'Falta de features; adicionar mais telas',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Projeto que funciona mas não é usado é projeto cancelado. Adoção é gerenciada: dono interno, treino específico por perfil e métrica acompanhada em ritual quinzenal.',
+    },
+    {
+      question: 'Por que treinamento "genérico de IA" não funciona na adoção do time do cliente?',
+      options: [
+        'Porque IA é impossível de ensinar',
+        'Porque cada perfil precisa de um recorte diferente: gestor aprende a pedir e avaliar; operador aprende o fluxo diário dele; dev aprende a manter o setup',
+        'Porque treinamento deve ser sempre pago à parte',
+        'Porque vídeo não ensina ninguém',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Treinamento gruda quando fala da tarefa da pessoa. O gestor não precisa de CLAUDE.md e o operador não precisa de árvore de decisão de planos — cada um recebe o seu recorte.',
+    },
+  ],
+  'co-7': [
+    {
+      question:
+        'No desafio final, por que a feature via Claude Code e a feature via Codex devem entrar por PRs revisados pelo colega?',
+      options: [
+        'Para gastar mais tempo',
+        'Porque revisão cruzada de PR (inclusive de agente) é o fluxo real de projeto profissional — e treina o olhar para os red flags de código gerado por IA',
+        'Porque agentes não sabem commitar',
+        'Para o GitHub liberar o merge automático',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O desafio simula a operação real: branch protection + PR + revisão humana é a governança que entregamos em cliente — praticá-la internamente é o ensaio geral.',
+    },
+    {
+      question:
+        'Qual é o destino correto do material produzido no desafio final (repo, proposta, vídeo)?',
+      options: [
+        'Arquivar e esquecer',
+        'Virar portfólio vivo da consultoria: material de reunião comercial para fechar clientes novos',
+        'Deletar por segurança',
+        'Enviar pro cliente fictício',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O desafio não é exercício de aluno: cada entregável vira ativo comercial. É a filosofia de toda a trilha — estudar produzindo o que a empresa usa.',
+    },
+  ],
 }
 
 // Fallback dynamic quiz generator to guarantee EVERY topic has a 5-question quiz

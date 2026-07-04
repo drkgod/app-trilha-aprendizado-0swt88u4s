@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAppStore } from '@/hooks/use-app-store'
-import { trails } from '@/data/trails'
+import { trails, totalTopics } from '@/data/trails'
 import { ChevronRight, BookOpen } from 'lucide-react'
 
 export default function TrailsList() {
@@ -13,7 +13,8 @@ export default function TrailsList() {
           <BookOpen className="text-primary" /> Todas as Trilhas
         </h1>
         <p className="text-muted-foreground mt-1">
-          5 trilhas · 114 tópicos · Da instalação ao domínio completo
+          {trails.length} trilhas · {totalTopics} tópicos · Do mapeamento de processos ao domínio
+          completo da stack
         </p>
       </div>
 

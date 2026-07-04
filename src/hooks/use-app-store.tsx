@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react'
-import { trails, type Trail, type Topic } from '@/data/trails'
+import { trails, totalTopics, type Trail, type Topic } from '@/data/trails'
 import { useAuth } from '@/hooks/use-auth'
 import {
   getUserProgress,
@@ -82,9 +82,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'all-topics',
     title: 'Lendário',
-    description: 'Complete todos os 114 tópicos',
+    description: 'Complete todos os tópicos de todas as trilhas',
     icon: '🏆',
-    condition: (s) => s.completedTopicIds.length >= 114,
+    condition: (s) => s.completedTopicIds.length >= totalTopics,
   },
   {
     id: 'streak-3',
