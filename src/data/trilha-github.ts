@@ -14,8 +14,12 @@ export const githubTopics: Topic[] = [
       'O Git exige configuração inicial de nome de usuário e e-mail antes do primeiro commit. A autenticação com o GitHub deve preferir o uso de chaves criptográficas SSH sobre chaves HTTPS com tokens. Gerar a chave SSH e registrá-la no painel do GitHub assegura commits validados e elimina a digitação repetida de credenciais nas chamadas de comandos bash locais.',
     references: [
       {
-        label: 'Connecting to GitHub with SSH',
+        label: 'Autenticação SSH no GitHub',
         url: 'https://docs.github.com/en/authentication/connecting-to-github-with-ssh',
+      },
+      {
+        label: 'Gerando Chaves SSH (Docs)',
+        url: 'https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent',
       },
     ],
     practiceSteps: [
@@ -35,9 +39,10 @@ export const githubTopics: Topic[] = [
     type: 'conceito',
     shortDescription: 'Ciclo básico de commits, push, pull e fetch.',
     concept:
-      'O ciclo operacional do Git envolve: `git status` (auditar modificações locais), `git add` (adicionar arquivos ao index), `git commit` (criar um ponto de restauração local) e `git push` (enviar as alterações para o repositório remoto). Compreender a diferença crítica entre `git fetch` (baixa atualizações remotas sem alterar o diretório local) e `git pull` (baixa e faz merge automático das atualizações no branch local) é obrigatório.',
+      'O ciclo operacional do Git envolve: `git status` (auditar modificações locais), `git add` (adicionar arquivos ao index), `git commit` (criar um ponto de restaurar local) e `git push` (enviar as alterações para o repositório remoto). Compreender a diferença crítica entre `git fetch` (baixa atualizações remotas sem alterar o diretório local) e `git pull` (baixa e faz merge automático das atualizações no branch local) é obrigatório.',
     references: [
-      { label: 'Git Basics Tutorial', url: 'https://git-scm.com/book/en/v2/Git-Basics' },
+      { label: 'Manual do Git Commit', url: 'https://git-scm.com/docs/git-commit' },
+      { label: 'Manual do Git Push', url: 'https://git-scm.com/docs/git-push' },
     ],
     practiceSteps: [
       'Crie um repositório Git local e faça o primeiro commit.',
@@ -59,8 +64,8 @@ export const githubTopics: Topic[] = [
       'Branches permitem isolar alterações de código do fluxo de produção principal (main). O comando `git switch -c feature/nome` cria e move a navegação para a nova branch local. Branches remotos são criados com o push indicando a origem remota (upstream) via `git push -u origin feature/nome`.',
     references: [
       {
-        label: 'Git Branching Guide',
-        url: 'https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell',
+        label: 'Ramificações e Merges no Git',
+        url: 'https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging',
       },
     ],
     practiceSteps: [
@@ -83,8 +88,8 @@ export const githubTopics: Topic[] = [
       'Um conflito ocorre quando branches distintos alteram a mesma linha de um arquivo de formas diferentes. O Git suspende o merge e adiciona marcadores de conflito (`<<<<<<<`, `=======`, `>>>>>>>`) no código-fonte. O desenvolvedor deve resolver a colisão editando o arquivo manualmente e apagando os marcadores, ou abortando o processo com `git merge --abort`.',
     references: [
       {
-        label: 'Resolving Git Conflicts',
-        url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts',
+        label: 'Resolvendo Conflitos via Linha de Comando',
+        url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line',
       },
     ],
     practiceSteps: [
@@ -107,7 +112,7 @@ export const githubTopics: Topic[] = [
       'O Git oferece múltiplas ferramentas para reverter ações: `git restore` (descarta alterações locais não commitadas), `git reset` (move o ponteiro de commits local, mantendo alterações no modo soft/mixed ou destruindo tudo no modo hard) e `git revert` (cria um commit de reversão seguro para branches compartilhados, mantendo o histórico intacto).',
     references: [
       {
-        label: 'Undoing Changes in Git',
+        label: 'Desfazendo Alterações (Livro Git)',
         url: 'https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things',
       },
     ],
@@ -131,7 +136,7 @@ export const githubTopics: Topic[] = [
       'Um submódulo Git funciona como um ponteiro para um commit específico de outro repositório independente de código dentro de uma pasta do seu projeto principal. O arquivo `.gitmodules` registra a associação de caminhos e URLs dos submódulos clonados.',
     references: [
       {
-        label: 'Git Submodules Documentation',
+        label: 'Git Submodules (Livro Git)',
         url: 'https://git-scm.com/book/en/v2/Git-Tools-Submodules',
       },
     ],
@@ -155,8 +160,8 @@ export const githubTopics: Topic[] = [
       'Modificar arquivos dentro de um submódulo exige commits em duas etapas: primeiro no repositório do submódulo (e envio de push para o servidor remoto do submódulo), e depois no repositório pai (para atualizar o ponteiro do commit que a pasta referencia).',
     references: [
       {
-        label: 'Working on Projects with Submodules',
-        url: 'https://git-scm.com/book/en/v2/Git-Tools-Submodules',
+        label: 'Operando Submódulos (Docs)',
+        url: 'https://git-scm.com/book/en/v2/Git-Tools-Submodules#_working_on_a_project_with_submodules',
       },
     ],
     practiceSteps: [
@@ -179,8 +184,8 @@ export const githubTopics: Topic[] = [
       'Problemas comuns de submódulos incluem a pasta vazia após o clone inicial (resolvido executando `git submodule update --init --recursive`) e commits órfãos gerados por edições no modo Detached HEAD dentro da pasta do submódulo.',
     references: [
       {
-        label: 'Submodules Pitfalls and Solutions',
-        url: 'https://git-scm.com/book/en/v2/Git-Tools-Submodules',
+        label: 'Pegadinhas de Submódulos (Docs)',
+        url: 'https://git-scm.com/book/en/v2/Git-Tools-Submodules#_submodule_pitfalls',
       },
     ],
     practiceSteps: [
@@ -201,7 +206,9 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Orientando agentes em repositórios com submódulos.',
     concept:
       'Como os agentes de IA leem o repositório como arquivos locais de disco, eles precisam de orientações explícitas (no CLAUDE.md/AGENTS.md) de que determinadas pastas são submódulos Git e exigem commits independentes de dois níveis.',
-    references: [{ label: 'Claude Code Git Integration', url: 'https://code.claude.com/docs/git' }],
+    references: [
+      { label: 'Git Integrations (Claude Code Docs)', url: 'https://code.claude.com/docs/git' },
+    ],
     practiceSteps: [
       'Crie regras claras de controle de submódulos no arquivo `CLAUDE.md`.',
       'Instrua o agente a realizar uma alteração que atinge o submódulo e o repositório pai.',
@@ -222,12 +229,13 @@ export const githubTopics: Topic[] = [
       'O arquivo `.gitignore` deve ser configurado antes do primeiro commit do projeto. Arquivos como `.env` e chaves privadas nunca devem ser versionados. Se uma chave de API for commitada por engano, sua revogação no Console do provedor deve ser imediata, pois deletá-la do arquivo não a remove da história dos commits.',
     references: [
       {
-        label: 'Ignoring Files in Git',
+        label: 'Ignorando arquivos no Git',
         url: 'https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository#_ignoring',
       },
+      { label: 'Ferramenta git-filter-repo', url: 'https://github.com/newren/git-filter-repo' },
     ],
     practiceSteps: [
-      'Crie um arquivo `.gitignore` e ignore pastas de pacotes de build.',
+      'Crie um arquivo `.gitignore` e ignore pastas de pacotes de build e env vars.',
       'Commit uma credencial falsa, remova-a com `git rm --cached` e verifique se ela ainda consta no histórico do git log.',
       'Documente os passos de limpeza de histórico com git-filter-repo.',
     ],
@@ -246,7 +254,7 @@ export const githubTopics: Topic[] = [
       'Pull Requests (PRs) são a base do desenvolvimento colaborativo. Um PR bem descrito explica de forma objetiva o que mudou e o porquê da alteração. A escolha da estratégia de merge (merge commit, squash, rebase) determina a legibilidade final da linha do tempo do repositório.',
     references: [
       {
-        label: 'About Pull Requests',
+        label: 'Sobre Pull Requests (Docs)',
         url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests',
       },
     ],
@@ -268,9 +276,11 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Auditando a qualidade e segurança do código de IA.',
     concept:
       'Revisar código escrito por agentes exige rigor extra. Sinais comuns de alerta incluem a remoção silenciosa de testes de validação do repositório para contornar falhas de build, uso de dependências de pacotes não autorizados e hardcoding de chaves de acesso.',
-    references: [{ label: 'Reviewing Code Written by AI', url: 'https://support.github.com' }],
+    references: [
+      { label: 'Segurança de Código (GitHub)', url: 'https://docs.github.com/en/code-security' },
+    ],
     practiceSteps: [
-      'Crie um check list de revisão estruturada.',
+      'Crie um check list de revisão estruturada no repo.',
       'Peça a um agente para gerar uma refatoração em um componente.',
       'Audite as alterações buscando por redundâncias de lógica e chaves hardcoded.',
     ],
@@ -287,9 +297,7 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Criação de diretórios paralelos para desenvolvimento.',
     concept:
       'Git Worktrees fornecem a capacidade de trabalhar em múltiplas branches de forma independente em pastas locais separadas na máquina de desenvolvimento local.',
-    references: [
-      { label: 'Git Worktree Documentation', url: 'https://git-scm.com/docs/git-worktree' },
-    ],
+    references: [{ label: 'Git Worktree Manual', url: 'https://git-scm.com/docs/git-worktree' }],
     practiceSteps: [
       'Rode `git worktree add ../pasta-tarefa branch-tarefa` no terminal.',
       'Verifique que as edições na pasta paralela não alteram a pasta raiz.',
@@ -308,7 +316,7 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Automatizando interações do GitHub via CLI.',
     concept:
       'A ferramenta de linha de comando oficial do GitHub (gh CLI) permite criar issues, realizar login de autenticação rápida, abrir e aprovar Pull Requests de forma programática pelo terminal.',
-    references: [{ label: 'GitHub CLI Reference', url: 'https://cli.github.com' }],
+    references: [{ label: 'gh CLI Manual de Comandos', url: 'https://cli.github.com/manual/gh' }],
     practiceSteps: [
       'Autentique seu usuário executando `gh auth login`.',
       'Crie uma issue com `gh issue create`.',
@@ -328,10 +336,8 @@ export const githubTopics: Topic[] = [
     concept:
       'Investigar a linha do tempo do código é necessário ao debugar bugs herdados. O comando `git blame` exibe quem alterou cada linha de um arquivo; o `git bisect` realiza busca binária no histórico de commits para encontrar o commit exato que introduziu o erro.',
     references: [
-      {
-        label: 'Git Debugging Tools',
-        url: 'https://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git',
-      },
+      { label: 'Git Bisect Command', url: 'https://git-scm.com/docs/git-bisect' },
+      { label: 'Git Blame Command', url: 'https://git-scm.com/docs/git-blame' },
     ],
     practiceSteps: [
       'Inspecione quem editou uma linha do arquivo usando `git blame`.',
@@ -352,7 +358,10 @@ export const githubTopics: Topic[] = [
     concept:
       'O comando `git rebase` reaplica commits de uma branch no topo de outra branch, mantendo o histórico de commits linear e limpo. Conhecer a regra de ouro de nunca rebasear branches públicas é necessário.',
     references: [
-      { label: 'Git Rebase Guide', url: 'https://git-scm.com/book/en/v2/Git-Branching-Rebasing' },
+      {
+        label: 'Rebasing no Git (Docs)',
+        url: 'https://git-scm.com/book/en/v2/Git-Branching-Rebasing',
+      },
     ],
     practiceSteps: [
       'Crie uma branch secundária e adicione dois commits de modificações.',
@@ -372,7 +381,9 @@ export const githubTopics: Topic[] = [
     shortDescription: 'Criação de monorepos vs multi-repos de código.',
     concept:
       'Estruturar os repositórios do projeto do cliente envolve escolher entre monorepos (uma única pasta gigante facilitando buscas, mas pesando com o tempo) ou multi-repos independentes (independência e limites claros, integrados por submódulos).',
-    references: [{ label: 'Monorepos vs Multi-Repos', url: 'https://github.com' }],
+    references: [
+      { label: 'Repositórios no GitHub', url: 'https://docs.github.com/en/repositories' },
+    ],
     practiceSteps: [
       'Desenhe a arquitetura de repositórios ideal para um cliente de e-commerce.',
       'Estruture pastas fictícias para demonstrar a modularidade das APIs.',
@@ -392,7 +403,10 @@ export const githubTopics: Topic[] = [
     concept:
       'Criar tags de versionamento (`git tag -a v1.0.0`) e cadastrar releases na interface do GitHub são as formas corretas de demarcar as versões do sistema que foram homologadas e entregues.',
     references: [
-      { label: 'Git Tagging', url: 'https://git-scm.com/book/en/v2/Git-Basics-Tagging' },
+      {
+        label: 'Gerenciando Releases (GitHub)',
+        url: 'https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository',
+      },
     ],
     practiceSteps: [
       'Crie uma tag semântica localmente executando `git tag -a v1.0.0 -m "Release v1.0.0"`.',
@@ -414,7 +428,7 @@ export const githubTopics: Topic[] = [
       'As regras de branch protection no GitHub garantem a integridade das branches de produção, proibindo merges diretos e exigindo aprovações de Pull Requests e builds de validação de testes contínuos sem erros.',
     references: [
       {
-        label: 'About Protected Branches',
+        label: 'Ramos Protegidos (GitHub Docs)',
         url: 'https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches',
       },
     ],
@@ -438,8 +452,8 @@ export const githubTopics: Topic[] = [
       'O GitHub Actions automatiza fluxos de validação de código executando builds, formatações de lints e rodando testes a cada push ou abertura de Pull Request na branch principal.',
     references: [
       {
-        label: 'Introduction to GitHub Actions',
-        url: 'https://docs.github.com/en/actions/about-github-actions/understanding-github-actions',
+        label: 'GitHub Actions Quickstart',
+        url: 'https://docs.github.com/en/actions/writing-workflows/quickstart',
       },
     ],
     practiceSteps: [
@@ -462,7 +476,7 @@ export const githubTopics: Topic[] = [
       'Definir regras de acesso e convidar colaboradores externos com permissões específicas de leitura ou escrita protege a segurança das bases de código e integridade da infraestrutura corporativa.',
     references: [
       {
-        label: 'Managing Access to Repositories',
+        label: 'Gerenciamento de Acesso a Repositórios',
         url: 'https://docs.github.com/en/organizations/managing-access-to-your-organizations-repositories/managing-member-access-to-your-organizations-repositories',
       },
     ],
@@ -485,7 +499,10 @@ export const githubTopics: Topic[] = [
     concept:
       'O `git-filter-repo` ou `BFG Repo-Cleaner` são utilitários desenvolvidos para reescrever de forma definitiva o histórico dos branches do Git, expurgando arquivos de segredos vazados em commits antigos.',
     references: [
-      { label: 'git-filter-repo Documentation', url: 'https://github.com/newren/git-filter-repo' },
+      {
+        label: 'Removendo Dados Sensíveis de Repos',
+        url: 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository',
+      },
     ],
     practiceSteps: [
       'Instale o `git-filter-repo` na sua máquina local.',

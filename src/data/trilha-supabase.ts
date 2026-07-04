@@ -14,8 +14,8 @@ export const supabaseTopics: Topic[] = [
       'O Supabase é um backend-as-a-service que encapsula o banco relacional Postgres, serviços de autenticação, armazenamento de arquivos, realtime e edge functions. A criação inicial do projeto exige escolher a região correta (mais próxima dos usuários do cliente) e gerar uma senha forte para o banco de dados Postgres.',
     references: [
       {
-        label: 'Supabase Getting Started',
-        url: 'https://supabase.com/docs/guides/getting-started',
+        label: 'Supabase Quickstart React',
+        url: 'https://supabase.com/docs/guides/getting-started/quickstarts/react',
       },
     ],
     practiceSteps: [
@@ -38,7 +38,7 @@ export const supabaseTopics: Topic[] = [
       'O ecossistema do Supabase entrega de forma integrada um banco de dados relacional Postgres completo com suporte a extensões (como pgvector), autenticação de usuários, buckets de armazenamento de mídia, suporte a conexões WebSocket em tempo real e orquestrador de Edge Functions.',
     references: [
       {
-        label: 'Supabase Architecture Overview',
+        label: 'Supabase Arquitetura (Docs)',
         url: 'https://supabase.com/docs/guides/architecture',
       },
     ],
@@ -62,12 +62,12 @@ export const supabaseTopics: Topic[] = [
       'Modelar o banco relacional exige desenhar tabelas estruturadas com chaves primárias (PK), e definir restrições e relacionamentos através de chaves estrangeiras (FK) para manter a integridade dos dados.',
     references: [
       {
-        label: 'Supabase Database Guides',
-        url: 'https://supabase.com/docs/guides/database/tables-and-rows',
+        label: 'Tabelas e Colunas no Supabase',
+        url: 'https://supabase.com/docs/guides/database/tables',
       },
     ],
     practiceSteps: [
-      'Crie uma tabela de usuários e uma de compras vinculando-as por chaves estrangeiras.',
+      'Crie uma tabela de usuários e uma de compras de teste vinculando-as por chaves estrangeiras.',
       'Defina tipos de dados corretos e restrições de integridade.',
       'Teste a inserção de dados.',
     ],
@@ -85,10 +85,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O Supabase fornece chaves de acesso distintas: a chave pública (`anon`) é feita para rodar no frontend e suas ações são filtradas por regras de RLS. A chave de serviço (`service_role`) ignora qualquer política de segurança do RLS — ela é a chave-mestra e deve viver protegida no backend de forma restrita.',
     references: [
-      {
-        label: 'API Keys Security and Scopes',
-        url: 'https://supabase.com/docs/guides/api#api-keys',
-      },
+      { label: 'Autenticação e Chaves API', url: 'https://supabase.com/docs/guides/api#api-keys' },
     ],
     practiceSteps: [
       'Localize as chaves `anon` e `service_role` nas configurações da API do projeto.',
@@ -110,7 +107,7 @@ export const supabaseTopics: Topic[] = [
       'A integração com o frontend é feita chamando o SDK do Supabase. A inicialização do client exige a URL do projeto e a chave pública `anon`, que devem ser carregadas a partir de variáveis de ambiente seguras.',
     references: [
       {
-        label: 'Supabase Client SDK for JavaScript',
+        label: 'Inicializando o Client JS (Docs)',
         url: 'https://supabase.com/docs/reference/javascript/initializing',
       },
     ],
@@ -133,10 +130,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O MCP oficial do Supabase conecta o Claude Code ou o Codex diretamente ao banco de dados do projeto, permitindo que o agente liste tabelas e execute queries SQL em modo de desenvolvimento.',
     references: [
-      {
-        label: 'Database MCP Server Guide',
-        url: 'https://supabase.com/docs/guides/getting-started/mcp',
-      },
+      { label: 'Supabase MCP (Docs)', url: 'https://supabase.com/docs/guides/getting-started/mcp' },
     ],
     practiceSteps: [
       'Conecte o servidor MCP ao seu agente de IA.',
@@ -158,7 +152,7 @@ export const supabaseTopics: Topic[] = [
       'O Row Level Security (RLS) é a funcionalidade de segurança de dados nativa do Postgres que avalia se a requisição de API atende a critérios específicos antes de liberar leitura ou escrita de linhas. Sem RLS ativo, qualquer usuário externo com a chave anon pode alterar a base de dados.',
     references: [
       {
-        label: 'Supabase Row Level Security Guides',
+        label: 'Row Level Security (RLS) Docs',
         url: 'https://supabase.com/docs/guides/database/postgres/row-level-security',
       },
     ],
@@ -182,8 +176,12 @@ export const supabaseTopics: Topic[] = [
       'Definir as regras do RLS envolve criar políticas de acesso comparando identidades como `auth.uid()` com colunas de posse da linha, isolando o acesso aos dados para que cada usuário possa ver e editar apenas as suas próprias informações.',
     references: [
       {
-        label: 'Writing Postgres Policies',
-        url: 'https://supabase.com/docs/guides/database/postgres/row-level-security#writing-policies',
+        label: 'Habilitando RLS e Criando Regras',
+        url: 'https://supabase.com/docs/guides/database/postgres/row-level-security#enabling-row-level-security',
+      },
+      {
+        label: 'Escrevendo Regras (Policies)',
+        url: 'https://supabase.com/docs/guides/database/postgres/row-level-security#creating-policies',
       },
     ],
     practiceSteps: [
@@ -206,8 +204,8 @@ export const supabaseTopics: Topic[] = [
       'O Supabase gerencia fluxos completos de login por e-mail e senha, disparando confirmações, e-mails de recuperação e renovações de sessões de forma integrada. Os templates destes e-mails de sistema podem ser customizados.',
     references: [
       {
-        label: 'Email Password Authentication',
-        url: 'https://supabase.com/docs/guides/auth/auth-email',
+        label: 'Autenticação por Email e Senha',
+        url: 'https://supabase.com/docs/guides/auth/passwords',
       },
     ],
     practiceSteps: [
@@ -230,7 +228,7 @@ export const supabaseTopics: Topic[] = [
       'Habilitar login social (como Google ou GitHub) envolve registrar a aplicação nos respectivos consoles de desenvolvedores e cadastrar as redirect URLs de forma precisa nas chaves de faturamento do provedor.',
     references: [
       {
-        label: 'Social Login / OAuth Setup',
+        label: 'Login Social com OAuth (Docs)',
         url: 'https://supabase.com/docs/guides/auth/social-login',
       },
     ],
@@ -254,7 +252,7 @@ export const supabaseTopics: Topic[] = [
       'Após o login, o Supabase emite tokens JWT contendo a identidade do usuário. Esses tokens possuem tempo de expiração curto para segurança e são renovados automaticamente pelo client via tokens de refresh.',
     references: [
       {
-        label: 'Understanding Session Tokens & JWTs',
+        label: 'Gerenciando Sessões no Supabase',
         url: 'https://supabase.com/docs/guides/auth/sessions',
       },
     ],
@@ -278,8 +276,8 @@ export const supabaseTopics: Topic[] = [
       'Alterar a estrutura do banco Postgres diretamente em produção causa inconsistências. Utilizar a CLI do Supabase para criar e versionar migrations locais e aplicar db push assegura repositórios reproduzíveis.',
     references: [
       {
-        label: 'Database Migrations and CLI',
-        url: 'https://supabase.com/docs/guides/cli/local-development',
+        label: 'Migrations na CLI (Docs)',
+        url: 'https://supabase.com/docs/guides/cli/local-development#database-migrations',
       },
     ],
     practiceSteps: [
@@ -302,7 +300,7 @@ export const supabaseTopics: Topic[] = [
       'O Supabase suporta a criação de branches de banco de dados vinculados a repositórios Git, permitindo testar novos esquemas e tabelas de forma isolada antes do merge na branch de produção.',
     references: [
       {
-        label: 'Database Branching Guide',
+        label: 'Ramificações do Banco (Docs)',
         url: 'https://supabase.com/docs/guides/platform/branching',
       },
     ],
@@ -325,7 +323,10 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O serviço de Storage permite hospedar arquivos de mídia (imagens, PDFs, zips) em buckets dedicados. Os buckets podem ser configurados como públicos (acesso livre por URL direta) ou privados (acesso concedido via policies de RLS específicas).',
     references: [
-      { label: 'Supabase Storage Reference', url: 'https://supabase.com/docs/guides/storage' },
+      {
+        label: 'Armazenamento de Arquivos (Storage)',
+        url: 'https://supabase.com/docs/guides/storage',
+      },
     ],
     practiceSteps: [
       'Crie um bucket público e um privado no Storage.',
@@ -347,7 +348,7 @@ export const supabaseTopics: Topic[] = [
       'Dominar a sintaxe básica de SQL é necessário ao auditar o banco Postgres, permitindo criar joins eficientes, views consolidadas de dados e depurar queries ineficientes sem depender exclusivamente dos prompts de IA.',
     references: [
       {
-        label: 'SQL Basics in Supabase',
+        label: 'Comandos Básicos de SQL no Postgres',
         url: 'https://supabase.com/docs/guides/database/postgres/sql-basics',
       },
     ],
@@ -371,7 +372,7 @@ export const supabaseTopics: Topic[] = [
       'A aba de Logs e advisors do painel do Supabase compila chamadas de APIs falhas, Advisors de segurança de chaves, Advisor de performance Postgres e logs de Auth, servindo como o ponto de partida ideal para solucionar erros de permissões.',
     references: [
       {
-        label: 'Debugging and Database Logs',
+        label: 'Auditoria de Logs e Métricas',
         url: 'https://supabase.com/docs/guides/platform/logging',
       },
     ],
@@ -394,12 +395,15 @@ export const supabaseTopics: Topic[] = [
     concept:
       'As Edge Functions do Supabase rodam scripts em Deno de forma serverless, ideais para lógicas de backend que não devem rodar no front-end, como processamento de pagamentos com Stripe ou webhooks externos.',
     references: [
-      { label: 'Edge Functions Documentation', url: 'https://supabase.com/docs/guides/functions' },
+      {
+        label: 'Desenvolvimento Serverless (Edge Functions)',
+        url: 'https://supabase.com/docs/guides/functions',
+      },
     ],
     practiceSteps: [
       'Instale a CLI e crie uma Edge Function simples em TypeScript.',
       'Faça o deploy da function no projeto do Supabase.',
-      'Chame a function a partir de um endpoint do app.',
+      'Chame the function a partir de um endpoint do app.',
     ],
     projectContext:
       'Edges Functions resolvem a necessidade de backend próprio em MVPs, reduzindo custos de infra e acelerando entregas.',
@@ -415,7 +419,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'O serviço de Realtime possibilita escutar atualizações de tabelas específicas no banco e disparar atualizações instantâneas no front-end via canais de WebSocket, ideal para chats ou painéis ao vivo.',
     references: [
-      { label: 'Supabase Realtime Quickstart', url: 'https://supabase.com/docs/guides/realtime' },
+      { label: 'Realtime WebSocket (Docs)', url: 'https://supabase.com/docs/guides/realtime' },
     ],
     practiceSteps: [
       'Ative o recurso de Realtime em uma tabela do banco.',
@@ -435,7 +439,7 @@ export const supabaseTopics: Topic[] = [
     shortDescription: 'Gargalos e cotas do plano gratuito.',
     concept:
       'O plano gratuito possui restrições como pausa do banco após uma semana de inatividade, limites baixos de armazenamento (500MB) e de tráfego de dados (2GB/mês).',
-    references: [{ label: 'Free Tier Limits and Overages', url: 'https://supabase.com/pricing' }],
+    references: [{ label: 'Limites de Cotas e Faturamento', url: 'https://supabase.com/pricing' }],
     practiceSteps: [
       'Documente todos os limites do plano gratuito.',
       'Prepare um guia indicando os gatilhos e alertas de upgrade.',
@@ -455,10 +459,7 @@ export const supabaseTopics: Topic[] = [
     concept:
       'Manter rotinas de backups ativas e dominar as ferramentas de restauração (Point-in-Time Recovery) garante a integridade dos dados e continuidade operacional do cliente frente a deleções acidentais.',
     references: [
-      {
-        label: 'Database Backups and Point-in-Time Recovery',
-        url: 'https://supabase.com/docs/guides/platform/backups',
-      },
+      { label: 'Backups e PITR (Docs)', url: 'https://supabase.com/docs/guides/platform/backups' },
     ],
     practiceSteps: [
       'Localize a aba de backups no console do projeto.',
