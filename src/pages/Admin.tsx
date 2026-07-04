@@ -17,8 +17,6 @@ export default function Admin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  if (!isAdmin) return <Navigate to="/" replace />
-
   const loadUsers = async () => {
     setLoading(true)
     try {
@@ -32,8 +30,13 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    loadUsers()
-  }, [])
+    if (isAdmin) {
+      loadUsers()
+    }
+  }, [isAdmin])
+
+  // Move the conditional check after all hooks have run
+  if (!isAdmin) return <Navigate to="/" replace />
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
