@@ -38,7 +38,9 @@ export function Layout() {
               <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
             </div>
             <div className="hidden sm:block">
-              <span className="font-display text-sm font-bold leading-none">Trilha IA</span>
+              <span className="font-display font-bold leading-none text-[0.78rem]">
+                Trilha&nbsp; Native
+              </span>
               <span className="block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                 Consultores
               </span>
