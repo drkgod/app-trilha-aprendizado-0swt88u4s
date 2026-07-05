@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Flame, Home, Map, Trophy, Shield, LogOut, Zap } from 'lucide-react'
+import brandLogo from '@/assets/yj4kqowzrp9i82gt0moaelynprc-3747b.svg'
 import { useAuth } from '@/hooks/use-auth'
 import { useAppStore } from '@/hooks/use-app-store'
 import { ConfettiEffect } from '@/components/ConfettiEffect'
@@ -33,18 +34,8 @@ export function Layout() {
     <div className="min-h-dvh">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between gap-3">
-          <NavLink to="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary btn-glow">
-              <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-display font-bold leading-none text-[0.78rem]">
-                Trilha&nbsp; Native
-              </span>
-              <span className="block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                Consultores
-              </span>
-            </div>
+          <NavLink to="/" className="flex items-center" aria-label="Página inicial">
+            <img src={brandLogo} alt="Trilha Native" className="h-5 w-auto sm:h-6" />
           </NavLink>
 
           <nav className="hidden items-center gap-1 md:flex">
