@@ -1,428 +1,345 @@
-import { useParams, Link, Navigate, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useParams, Navigate, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  CheckCircle2,
-  Circle,
-  Zap,
+  ArrowRight,
+  AlertTriangle,
   BookOpen,
-  Wrench,
   Briefcase,
+  Check,
+  CheckCircle2,
+  Clock,
   ExternalLink,
-  Loader2,
-  CheckSquare,
-  Square,
-  AlertCircle,
-  X,
-  HelpCircle,
+  GraduationCap,
+  Layers,
+  ListChecks,
+  Newspaper,
+  Play,
+  Swords,
+  Wrench,
+  Zap,
 } from 'lucide-react'
 import { useAppStore } from '@/hooks/use-app-store'
-import { trails } from '@/data/trails'
+import { getTopicById } from '@/data/trails'
 import { getQuizForTopic } from '@/data/quizzes'
-import { useState, useEffect } from 'react'
+import type { RefKind } from '@/data/types'
+import { QuizRunner } from '@/components/QuizRunner'
+import { ConfettiEffect } from '@/components/ConfettiEffect'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
+const refIcons: Record<RefKind, typeof BookOpen> = {
+  doc: BookOpen,
+  curso: GraduationCap,
+  video: Play,
+  artigo: Newspaper,
+  tool: Wrench,
+}
+
+const refLabels: Record<RefKind, string> = {
+  doc: 'Doc',
+  curso: 'Curso',
+  video: 'Vídeo',
+  artigo: 'Artigo',
+  tool: 'Ferramenta',
+}
+
+const priorityStyle: Record<string, { label: string; className: string }> = {
+  alta: { label: '🔴 Prioridade alta', className: 'border-red-500/40 bg-red-500/10 text-red-300' },
+  media: {
+    label: '🟡 Prioridade média',
+    className: 'border-yellow-500/40 bg-yellow-500/10 text-yellow-300',
+  },
+  baixa: {
+    label: '🟢 Prioridade baixa',
+    className: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
+  },
+}
 
 export default function TopicDetail() {
-  const { trailId, topicId } = useParams()
+  const { trailId, topicId } = useParams<{ trailId: string; topicId: string }>()
+  const navigate = useNavigate()
   const { isTopicCompleted, toggleTopic } = useAppStore()
-  const [toggling, setToggling] = useState(false)
-  const [showXP, setShowXP] = useState(false)
+  const [checked, setChecked] = useState<Record<number, boolean>>({})
+  const [celebrate, setCelebrate] = useState(false)
+  const [saving, setSaving] = useState(false)
 
-  // Interactive local steps checklist state
-  const [checkedSteps, setCheckedSteps] = useState<Record<number, boolean>>({})
+  const { trail, topic } =
+    trailId && topicId ? getTopicById(trailId, topicId) : { trail: undefined, topic: undefined }
+  if (!trail || !topic) return <Navigate to="/trails" replace />
 
-  // Quiz Modal state
-  const [showQuizModal, setShowQuizModal] = useState(false)
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({})
-  const [validated, setValidated] = useState(false)
-  const [quizErrors, setQuizErrors] = useState<Record<number, boolean>>({})
-
-  // Reset checklist and quiz when topic changes
-  useEffect(() => {
-    setCheckedSteps({})
-    setShowQuizModal(false)
-    setSelectedAnswers({})
-    setValidated(false)
-    setQuizErrors({})
-  }, [topicId])
-
-  const trail = trails.find((t) => t.id === trailId)
-  if (!trail) return <Navigate to="/" replace />
-
-  const topicIndex = trail.topics.findIndex((t) => t.id === topicId)
-  if (topicIndex === -1) return <Navigate to={`/trail/${trailId}`} replace />
-
-  const topic = trail.topics[topicIndex]
-  const prevTopic = topicIndex > 0 ? trail.topics[topicIndex - 1] : null
-  const nextTopic = topicIndex < trail.topics.length - 1 ? trail.topics[topicIndex + 1] : null
   const completed = isTopicCompleted(topic.id)
+  const isBoss = topic.type === 'boss'
+  const quiz = isBoss ? getQuizForTopic(topic.id) : []
 
-  const topicQuiz = getQuizForTopic(topic.id, topic.title, trail.name)
+  const topicIdx = trail.topics.findIndex((t) => t.id === topic.id)
+  const nextInTrail = trail.topics[topicIdx + 1] ?? null
 
-  const handleToggleClick = () => {
-    if (completed) {
-      // If already completed, just toggle off
-      performToggle()
-    } else {
-      // If completing, open the quiz first
-      if (allStepsChecked) {
-        setShowQuizModal(true)
-      }
-    }
-  }
-
-  const performToggle = async () => {
-    setToggling(true)
+  const handleComplete = async () => {
+    if (completed || saving) return
+    setSaving(true)
     try {
       await toggleTopic(topic, trail.id)
-      if (!completed) {
-        setShowXP(true)
-        setTimeout(() => setShowXP(false), 1500)
-      }
+      setCelebrate(true)
+      setTimeout(() => setCelebrate(false), 2500)
+    } catch (e) {
+      console.error('Erro ao salvar progresso:', e)
     } finally {
-      setToggling(false)
+      setSaving(false)
     }
   }
 
-  const handleSelectAnswer = (qIdx: number, oIdx: number) => {
-    setSelectedAnswers((prev) => ({ ...prev, [qIdx]: oIdx }))
-    // Clear error for this question on edit
-    if (validated) {
-      setQuizErrors((prev) => ({ ...prev, [qIdx]: false }))
+  const handleUncomplete = async () => {
+    if (!completed || saving) return
+    setSaving(true)
+    try {
+      await toggleTopic(topic, trail.id)
+    } catch (e) {
+      console.error('Erro ao salvar progresso:', e)
+    } finally {
+      setSaving(false)
     }
   }
 
-  const handleValidateQuiz = () => {
-    const errors: Record<number, boolean> = {}
-    let hasError = false
-
-    topicQuiz.forEach((q, idx) => {
-      const selected = selectedAnswers[idx]
-      if (selected !== q.correctIndex) {
-        errors[idx] = true
-        hasError = true
-      }
-    })
-
-    setQuizErrors(errors)
-    setValidated(true)
-
-    if (!hasError) {
-      // All correct! Close modal and complete topic
-      setShowQuizModal(false)
-      performToggle()
-    }
-  }
-
-  const toggleStep = (index: number) => {
-    setCheckedSteps((prev) => ({ ...prev, [index]: !prev[index] }))
-  }
-
-  const allStepsChecked = topic.practiceSteps.every((_, idx) => checkedSteps[idx] === true)
-  const canComplete = completed || allStepsChecked
+  const prio = priorityStyle[topic.priority]
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in-up pb-20 lg:pb-0">
-      {/* Back nav */}
-      <div className="flex items-center gap-3">
+    <div className="mx-auto max-w-3xl space-y-8">
+      {celebrate && <ConfettiEffect />}
+
+      <header className="animate-fade-up">
         <Link
           to={`/trail/${trail.id}`}
-          className="p-2 rounded-xl hover:bg-secondary/50 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft className="h-4 w-4" /> {trail.name}
         </Link>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span style={{ color: trail.color }}>{trail.name}</span>
-          <ChevronRight size={14} />
-          <span>Tópico {topic.index}</span>
-        </div>
-      </div>
 
-      {/* Header */}
-      <div className="glass-card p-6 sm:p-8">
-        <div className="flex items-start gap-4">
-          <div
-            className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 ${
-              completed ? 'node-completed' : ''
-            }`}
-            style={
-              !completed
-                ? { background: `${trail.color}15`, border: `1px solid ${trail.color}30` }
-                : {}
-            }
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="pill" style={{ borderColor: `${trail.color}55`, color: trail.color }}>
+            {isBoss ? <Swords className="h-3.5 w-3.5" /> : null}
+            {isBoss ? 'Boss fight' : `Etapa ${topic.index}`}
+          </span>
+          <span className={cn('pill', prio.className)}>{prio.label}</span>
+          <span className="pill">
+            <Zap className="h-3.5 w-3.5" /> +{topic.xp} XP
+          </span>
+          <span className="pill">
+            <Clock className="h-3.5 w-3.5" /> ~{topic.estMinutes} min
+          </span>
+          {completed && (
+            <span className="pill pill-glow">
+              <CheckCircle2 className="h-3.5 w-3.5" /> Concluída
+            </span>
+          )}
+        </div>
+
+        <h1 className="font-display mt-4 text-3xl font-bold leading-tight sm:text-4xl">
+          {topic.title}
+        </h1>
+        <p className="mt-2 text-lg text-muted-foreground">{topic.shortDescription}</p>
+      </header>
+
+      {/* Concept */}
+      <section className="glass animate-fade-up p-6 sm:p-7" style={{ animationDelay: '80ms' }}>
+        <span className="kicker">
+          <BookOpen className="mr-1 h-3.5 w-3.5" /> Conceito
+        </span>
+        <p className="mt-3 leading-relaxed text-foreground/90">{topic.concept}</p>
+      </section>
+
+      {topic.deepDive.length > 0 && (
+        <section className="glass animate-fade-up p-6 sm:p-7" style={{ animationDelay: '120ms' }}>
+          <span className="kicker">
+            <Layers className="mr-1 h-3.5 w-3.5" /> Aprofundando
+          </span>
+          <ul className="mt-4 space-y-3">
+            {topic.deepDive.map((item, i) => (
+              <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {topic.pitfalls.length > 0 && (
+        <section
+          className="animate-fade-up rounded-2xl border border-orange-500/25 bg-orange-500/5 p-6 sm:p-7"
+          style={{ animationDelay: '160ms' }}
+        >
+          <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-orange-400">
+            <AlertTriangle className="h-3.5 w-3.5" /> Armadilhas clássicas
+          </span>
+          <ul className="mt-4 space-y-3">
+            {topic.pitfalls.map((item, i) => (
+              <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
+                <span className="mt-0.5 text-orange-400">⚠</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {topic.practiceSteps.length > 0 && (
+        <section className="glass animate-fade-up p-6 sm:p-7" style={{ animationDelay: '200ms' }}>
+          <span className="kicker">
+            <ListChecks className="mr-1 h-3.5 w-3.5" /> Prática — mão na massa
+          </span>
+          <div className="mt-4 space-y-2.5">
+            {topic.practiceSteps.map((step, i) => (
+              <button
+                key={i}
+                onClick={() => setChecked((prev) => ({ ...prev, [i]: !prev[i] }))}
+                className={cn(
+                  'flex w-full items-start gap-3 rounded-xl border p-3.5 text-left text-sm transition-all',
+                  checked[i]
+                    ? 'border-primary/40 bg-primary/5 text-muted-foreground line-through'
+                    : 'border-border bg-secondary/40 hover:border-primary/30',
+                )}
+              >
+                <span
+                  className={cn(
+                    'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors',
+                    checked[i] ? 'border-primary bg-primary' : 'border-muted-foreground/40',
+                  )}
+                >
+                  {checked[i] && (
+                    <Check className="h-3.5 w-3.5 text-primary-foreground" strokeWidth={3} />
+                  )}
+                </span>
+                <span className="leading-relaxed">{step}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {topic.projectContext && (
+        <section
+          className="animate-fade-up rounded-2xl border p-6 sm:p-7"
+          style={{
+            animationDelay: '240ms',
+            borderColor: `${trail.color}35`,
+            background: `${trail.color}0a`,
+          }}
+        >
+          <span
+            className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em]"
+            style={{ color: trail.color }}
           >
-            {completed ? (
-              <CheckCircle2 size={28} className="text-primary-foreground" />
-            ) : (
-              trail.icon
-            )}
-          </div>
-          <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className={`badge-${topic.priority}`}>{topic.priority}</span>
-              <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                <Zap size={12} style={{ color: trail.color }} /> {topic.xp} XP
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-bold">{topic.title}</h1>
-          </div>
-        </div>
-      </div>
+            <Briefcase className="h-3.5 w-3.5" /> No projeto do cliente
+          </span>
+          <p className="mt-3 text-sm leading-relaxed text-foreground/85">{topic.projectContext}</p>
+        </section>
+      )}
 
-      {/* Content sections */}
-      <div className="space-y-4">
-        {/* Concept / Explain */}
-        <div className="glass-card p-6 space-y-3">
-          <div className="flex items-center gap-2">
-            <BookOpen size={18} className="text-primary" />
-            <h2 className="font-semibold text-base">Conceito e Explicação</h2>
-          </div>
-          <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
-            {topic.concept}
-          </p>
-        </div>
-
-        {/* References / Documentation Links */}
-        {topic.references && topic.references.length > 0 && (
-          <div className="glass-card p-6 space-y-3">
-            <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
-              Leituras Recomendadas
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              {topic.references.map((ref, idx) => (
+      {topic.references.length > 0 && (
+        <section className="glass animate-fade-up p-6 sm:p-7" style={{ animationDelay: '280ms' }}>
+          <span className="kicker">
+            <GraduationCap className="mr-1 h-3.5 w-3.5" /> Curadoria — vá além
+          </span>
+          <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+            {topic.references.map((ref, i) => {
+              const Icon = refIcons[ref.kind]
+              return (
                 <a
-                  key={idx}
+                  key={i}
                   href={ref.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-secondary/50 border border-border text-xs font-semibold hover:border-primary/45 hover:bg-secondary transition-all"
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-secondary/40 p-3.5 transition-all hover:border-primary/40 hover:bg-primary/5"
                 >
-                  <span>{ref.label}</span>
-                  <ExternalLink size={12} className="text-muted-foreground" />
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                    <Icon className="h-4.5 w-4.5 h-5 w-5 text-primary" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold">{ref.label}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      {refLabels[ref.kind]}
+                    </span>
+                  </span>
+                  <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
                 </a>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Step-by-Step Practice */}
-        <div className="glass-card p-6 space-y-4">
-          <div className="flex items-center gap-2">
-            <Wrench size={18} className="text-amber-400" />
-            <h2 className="font-semibold text-base">Passo a Passo Prático</h2>
-          </div>
-          <div className="space-y-2.5">
-            {topic.practiceSteps.map((step, idx) => {
-              const isChecked = checkedSteps[idx] || false
-              return (
-                <div
-                  key={idx}
-                  onClick={() => toggleStep(idx)}
-                  className={`p-3.5 rounded-xl border transition-all flex items-start gap-3 cursor-pointer ${
-                    isChecked
-                      ? 'bg-primary/5 border-primary/20 text-muted-foreground'
-                      : 'bg-secondary/30 border-border/60 hover:border-border text-foreground'
-                  }`}
-                >
-                  <button className="mt-0.5 flex-shrink-0 text-primary">
-                    {isChecked ? (
-                      <CheckSquare size={18} />
-                    ) : (
-                      <Square size={18} className="text-muted-foreground" />
-                    )}
-                  </button>
-                  <p className={`text-sm leading-relaxed ${isChecked ? 'line-through' : ''}`}>
-                    {step}
-                  </p>
-                </div>
               )
             })}
           </div>
-        </div>
+        </section>
+      )}
 
-        {/* Project Context */}
-        <div className="glass-card p-6 space-y-3">
-          <div className="flex items-center gap-2">
-            <Briefcase size={18} className="text-blue-400" />
-            <h2 className="font-semibold text-base">Na Prática do Projeto / Consultoria</h2>
-          </div>
-          <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10 text-muted-foreground text-sm leading-relaxed">
-            {topic.projectContext}
-          </div>
-        </div>
-      </div>
-
-      {/* Complete Button */}
-      <div className="relative">
-        <button
-          onClick={handleToggleClick}
-          disabled={toggling || !canComplete}
-          className={`w-full py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-            completed
-              ? 'bg-secondary text-muted-foreground hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 border border-border'
-              : allStepsChecked
-                ? 'bg-primary text-primary-foreground glow-green hover:bg-primary/90'
-                : 'bg-secondary/50 text-muted-foreground cursor-not-allowed opacity-60 border border-border'
-          }`}
-        >
-          {toggling ? (
-            <Loader2 size={18} className="animate-spin" />
-          ) : completed ? (
-            <>
-              <CheckCircle2 size={18} /> Concluído — clique para desmarcar
-            </>
-          ) : allStepsChecked ? (
-            <>
-              <Circle size={18} /> Validar Conhecimento para Concluir (+{topic.xp} XP)
-            </>
-          ) : (
-            <>
-              <AlertCircle size={18} /> Conclua todos os passos práticos acima para liberar (+
-              {topic.xp} XP)
-            </>
-          )}
-        </button>
-
-        {/* XP Float animation */}
-        {showXP && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full">
-            <span className="text-primary font-bold text-xl animate-xp-float flex items-center gap-1">
-              <Zap size={18} /> +{topic.xp} XP
+      {/* Boss quiz OR complete button */}
+      {isBoss ? (
+        <section className="animate-fade-up space-y-4" style={{ animationDelay: '320ms' }}>
+          <div className="text-center">
+            <span className="kicker justify-center">
+              <Swords className="mr-1 h-3.5 w-3.5" /> Hora do desafio
             </span>
+            <h2 className="font-display mt-2 text-2xl font-bold">Derrote o boss</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Acerte 4 de 5 para conquistar +{topic.xp} XP.
+            </p>
           </div>
-        )}
-      </div>
-
-      {/* Prev / Next nav */}
-      <div className="flex gap-3">
-        {prevTopic ? (
-          <Link
-            to={`/trail/${trail.id}/topic/${prevTopic.id}`}
-            className="flex-1 glass-card-hover p-4 flex items-center gap-3"
-          >
-            <ChevronLeft size={18} className="text-muted-foreground" />
-            <div className="min-w-0">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Anterior</p>
-              <p className="text-sm font-medium truncate">{prevTopic.title}</p>
-            </div>
-          </Link>
-        ) : (
-          <div className="flex-1" />
-        )}
-        {nextTopic ? (
-          <Link
-            to={`/trail/${trail.id}/topic/${nextTopic.id}`}
-            className="flex-1 glass-card-hover p-4 flex items-center justify-end gap-3 text-right"
-          >
-            <div className="min-w-0">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Próximo</p>
-              <p className="text-sm font-medium truncate">{nextTopic.title}</p>
-            </div>
-            <ChevronRight size={18} className="text-muted-foreground" />
-          </Link>
-        ) : (
-          <div className="flex-1" />
-        )}
-      </div>
-
-      {/* Quiz Modal */}
-      {showQuizModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md overflow-y-auto">
-          <div className="glass-card max-w-2xl w-full max-h-[85vh] overflow-y-auto flex flex-col p-6 sm:p-8 space-y-6 relative border-primary/30 glow-green-sm animate-scale-up my-8">
-            {/* Close button */}
-            <button
-              onClick={() => setShowQuizModal(false)}
-              className="absolute right-4 top-4 p-2 rounded-xl hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X size={18} />
-            </button>
-
-            {/* Modal Header */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-primary">
-                <HelpCircle size={22} className="animate-pulse" />
-                <h2 className="text-lg font-bold">Questionário de Validação Técnica</h2>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed p-3.5 rounded-xl bg-primary/5 border border-primary/10">
-                💡 <span className="font-semibold text-primary">Aviso</span>: Este questionário é
-                apenas um pontapé inicial para validar seu raciocínio crítico. Estude o tema a fundo
-                antes de responder. Você precisa responder{' '}
-                <strong>todas as perguntas corretamente</strong> para concluir o tópico.
+          {completed ? (
+            <div className="glass p-8 text-center">
+              <span className="text-4xl">🏆</span>
+              <h3 className="font-display mt-3 text-xl font-bold">Boss já derrotado!</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Você venceu este desafio. Siga a jornada.
               </p>
             </div>
-
-            {/* Questions List */}
-            <div className="space-y-6 divide-y divide-border/40">
-              {topicQuiz.map((q, qIdx) => (
-                <div key={qIdx} className={`space-y-3 ${qIdx > 0 ? 'pt-6' : ''}`}>
-                  <h3 className="text-sm font-semibold flex gap-2">
-                    <span className="text-primary">{qIdx + 1}.</span>
-                    <span>{q.question}</span>
-                  </h3>
-                  <div className="grid grid-cols-1 gap-2">
-                    {q.options.map((option, oIdx) => {
-                      const isSelected = selectedAnswers[qIdx] === oIdx
-                      const isError = validated && quizErrors[qIdx] && isSelected
-                      const isCorrect = validated && !quizErrors[qIdx] && isSelected
-
-                      return (
-                        <button
-                          key={oIdx}
-                          onClick={() => handleSelectAnswer(qIdx, oIdx)}
-                          className={`text-left p-3.5 rounded-xl border text-xs leading-relaxed transition-all flex items-start gap-3 ${
-                            isSelected
-                              ? isError
-                                ? 'bg-red-500/10 border-red-500/40 text-red-300'
-                                : isCorrect
-                                  ? 'bg-primary/10 border-primary/40 text-primary-foreground'
-                                  : 'bg-primary/10 border-primary/40 text-primary font-medium'
-                              : 'bg-secondary/20 border-border hover:border-primary/20 hover:bg-secondary/40'
-                          }`}
-                        >
-                          <span
-                            className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 border mt-0.5 ${
-                              isSelected ? 'border-primary' : 'border-muted-foreground/30'
-                            }`}
-                          >
-                            {isSelected && <span className="w-2 h-2 rounded-full bg-primary" />}
-                          </span>
-                          <span>{option}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
-
-                  {/* Feedback explanation if error */}
-                  {validated && quizErrors[qIdx] && (
-                    <div className="p-3 text-xs rounded-xl bg-red-500/5 border border-red-500/10 text-red-400 leading-relaxed flex gap-2">
-                      <AlertCircle size={14} className="flex-shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-semibold">Incorreto:</span> {q.explanation}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Validation CTA */}
-            <div className="pt-4 flex gap-3">
-              <button
-                onClick={() => setShowQuizModal(false)}
-                className="flex-1 py-3 rounded-xl bg-secondary text-muted-foreground font-semibold text-xs border border-border hover:bg-secondary/80 transition-colors"
+          ) : (
+            <QuizRunner questions={quiz} onPass={handleComplete} />
+          )}
+        </section>
+      ) : (
+        <section className="animate-fade-up" style={{ animationDelay: '320ms' }}>
+          {completed ? (
+            <div className="glass flex flex-col items-center gap-3 p-6 sm:flex-row sm:justify-between">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-6 w-6 text-primary" />
+                <p className="font-semibold">Etapa concluída · +{topic.xp} XP no bolso</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleUncomplete}
+                disabled={saving}
+                className="text-muted-foreground"
               >
-                Voltar ao Conteúdo
-              </button>
-              <button
-                onClick={handleValidateQuiz}
-                disabled={Object.keys(selectedAnswers).length < topicQuiz.length}
-                className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-xs hover:bg-primary/95 transition-all disabled:opacity-50 disabled:cursor-not-allowed glow-green-sm"
-              >
-                Validar Respostas
-              </button>
+                Desmarcar
+              </Button>
             </div>
-          </div>
-        </div>
+          ) : (
+            <Button
+              onClick={handleComplete}
+              disabled={saving}
+              className="btn-glow h-14 w-full text-base font-bold"
+            >
+              <CheckCircle2 className="mr-2 h-5 w-5" />
+              {saving ? 'Salvando…' : `Concluir etapa · +${topic.xp} XP`}
+            </Button>
+          )}
+        </section>
+      )}
+
+      {/* Next */}
+      {nextInTrail && (
+        <section className="animate-fade-up" style={{ animationDelay: '360ms' }}>
+          <button
+            onClick={() => navigate(`/trail/${trail.id}/topic/${nextInTrail.id}`)}
+            className="glass glass-hover group flex w-full items-center gap-4 p-5 text-left"
+          >
+            <div className="min-w-0 flex-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                Próxima etapa
+              </span>
+              <p className="font-display mt-0.5 truncate font-bold">{nextInTrail.title}</p>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+          </button>
+        </section>
       )}
     </div>
   )

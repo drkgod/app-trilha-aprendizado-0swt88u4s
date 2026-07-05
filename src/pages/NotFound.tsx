@@ -1,34 +1,19 @@
 import { Link } from 'react-router-dom'
-import { MoveLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="relative z-10 max-w-sm">
-        <span className="text-8xl block mb-6 animate-bounce">🧭</span>
-        <h1
-          className="text-4xl font-extrabold tracking-tight mb-2"
-          style={{ fontFamily: 'Space Grotesk' }}
-        >
-          404
-        </h1>
-        <h2 className="text-xl font-bold mb-4">Rota perdida!</h2>
-        <p className="text-muted-foreground text-sm mb-8">
-          Você se desviou do mapa da trilha de aprendizado. Vamos guiar você de volta.
-        </p>
-
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-all glow-green-sm"
-        >
-          <MoveLeft size={16} />
-          Voltar ao Dashboard
-        </Link>
-      </div>
+    <div className="flex min-h-dvh flex-col items-center justify-center px-4 text-center">
+      <span className="kicker">Erro 404</span>
+      <h1 className="font-display mt-4 text-5xl font-bold">
+        Etapa <span className="text-primary text-glow">não encontrada</span>
+      </h1>
+      <p className="mt-3 max-w-md text-muted-foreground">
+        Esse caminho não existe no mapa. Volte para a trilha e continue a jornada.
+      </p>
+      <Button asChild className="btn-glow mt-8 h-12 px-8 font-bold">
+        <Link to="/">Voltar ao início</Link>
+      </Button>
     </div>
   )
 }

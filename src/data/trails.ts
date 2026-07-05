@@ -1,92 +1,109 @@
 import type { Trail } from './types'
+import { fundamentosTopics } from './trilha-fundamentos'
 import { claudeCodeTopics } from './trilha-claude-code'
 import { codexTopics } from './trilha-codex'
 import { claudeAiTopics } from './trilha-anthropic'
 import { githubTopics } from './trilha-github'
 import { supabaseTopics } from './trilha-supabase'
-import { trilhaFundamentos } from './trilha-fundamentos'
-import { consultoriaTopics } from './trilha-consultoria'
+import { projetosTopics } from './trilha-projetos'
 
-export { type Topic, type Trail, type Priority, type TopicType, type ReferenceLink } from './types'
+export type { Trail, Topic, QuizQuestion, ReferenceLink } from './types'
 
 export const trails: Trail[] = [
+  {
+    id: 'fundamentos',
+    name: 'Fundamentos de IA',
+    slug: 'fundamentos',
+    icon: 'BrainCircuit',
+    color: '#4DD8E6',
+    colorGlow: 'rgba(77, 216, 230, 0.35)',
+    tagline: 'Tokens, embeddings, RAG e grafos',
+    description:
+      'A base conceitual que sustenta todo o resto: como modelos funcionam, contexto, vetorização, busca semântica, GraphRAG, segundo cérebro e o mapa dos agentes — incluindo o Antigravity.',
+    topics: fundamentosTopics,
+  },
   {
     id: 'claude-code',
     name: 'Claude Code',
     slug: 'claude-code',
-    icon: '🟠',
+    icon: 'Terminal',
     color: '#FF6B35',
-    colorGlow: '24 100% 60%',
+    colorGlow: 'rgba(255, 107, 53, 0.35)',
+    tagline: 'O agente da Anthropic no seu terminal',
     description:
-      'Domine o agente de terminal da Anthropic — da instalação a subagents, hooks e automações avançadas.',
+      'Instalação, CLAUDE.md, permissões, subagentes, hooks, MCP, worktrees e automação headless — o domínio operacional completo da ferramenta.',
     topics: claudeCodeTopics,
   },
   {
     id: 'codex',
     name: 'Codex',
     slug: 'codex',
-    icon: '🟣',
+    icon: 'Bot',
     color: '#A855F7',
-    colorGlow: '271 91% 65%',
+    colorGlow: 'rgba(168, 85, 247, 0.35)',
+    tagline: 'CLI, app, extensão e Cloud da OpenAI',
     description:
-      'Domine a ferramenta de agentes da OpenAI — CLI, app desktop, Cloud e integração com GitHub.',
+      'As quatro superfícies do Codex, AGENTS.md, sandbox, delegação ao Cloud, @codex em PRs e o comparativo honesto com o Claude Code.',
     topics: codexTopics,
   },
   {
     id: 'claude-ai',
-    name: 'Claude.ai',
+    name: 'Ecossistema Claude',
     slug: 'claude-ai',
-    icon: '🔵',
+    icon: 'Sparkles',
     color: '#3B82F6',
-    colorGlow: '217 91% 60%',
+    colorGlow: 'rgba(59, 130, 246, 0.35)',
+    tagline: 'Claude.ai, API, Cowork e Academy',
     description:
-      'Domine a plataforma web do Claude.ai — Projects, Artifacts, Web Search e integrações.',
+      'Planos, Projects, Artifacts, conectores, memória, o essencial da API, agentes embarcados e as respostas corporativas de privacidade.',
     topics: claudeAiTopics,
   },
   {
     id: 'github',
-    name: 'GitHub',
+    name: 'GitHub & Git',
     slug: 'github',
-    icon: '⚫',
+    icon: 'GitBranch',
     color: '#E5E7EB',
-    colorGlow: '220 13% 91%',
+    colorGlow: 'rgba(229, 231, 235, 0.30)',
+    tagline: 'Submodules, PRs e governança de repo',
     description:
-      'Domine Git e GitHub — do setup à arquitetura de repositórios, submodules e pipelines.',
+      'Do fluxo diário ao avançado: submodules a fundo (o dia a dia dos projetos), desfazer sem medo, PRs de agente, worktrees, proteção de branch e o protocolo do segredo vazado.',
     topics: githubTopics,
   },
   {
     id: 'supabase',
     name: 'Supabase',
     slug: 'supabase',
-    icon: '🟢',
+    icon: 'Database',
     color: '#22C55E',
-    colorGlow: '142 71% 45%',
+    colorGlow: 'rgba(34, 197, 94, 0.35)',
+    tagline: 'Postgres, RLS, pgvector e Edge Functions',
     description:
-      'Domine o backend-as-a-service Postgres — RLS, Autenticação, Storage, Realtime e Migrations.',
+      'O backend completo: keys e RLS, auth, migrations, branches de banco, storage, busca vetorial e híbrida, Realtime e o plano de desastre.',
     topics: supabaseTopics,
   },
   {
-    id: 'fundamentos',
-    name: 'Fundamentos',
-    slug: 'fundamentos',
-    icon: '🌐',
-    color: '#4DD8E6',
-    colorGlow: '185 80% 60%',
+    id: 'projetos',
+    name: 'Projetos na Prática',
+    slug: 'projetos',
+    icon: 'Rocket',
+    color: '#F5B94A',
+    colorGlow: 'rgba(245, 185, 74, 0.35)',
+    tagline: 'Missões reais de consultoria',
     description:
-      'Domine tokens, embeddings, busca semântica e vetorização com Supabase e pgvector.',
-    topics: trilhaFundamentos.topics,
-  },
-  {
-    id: 'consultoria',
-    name: 'Consultoria na Prática',
-    slug: 'consultoria',
-    icon: '🧭',
-    color: '#FBD65C',
-    colorGlow: '45 94% 67%',
-    description:
-      'Mapeamento de processos, Antigravity, setup padrão e a simulação end-to-end da consultoria.',
-    topics: consultoriaTopics,
+      'As missões que cruzam tudo: discovery, blueprint, repo profissional, RAG interno, app completo com agente, QA de código gerado, entrega e o comparativo de stack.',
+    topics: projetosTopics,
   },
 ]
 
 export const totalTopics = trails.reduce((sum, trail) => sum + trail.topics.length, 0)
+
+export function getTrailById(id: string): Trail | undefined {
+  return trails.find((t) => t.id === id)
+}
+
+export function getTopicById(trailId: string, topicId: string) {
+  const trail = getTrailById(trailId)
+  const topic = trail?.topics.find((t) => t.id === topicId)
+  return { trail, topic }
+}

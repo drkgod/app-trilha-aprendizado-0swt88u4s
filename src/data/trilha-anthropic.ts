@@ -1,93 +1,142 @@
 import type { Topic } from './types'
 
-const xpMap = { alta: 30, media: 20, baixa: 10 }
+const SUP = 'https://support.claude.com'
+const DOCS = 'https://docs.claude.com'
+const ACAD = 'https://anthropic.skilljar.com'
 
 export const claudeAiTopics: Topic[] = [
   {
     id: 'ca-1',
     index: 1,
-    title: 'Planos do Claude.ai',
+    title: 'Planos: Free, Pro, Max, Team e Enterprise',
     priority: 'alta',
     type: 'conceito',
-    shortDescription: 'Cotas, preços e resets de limites entre planos.',
+    shortDescription: 'O que cada plano libera, preços e como funciona o reset de limites.',
     concept:
-      'A plataforma Claude.ai oferece acesso via planos Free, Pro, Team e Enterprise. Cada plano possui cotas de mensagens e janelas de resets específicas. O plano Pro dá acesso a 5x mais cota do que o Free, e os planos Team e Enterprise escalam esse teto para acomodar colaboradores de equipes grandes. Entender essas diferenças ajuda a orientar o cliente no melhor custo-benefício.',
-    references: [
-      { label: 'Preços Oficiais do Claude', url: 'https://www.anthropic.com/claude/pricing' },
-      { label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' },
+      'A escada de planos do Claude.ai: Free (acesso básico com limites apertados), Pro (mais uso, Projects, Research e acesso ao Claude Code), Max 5x e Max 20x (multiplicadores de uso para power users e mais acesso a Opus), Team (assentos gerenciados, colaboração e mais contexto para empresas) e Enterprise (SSO, auditoria, retenção configurável). Limites funcionam por janela que reseta (e tetos semanais nos planos maiores) — e consomem por tokens processados, então conversas longas com arquivos grandes gastam muito mais que perguntas curtas. Consultor dimensiona plano por padrão de uso, não por cargo.',
+    deepDive: [
+      'A pergunta de dimensionamento: quantas horas/dia, com que tamanho de contexto, em qual modelo? Um analista que anexa PDFs de 200 páginas consome como três que não anexam.',
+      'Team vs várias contas Pro: gestão central, billing único e recursos de colaboração — a partir de ~5 pessoas a conversa muda de plano individual para Team.',
+      'Preços e franquias mudam — cite sempre a página oficial de preços na proposta, com data.',
+    ],
+    pitfalls: [
+      'Prometer limites específicos de memória — verifique a página oficial no dia da proposta.',
+      'Colocar o time inteiro no Free para "testar" e queimar a primeira impressão com limites.',
     ],
     practiceSteps: [
-      'Compare as funcionalidades dos planos Pro e Team nas páginas oficiais.',
-      'Documente as limitações de envio de arquivos e janelas de resets do plano Free.',
-      'Monte uma tabela de custos estimada para um time de 10 consultores.',
+      'Monte a tabela de decisão perfil → plano da consultoria.',
+      'Simule o custo mensal de um time de 10 pessoas em 3 cenários de plano.',
     ],
     projectContext:
-      'Oriente sempre o cliente a criar planos Team para centralizar o faturamento e compartilhar projetos com facilidade na empresa.',
-    xp: xpMap.alta,
+      'Licenciamento é a primeira planilha do projeto de implantação — errar o plano mina a adoção antes do primeiro treinamento.',
+    references: [
+      { label: 'Preços — Anthropic', url: 'https://www.anthropic.com/pricing', kind: 'doc' },
+      { label: 'Central de ajuda — planos e limites', url: SUP, kind: 'doc' },
+    ],
+    xp: 60,
+    estMinutes: 25,
   },
   {
     id: 'ca-2',
     index: 2,
-    title: 'Modelos atuais',
+    title: 'A família de modelos e qual indicar',
     priority: 'alta',
     type: 'conceito',
-    shortDescription: 'Família de modelos Claude e seus casos de uso.',
+    shortDescription: 'Opus, Sonnet e Haiku — diferença prática por caso de uso e orçamento.',
     concept:
-      'A família de modelos Claude conta com variações: Claude 3.5 Sonnet (inteligência de uso geral e alta velocidade), Claude 3.5 Haiku (velocidade extrema e custo otimizado) e Claude 3 Opus (profundidade analítica avançada). Escolher o modelo adequado evita gastos desnecessários e aumenta a precisão das respostas.',
-    references: [
-      {
-        label: 'Modelos Claude (Docs)',
-        url: 'https://docs.anthropic.com/en/docs/about-claude/models',
-      },
+      'A família Claude se organiza em três tiers com trade-off claro: Opus (máxima capacidade — raciocínio profundo, arquitetura, análises complexas — mais caro e lento), Sonnet (o cavalo de batalha: 80-90% da capacidade por fração do custo, padrão para quase tudo) e Haiku (velocidade e volume — classificação, extração, tarefas mecânicas em escala). No seletor do Claude.ai e via API, a heurística do consultor é a mesma: comece com Sonnet; suba para Opus quando a tarefa comprovadamente exige; desça para Haiku quando o volume domina. Versões evoluem trimestralmente — decore a lógica dos tiers, consulte a doc para os números.',
+    deepDive: [
+      'Extended thinking: os modelos atuais pensam antes de responder quando a tarefa pede — qualidade extra com custo de latência; saiba quando vale.',
+      'Na API, o custo por milhão de tokens difere por ordem de grandeza entre tiers — a escolha de modelo é a principal linha da fatura de qualquer produto.',
+      'Indicação por caso: contrato jurídico complexo → Opus; assistente interno → Sonnet; classificar 100k tickets → Haiku.',
+    ],
+    pitfalls: [
+      'Recomendar por benchmark em vez de testar no material do cliente.',
+      'Fixar nomes de versão em documento perene — cite tiers e linke a doc.',
     ],
     practiceSteps: [
-      'Envie o mesmo prompt de lógica ou refatoração nos três modelos e analise o tempo de resposta.',
-      'Analise os custos de entrada e saída por milhão de tokens na página da documentação.',
-      'Monte um guia indicando qual modelo sugerir por tipo de ticket (ex: Haiku para testes rápidos).',
+      'Rode a mesma análise real nos três tiers e compare qualidade × custo.',
+      'Escreva o guia de 1 página "qual modelo para quê" do time.',
     ],
     projectContext:
-      'Vender consultoria de eficiência de custos de IA envolve saber apontar o modelo mais leve e barato para resolver o gargalo do cliente.',
-    xp: xpMap.alta,
+      'A matriz tarefa → modelo entra em todo treinamento e em toda arquitetura de produto que a consultoria desenha.',
+    references: [
+      {
+        label: 'Docs — visão geral de modelos',
+        url: DOCS + '/en/docs/about-claude/models/overview',
+        kind: 'doc',
+      },
+      { label: 'Claude 101 — Anthropic Academy', url: ACAD + '/claude-101', kind: 'curso' },
+    ],
+    xp: 60,
+    estMinutes: 25,
   },
   {
     id: 'ca-3',
     index: 3,
-    title: 'Projects',
+    title: 'Projects: conhecimento e instruções persistentes',
     priority: 'alta',
-    type: 'conceito',
-    shortDescription: 'Organizando contextos de projetos e conhecimento.',
+    type: 'pratica',
+    shortDescription:
+      'Project knowledge, instruções do projeto e quando usar Project vs chat solto.',
     concept:
-      'A funcionalidade de Projects permite agrupar conversas e carregar documentos e regras de contexto (Project Knowledge) específicos para um escopo de trabalho (ex: a documentação de um sistema do cliente). O Claude lê todo esse contexto nas conversas do projeto, eliminando a necessidade de reenviar os mesmos arquivos.',
-    references: [
-      { label: 'Claude para Trabalho', url: 'https://www.anthropic.com/learn/claude-for-work' },
+      'Projects são espaços de trabalho persistentes: você anexa conhecimento (documentos que TODA conversa do projeto enxerga) e define instruções (o system prompt do projeto — tom, papel, regras). É a resposta ao problema de recomeçar do zero a cada chat: o contexto do cliente X vive no Project do cliente X. A decisão Project vs chat solto: assunto recorrente com material de referência → Project; pergunta pontual → chat. Para consultoria, um Project por cliente com os documentos-chave e as instruções de contexto é o setup mínimo profissional.',
+    deepDive: [
+      'Project knowledge consome contexto: documentos anexados entram nas conversas — cure o essencial em vez de despejar 40 arquivos.',
+      'Instruções de projeto são onde mora a mágica: "você é analista da empresa X, setor Y, sempre responda considerando os processos do documento Z" transforma a qualidade.',
+      'Em Team, Projects compartilhados alinham o time inteiro no mesmo contexto e padrão de resposta.',
+    ],
+    pitfalls: [
+      'Despejar documentos demais e degradar todas as conversas do projeto.',
+      'Instruções genéricas ("seja útil") que desperdiçam o recurso.',
     ],
     practiceSteps: [
-      'Crie um Project no painel lateral do Claude.ai.',
-      'Faça upload de guias de boas práticas e diagramas da sua empresa na aba "Project Knowledge".',
-      'Defina instruções customizadas no projeto e verifique se ele as segue em novas threads.',
+      'Crie um Project de cliente real: 3-5 documentos essenciais + instruções específicas.',
+      'Compare a mesma pergunta no Project e num chat solto.',
     ],
     projectContext:
-      'Configure um Project para cada cliente ativo da sua consultoria para centralizar o conhecimento e histórico de chamadas do projeto dele.',
-    xp: xpMap.alta,
+      'O "Project bem montado por área" é entregável de implantação: RH, jurídico e operações do cliente, cada um com seu espaço curado.',
+    references: [
+      { label: 'Central de ajuda — Projects', url: SUP, kind: 'doc' },
+      { label: 'Claude 101 — Anthropic Academy', url: ACAD + '/claude-101', kind: 'curso' },
+    ],
+    xp: 60,
+    estMinutes: 30,
   },
   {
     id: 'ca-4',
     index: 4,
-    title: 'Artifacts',
+    title: 'Artifacts: de resposta a produto',
     priority: 'alta',
-    type: 'conceito',
-    shortDescription: 'Criação e edição de código e interfaces ricas.',
+    type: 'pratica',
+    shortDescription: 'Tipos, iteração, publicação e artifacts com IA embutida.',
     concept:
-      'Os Artifacts são painéis laterais interativos criados para exibir e editar blocos extensos de código, esquemas de bancos de dados, fluxogramas Mermaid e até protótipos de interfaces web funcionais (HTML/CSS/JS) diretamente na tela de chat.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'Artifacts são saídas que viram objetos editáveis numa janela própria: documentos, código, páginas HTML interativas, diagramas, apps React. Você itera neles ("mude a cor", "adicione um filtro") sem perder a versão, e pode publicar/compartilhar por link. O salto recente: artifacts com IA embutida — o app criado pode ele mesmo chamar o Claude, permitindo construir mini-ferramentas inteligentes (um gerador de propostas, um simulador) sem escrever uma linha de código. Para o consultor, artifacts são a fábrica de protótipos de demonstração.',
+    deepDive: [
+      'Fluxo de protótipo em reunião: descreva a ferramenta → artifact interativo → itere ao vivo com o feedback do cliente → compartilhe o link no follow-up.',
+      'Artifacts com IA embutida usam a conta de quem USA o artifact — dá para distribuir a ferramenta sem pagar o uso dos outros.',
+      'Limitações a conhecer: ambiente sandboxed, sem backend próprio — para produto de verdade, o caminho é exportar o código e evoluir com Claude Code.',
+    ],
+    pitfalls: [
+      'Prometer que o artifact é o produto final — é protótipo excelente, não infraestrutura.',
+      'Ignorar a publicação por link e mandar screenshot do que poderia ser interativo.',
+    ],
     practiceSteps: [
-      'Ative a funcionalidade de Artifacts nas configurações do seu perfil.',
-      'Peça para o Claude criar um protótipo de dashboard de metas usando Tailwind e HTML.',
-      'Clique em "Publish" no canto do painel e gere um link público compartilhável.',
+      'Crie um artifact interativo de uma calculadora de ROI para seu serviço.',
+      'Crie um artifact com IA embutida (ex: gerador de resumo executivo) e compartilhe.',
     ],
     projectContext:
-      'Use Artifacts para demonstrar protótipos de interfaces rápidas para o cliente na primeira reunião de alinhamento técnico do projeto.',
-    xp: xpMap.alta,
+      'Protótipo em 20 minutos na frente do cliente é a demonstração de valor que fecha a fase de discovery.',
+    references: [
+      { label: 'Central de ajuda — Artifacts', url: SUP, kind: 'doc' },
+      {
+        label: 'Anúncio — artifacts com IA',
+        url: 'https://www.anthropic.com/news/claude-powered-artifacts',
+        kind: 'artigo',
+      },
+    ],
+    xp: 60,
+    estMinutes: 30,
   },
   {
     id: 'ca-5',
@@ -95,103 +144,157 @@ export const claudeAiTopics: Topic[] = [
     title: 'Gestão de contexto no Claude.ai',
     priority: 'alta',
     type: 'conceito',
-    shortDescription: 'Como chats longos degradam a performance do modelo.',
+    shortDescription: 'Por que chat longo degrada, quando abrir chat novo e o custo dos anexos.',
     concept:
-      'Conversar em uma única thread por muito tempo faz o contexto acumular tokens repetidos, aumentando a probabilidade de respostas confusas e alucinações. Limpar o histórico e abrir novos chats é fundamental para manter as respostas precisas.',
-    references: [
-      {
-        label: 'Claude Model Specs',
-        url: 'https://docs.anthropic.com/en/docs/about-claude/models',
-      },
+      'As leis de contexto valem na interface web: cada mensagem reprocessa a conversa inteira — chats longos ficam lentos, caros (consomem limite mais rápido) e menos precisos, porque o modelo dilui atenção. Arquivos anexados são os maiores ocupantes: um PDF grande entra inteiro e é reprocessado a cada turno. As regras práticas para ensinar a qualquer usuário: um assunto por chat; terminou um tema, chat novo; material recorrente vai para Project knowledge (não re-anexado a cada conversa); e peça um resumo antes de migrar de chat para levar o essencial.',
+    deepDive: [
+      'Sintoma clássico: "o Claude ficou burro" no fim de um chat de 200 mensagens — não ficou; o contexto afogou.',
+      'O limite de conversa existe: chats podem atingir o teto de contexto e travar — o aviso para migrar chegou tarde; o hábito de segmentar chega antes.',
+      'Anexo pontual vs Project knowledge: uma vez → anexo; sempre → Project.',
+    ],
+    pitfalls: [
+      'O chat-vida: uma única conversa de 3 meses para tudo.',
+      'Re-anexar o mesmo PDF de 100 páginas em 15 chats diferentes.',
     ],
     practiceSteps: [
-      'Analise a lentidão nas respostas em uma conversa que excedeu 30 interações.',
-      'Abra um chat novo com o mesmo assunto e compare a precisão imediata.',
-      'Escreva no seu guia as práticas para evitar o inchaço de conversas.',
+      'Audite seus chats: quantos misturam 3+ assuntos? Migre para a disciplina um-tema-um-chat.',
+      'Mova seus 3 anexos mais repetidos para Project knowledge.',
     ],
     projectContext:
-      'Oriente a equipe do cliente a iniciar novas conversas a cada nova tarefa do projeto para economizar créditos e evitar bugs de contexto.',
-    xp: xpMap.alta,
+      'Higiene de contexto é o módulo de maior ROI no treinamento de usuários finais do cliente — dobra a qualidade percebida sem custar nada.',
+    references: [{ label: 'Central de ajuda — limites e uso', url: SUP, kind: 'doc' }],
+    xp: 60,
+    estMinutes: 20,
   },
   {
     id: 'ca-6',
     index: 6,
     title: 'Upload e análise de arquivos',
     priority: 'alta',
-    type: 'conceito',
-    shortDescription: 'Extraindo dados de PDFs, imagens e planilhas.',
+    type: 'pratica',
+    shortDescription: 'Formatos aceitos, limites de tamanho e o que o Claude enxerga em cada tipo.',
     concept:
-      'O Claude.ai possui capacidade de processar arquivos complexos (como PDFs contendo tabelas financeiras, planilhas CSV com centenas de linhas e imagens com anotações de layout) extraindo dados e formatando-os.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'O Claude.ai aceita PDFs, imagens, documentos de texto, planilhas e código — mas o que ele "enxerga" varia por tipo: PDFs entram com texto e visual das páginas (tabelas e diagramas incluídos); imagens são analisadas visualmente; CSVs/planilhas viram dados que ele pode analisar (e, com o ambiente de análise, executar código sobre eles); documentos escaneados dependem da qualidade do scan. Limites de tamanho e quantidade por conversa existem e variam por plano. O consultor precisa saber diagnosticar o clássico "ele não leu meu arquivo direito" — que quase sempre é scan ruim, arquivo truncado por tamanho ou tabela complexa demais.',
+    deepDive: [
+      'PDF grande: pergunte primeiro "o que você consegue ver deste documento?" para validar a ingestão antes de confiar na análise.',
+      'Planilhas: o modo de análise de dados escreve e executa código sobre o arquivo — resultados verificáveis, não estimados.',
+      'Vários arquivos: o Claude cruza documentos ("compare o contrato A com a proposta B") — um dos casos de uso de maior valor em consultoria.',
+    ],
+    pitfalls: [
+      'Subir um scan de fax de 1998 e culpar o modelo.',
+      'Anexar 10 arquivos "por contexto" quando a pergunta usa um.',
+    ],
     practiceSteps: [
-      'Faça upload de uma planilha complexa de dados do Excel.',
-      'Peça análises de agrupamentos e estatísticas específicas dos dados das colunas.',
-      'Solicite a formatação das conclusões in tabelas limpas no chat.',
+      'Teste os limites: suba um PDF grande, uma planilha e uma imagem; valide o que foi visto em cada.',
+      'Faça uma análise cruzada de dois documentos reais.',
     ],
     projectContext:
-      'Capacite o time do cliente a realizar auditorias rápidas de relatórios e contratos carregando os arquivos no Claude.',
-    xp: xpMap.alta,
+      'Análise de documentos é o caso de uso nº 1 dos usuários de negócio do cliente — dominar os limites evita frustração na primeira semana.',
+    references: [{ label: 'Central de ajuda — uploads', url: SUP, kind: 'doc' }],
+    xp: 60,
+    estMinutes: 25,
   },
   {
     id: 'ca-7',
     index: 7,
     title: 'Web search e Research',
     priority: 'alta',
-    type: 'conceito',
-    shortDescription: 'Pesquisas automáticas de mercado e concorrência.',
+    type: 'pratica',
+    shortDescription: 'Quando o Claude busca sozinho, o modo Research e como pedir bem.',
     concept:
-      'A pesquisa web integrada permite que o Claude.ai busque informações atualizadas na internet em tempo real. O modo de pesquisa detalhado (Deep Research) aprofunda essa busca de forma a pesquisar e sintetizar grandes relatórios de inteligência de mercado.',
-    references: [{ label: 'Pesquisa com Claude (Blog)', url: 'https://www.anthropic.com/learn' }],
+      'O Claude busca na web quando a pergunta pede informação atual — e o modo Research vai além: conduz uma investigação multi-etapa, consultando dezenas de fontes e devolvendo um relatório com citações. A habilidade do usuário está no pedido: research bom recebe escopo ("mercado brasileiro", "últimos 12 meses"), critérios ("priorize fontes oficiais") e formato de saída ("tabela comparativa com fontes"). Para consultoria, Research é o estagiário de pesquisa que entrega em 10 minutos o levantamento que tomava uma tarde — desde que você saiba briefá-lo.',
+    deepDive: [
+      'Citações são o contrato de confiança: sempre verifique as fontes-chave antes de repassar ao cliente — o modelo resume, você endossa.',
+      'Research consome bem mais que chat normal — use para o que vale um relatório, não para uma dúvida pontual.',
+      'Combine com Projects: research sobre o setor do cliente dentro do Project que já tem o contexto dele.',
+    ],
+    pitfalls: [
+      'Repassar relatório de research sem checar uma única fonte.',
+      'Pedir "pesquise sobre X" sem escopo e reclamar da generalidade.',
+    ],
     practiceSteps: [
-      'Ative a pesquisa web e faça perguntas sobre notícias recentes da stack.',
-      'Dispare uma busca sobre os principais concorrentes do seu cliente e peça a compilação de dados.',
-      'Verifique se as fontes citadas nas notas de rodapé correspondem a sites confiáveis.',
+      'Rode um Research real com briefing completo (escopo, critérios, formato) para um cliente atual.',
+      'Verifique 3 fontes citadas e avalie a fidelidade do resumo.',
     ],
     projectContext:
-      'Use a busca web integrada para fazer varreduras iniciais de concorrência e tendências de tecnologia para estruturar propostas de projetos.',
-    xp: xpMap.alta,
+      'Levantamentos de mercado e benchmark de concorrentes viram entregáveis de horas, não semanas — margem direto no bolso da consultoria.',
+    references: [
+      {
+        label: 'Anúncio — Research',
+        url: 'https://www.anthropic.com/news/research',
+        kind: 'artigo',
+      },
+      { label: 'Central de ajuda — web search', url: SUP, kind: 'doc' },
+    ],
+    xp: 60,
+    estMinutes: 25,
   },
   {
     id: 'ca-8',
     index: 8,
-    title: 'Memória e histórico',
+    title: 'Memória e histórico entre conversas',
     priority: 'alta',
     type: 'conceito',
-    shortDescription: 'Como a memória entre chats impacta o desenvolvimento.',
+    shortDescription:
+      'Busca em chats passados, memória entre conversas e o que dizer sobre privacidade.',
     concept:
-      'A funcionalidade de memória do Claude.ai permite registrar fatos e preferências do usuário de forma global (ex: "sempre escreva código com TypeScript"). Compreender as políticas de privacidade da Anthropic sobre a retenção destes dados é obrigatório para clientes corporativos.',
-    references: [
-      { label: 'Privacidade e Confiança na Anthropic', url: 'https://www.anthropic.com/trust' },
+      'Dois recursos distintos que usuários confundem: a busca no histórico (o Claude consulta suas conversas passadas quando você referencia algo — "continue o plano de ontem") e a memória (o Claude constrói e mantém um resumo do que aprendeu sobre você/seus projetos, aplicado automaticamente). Ambos são configuráveis — dá para ver, editar e desligar a memória, e usar chats incógnitos que não entram em nada. As perguntas de privacidade do cliente têm resposta objetiva: onde ver o que está memorizado, como apagar, e o que a política vigente diz sobre uso de dados — sempre respondidas com a documentação oficial, nunca de memória.',
+    deepDive: [
+      'Memória em Team/Enterprise tem controles administrativos — a governança que o compliance do cliente vai querer ver.',
+      'Memória boa se cura: revise o que foi memorizado e corrija distorções (projetos antigos, contextos que mudaram).',
+      'Chat incógnito é a válvula para assuntos sensíveis que não devem influenciar o perfil.',
+    ],
+    pitfalls: [
+      'Afirmar "o Claude lembra de tudo" ou "não lembra de nada" — os dois estão errados; explique os dois mecanismos.',
+      'Deixar memória ligada em conta compartilhada de demonstração com dados de vários clientes.',
     ],
     practiceSteps: [
-      'Abra as configurações de memória da sua conta no painel.',
-      'Cadastre a preferência de receber respostas curtas e focadas em comandos.',
-      'Abra um chat novo e confirme se o Claude segue a preferência sem comandos adicionais.',
+      'Ative, inspecione e edite sua memória; teste uma referência a conversa antiga.',
+      'Escreva o parágrafo-padrão de resposta sobre memória/privacidade para clientes.',
     ],
     projectContext:
-      'Explique detalhadamente as regras de privacidade de dados para empresas de grande porte que precisam de conformidade LGPD/GDPR.',
-    xp: xpMap.alta,
+      'Configurar memória e histórico corretamente por perfil de usuário faz parte do desenho de governança da implantação.',
+    references: [
+      {
+        label: 'Anúncio — memória no Claude',
+        url: 'https://www.anthropic.com/news/memory',
+        kind: 'artigo',
+      },
+      { label: 'Central de ajuda — memória e privacidade', url: SUP, kind: 'doc' },
+    ],
+    xp: 60,
+    estMinutes: 25,
   },
   {
     id: 'ca-9',
     index: 9,
-    title: 'Conectores/integrações no Claude.ai',
+    title: 'Conectores: MCP na interface do Claude.ai',
     priority: 'alta',
-    type: 'conceito',
-    shortDescription: 'Conectando o Claude a ferramentas corporativas.',
+    type: 'pratica',
+    shortDescription: 'Adicionar conectores (Drive, Gmail…), o diretório e o modelo de permissões.',
     concept:
-      'Os conectores do Claude.ai permitem buscar dados de pastas do Google Drive, canais do Slack ou caixas de entrada do Gmail diretamente nas conversas do chat, ampliando o leque de ações do assistente.',
-    references: [
-      { label: 'Claude para Trabalho', url: 'https://www.anthropic.com/learn/claude-for-work' },
+      'Conectores trazem o MCP para o usuário final: pela interface, conecta-se Google Drive, Gmail, Calendar, Slack, Notion, Linear e o diretório crescente de integrações — e o Claude passa a buscar no Drive da empresa, resumir a caixa de entrada, criar eventos. Cada conector pede OAuth e escopos explícitos, e pode ser habilitado/desabilitado por conversa. Este é o recurso que transforma o Claude.ai de "chat esperto" em "assistente que trabalha nos meus sistemas" — e o que abre as conversas de automação de processos com áreas de negócio.',
+    deepDive: [
+      'Conectores custam contexto como todo MCP: habilite por conversa o que a tarefa usa, não tudo sempre.',
+      'Em Team/Enterprise, admins controlam quais conectores o time pode usar — a alavanca de governança.',
+      'Conectores remotos customizados: a empresa pode expor seus próprios sistemas via MCP e plugá-los na interface — o projeto de integração que a consultoria vende.',
+    ],
+    pitfalls: [
+      'Conectar o Gmail pessoal numa demo com tela compartilhada.',
+      'Ignorar prompt injection: um e-mail malicioso lido pelo conector pode conter instruções — cuidado com fluxos que leem conteúdo externo e agem.',
     ],
     practiceSteps: [
-      'Conecte sua conta do Google Drive no painel de conectores.',
-      'Peça análises de um documento do Drive dentro do chat informando o nome dele.',
-      'Valide o fluxo de permissões de acesso da organização.',
+      'Conecte Drive e Calendar; rode 3 tarefas reais cruzando os dois.',
+      'Explore o diretório de conectores e liste os 5 mais relevantes para seus clientes.',
     ],
     projectContext:
-      'Esta integração traz produtividade imediata no dia a dia da empresa, permitindo cruzamento de dados de múltiplos canais sem sair do navegador.',
-    xp: xpMap.alta,
+      'O mapeamento de processos identifica os sistemas; os conectores (nativos ou customizados) são como a IA chega neles — o coração da proposta de automação.',
+    references: [
+      { label: 'Central de ajuda — conectores', url: SUP, kind: 'doc' },
+      { label: 'modelcontextprotocol.io', url: 'https://modelcontextprotocol.io/', kind: 'doc' },
+    ],
+    xp: 60,
+    estMinutes: 30,
   },
   {
     id: 'ca-10',
@@ -199,141 +302,226 @@ export const claudeAiTopics: Topic[] = [
     title: 'Styles e preferences',
     priority: 'media',
     type: 'pratica',
-    shortDescription: 'Personalizando a voz e o tom das respostas.',
+    shortDescription: 'Personalizar tom e formato; preferences globais vs instruções de projeto.',
     concept:
-      'Você pode calibrar as preferências do Claude para que ele adote tom profissional, técnico ou amigável, alinhado à voz de marca da empresa nas produções de e-mails ou relatórios.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'Três camadas de personalização que se somam: preferences globais (valem em tudo — "responda em português, seja direto, evite listas desnecessárias"), styles (perfis de escrita chaveáveis — formal, conciso, explicativo — inclusive treinados a partir de exemplos do SEU texto) e instruções de projeto (contexto específico daquele Project). A ordem de precedência prática: o mais específico vence. Consultor configura as três camadas no onboarding de cada usuário do cliente — dez minutos que eliminam meses de "reescreva isso mais curto".',
+    deepDive: [
+      'Style a partir de amostra: cole 3 textos seus e o Claude extrai o estilo — o caminho para relatórios que soam como a empresa, não como IA.',
+      'Preference boa é regra objetiva ("máximo 3 parágrafos salvo pedido") — não adjetivo ("seja bom").',
+      'Documente o conjunto padrão de preferences da consultoria para replicar em cada implantação.',
+    ],
+    pitfalls: [
+      'Instruções conflitantes entre camadas gerando comportamento errático.',
+      'Style rebuscado que vira caricatura em respostas técnicas.',
+    ],
     practiceSteps: [
-      'Crie um style padrão para comunicação corporativa nas configurações.',
-      'Gere um e-mail de aviso de manutenção de sistema usando o style ativo.',
-      'Compare a saída com o tom de voz padrão do Claude.',
+      'Configure suas preferences globais com 5 regras objetivas.',
+      'Crie um style a partir de 3 relatórios reais e compare a saída.',
     ],
     projectContext:
-      'Desenvolva estilos de resposta específicos para o time de suporte ou vendas do cliente utilizarem nas interações de rotina.',
-    xp: xpMap.media,
+      'Padronização de voz nas saídas de IA é requisito de marca em clientes maiores — e styles são a resposta nativa.',
+    references: [{ label: 'Central de ajuda — styles', url: SUP, kind: 'doc' }],
+    xp: 45,
+    estMinutes: 20,
   },
   {
     id: 'ca-11',
     index: 11,
-    title: 'Claude Console',
+    title: 'Claude Console: a porta de entrada da API',
     priority: 'media',
     type: 'pratica',
-    shortDescription: 'Acesso e faturamento da API no painel de controle.',
+    shortDescription: 'Criar conta, API keys, Workbench para testar prompts, billing e consumo.',
     concept:
-      'O Console da Anthropic é o portal técnico para geração de API Keys, controle de faturamento pay-as-you-go, configurações de rate limits dos endpoints de produção e testes de prompts no Workbench.',
-    references: [{ label: 'Anthropic Developer Console', url: 'https://console.anthropic.com' }],
+      'O Console (console.anthropic.com ou platform.claude.com) é o painel de desenvolvedor: criação de API keys (por workspace, com escopos), o Workbench — playground para testar prompts com controle de modelo, temperatura e system prompt antes de escrever código — e a visão de billing/uso com limites de gasto configuráveis. Mesmo consultor que não programa precisa navegar aqui: é onde se cria a key do projeto do cliente, se define o teto de gasto (SEMPRE defina) e se responde "quanto gastamos este mês e com o quê".',
+    deepDive: [
+      'Workspaces separam clientes: keys, limites e billing por workspace — a organização mínima de uma consultoria multi-cliente.',
+      'O Workbench gera o código da chamada testada — a ponte natural do prompt validado para o produto.',
+      'Alertas e tetos de gasto são a diferença entre susto de fatura e operação controlada.',
+    ],
+    pitfalls: [
+      'Uma key global para todos os clientes — sem isolamento de custo nem revogação limpa.',
+      'Testar prompt direto no código em vez de iterar barato no Workbench.',
+    ],
     practiceSteps: [
-      'Crie uma conta de teste no Console da Anthropic.',
-      'Gere uma chave de API segura.',
-      'Estude a tabela de custos de chamadas de tokens dos modelos.',
+      'Crie um workspace de teste, uma key com escopo e um teto de gasto.',
+      'Itere um prompt real no Workbench até o resultado desejado e exporte o código.',
     ],
     projectContext:
-      'O Console é a primeira parada em qualquer projeto de desenvolvimento de produtos próprios de IA que o cliente deseja construir.',
-    xp: xpMap.media,
+      'Setup de Console por cliente (workspace + key + teto + alerta) é checklist de kickoff de qualquer projeto com API.',
+    references: [
+      { label: 'Claude Console', url: 'https://console.anthropic.com/', kind: 'tool' },
+      {
+        label: 'Docs — primeiros passos na API',
+        url: DOCS + '/en/api/getting-started',
+        kind: 'doc',
+      },
+    ],
+    xp: 45,
+    estMinutes: 25,
   },
   {
     id: 'ca-12',
     index: 12,
-    title: 'API Messages básica',
+    title: 'API Messages: o mínimo essencial',
     priority: 'media',
-    type: 'pratica',
-    shortDescription: 'Conceitos e requisições básicas da API.',
+    type: 'conceito',
+    shortDescription:
+      'Estrutura de request, system prompt e o vocabulário para acompanhar quem constrói.',
     concept:
-      'A API Messages da Anthropic é o endpoint para chamadas síncronas de processamento de texto e imagens. A chamada estruturada exige um array de mensagens contendo as alternâncias de papéis (user/assistant) e o system prompt isolado.',
-    references: [
-      { label: 'API Messages Reference', url: 'https://docs.anthropic.com/en/api/messages' },
+      'A Messages API é uma chamada HTTP com: model (qual Claude), system (as instruções permanentes), messages (a conversa — pares user/assistant), max_tokens (teto da resposta) e temperature. A resposta traz o conteúdo e o usage (tokens de entrada e saída — a base da conta de custo). Você não precisa programar para valer ouro numa reunião técnica: precisa ler um request e responder "onde entra a instrução do sistema?", "por que a fatura subiu?" (tokens de entrada crescem com o histórico reenviado) e "o que é streaming?" (a resposta chegando aos pedaços para UX fluida).',
+    deepDive: [
+      'A API é stateless: cada chamada reenvia a conversa inteira — por isso histórico longo = custo crescente, e por isso existe prompt caching.',
+      'System prompt na API = as "instruções de projeto" do mundo dos produtos: é onde vive a persona e as regras do assistente do cliente.',
+      'usage na resposta é o medidor: input_tokens × preço + output_tokens × preço = o custo daquela chamada.',
+    ],
+    pitfalls: [
+      'Achar que a API "lembra" da conversa anterior sozinha.',
+      'Ignorar max_tokens e ter respostas cortadas em produção.',
     ],
     practiceSteps: [
-      'Instale o SDK de Node da Anthropic no seu ambiente local.',
-      'Execute uma requisição messages simples via script JS.',
-      'Analise os metadados de tokens da resposta recebida.',
+      'No Workbench, monte uma chamada com system prompt e leia o usage da resposta.',
+      'Calcule o custo de 1000 atendimentos/dia do assistente hipotético do cliente.',
     ],
     projectContext:
-      'Saber a sintaxe básica de integração da API Messages é essencial para auditar o trabalho do desenvolvedor no projeto do cliente.',
-    xp: xpMap.media,
+      'Fluência em ler requests permite ao consultor auditar o que a equipe de dev do cliente construiu — e escopar produtos com custo realista.',
+    references: [
+      { label: 'Docs — Messages API', url: DOCS + '/en/api/messages', kind: 'doc' },
+      {
+        label: 'Building with the Claude API — Academy',
+        url: ACAD + '/claude-with-the-anthropic-api',
+        kind: 'curso',
+      },
+    ],
+    xp: 45,
+    estMinutes: 30,
   },
   {
     id: 'ca-13',
     index: 13,
-    title: 'Tool use / function calling',
+    title: 'Tool use na API: conceito e exemplo',
     priority: 'media',
-    type: 'pratica',
-    shortDescription: 'Habilitando ações e cálculos via chaves API.',
+    type: 'conceito',
+    shortDescription: 'Function calling — como o modelo pede para executar ações no mundo.',
     concept:
-      'O recurso de Tool Use (function calling) permite que o modelo decida quando e qual ferramenta externa chamar para resolver problemas específicos (ex: fazer uma query em um banco de dados) mapeando as assinaturas em JSON schema.',
-    references: [
-      {
-        label: 'Guia de Uso de Ferramentas (Tool Use)',
-        url: 'https://docs.anthropic.com/en/docs/build-with-claude/tool-use',
-      },
+      'Tool use (function calling) é o mecanismo que transforma o modelo em agente: você declara ferramentas (nome, descrição, parâmetros em JSON Schema), o modelo decide quando usá-las e responde com um pedido estruturado de chamada ("chame consultar_pedido com id=123"); SEU código executa a ação real e devolve o resultado, e o modelo continua com essa informação. O modelo nunca executa nada — ele pede; a aplicação executa. Entender esse loop é entender como TODOS os agentes (Claude Code, conectores, MCP) funcionam por baixo.',
+    deepDive: [
+      'A descrição da ferramenta é prompt: descrições precisas de quando usar (e quando não) definem a qualidade da decisão do modelo.',
+      'O loop: user → modelo pede tool → app executa → resultado volta como mensagem → modelo responde ou pede outra tool. Multi-step agents são esse loop repetido.',
+      'MCP é a padronização disso: em vez de cada app declarar ferramentas do seu jeito, o protocolo define o contrato.',
+    ],
+    pitfalls: [
+      'Ferramentas com descrições vagas gerando chamadas erradas — o bug mais comum de agentes caseiros.',
+      'Executar ações destrutivas pedidas pelo modelo sem camada de confirmação.',
     ],
     practiceSteps: [
-      'Mapeie uma ferramenta simples (como obter cotação de moedas) em JSON schema.',
-      'Faça uma requisição enviando o objeto da ferramenta na propriedade `tools`.',
-      'Inspecione a resposta do modelo retornando a requisição de chamada (`tool_use`).',
+      'Desenhe o diagrama do loop de tool use para um caso do cliente (ex: consultar estoque).',
+      'No Workbench/docs, monte uma definição de ferramenta e observe o modelo decidir usá-la.',
     ],
     projectContext:
-      'Implementar Tool Use robusto é o que separa um chatbot de IA comum de um agente autônomo conectado aos dados da empresa.',
-    xp: xpMap.media,
+      'Todo blueprint de automação tem uma tabela "ferramentas do agente": nome, o que faz, riscos, aprovação necessária — este tópico é o alicerce dela.',
+    references: [
+      {
+        label: 'Docs — tool use',
+        url: DOCS + '/en/docs/agents-and-tools/tool-use/overview',
+        kind: 'doc',
+      },
+      { label: 'Cursos de API/MCP — Academy', url: ACAD + '/', kind: 'curso' },
+    ],
+    xp: 45,
+    estMinutes: 30,
   },
   {
     id: 'ca-14',
     index: 14,
-    title: 'Claude in Chrome / Excel / PowerPoint',
+    title: 'Claude in Chrome, Excel e PowerPoint',
     priority: 'media',
-    type: 'pratica',
-    shortDescription: 'Extensões e suplementos para rotinas de escritório.',
+    type: 'conceito',
+    shortDescription: 'O que cada agente embarcado faz e para qual perfil de cliente indicar.',
     concept:
-      'Utilizar extensões e suplementos oficiais permite que equipes administrativas acelerem rotinas de digitação, montagem de apresentações em slides e análises de fórmulas no Excel.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'Três agentes que moram onde o trabalho acontece: Claude in Chrome navega e opera páginas (preenche formulários, pesquisa em sistemas web, executa fluxos no navegador); Claude in Excel trabalha dentro da planilha (fórmulas, análises, limpeza e explicação de modelos existentes); Claude in PowerPoint monta e reformata apresentações no próprio arquivo. A indicação é cirúrgica por perfil: financeiro vive no Excel, comercial vive no PowerPoint, operações vive em sistemas web — cada um recebe o agente do seu habitat, com curva de adoção mínima porque a interface já é conhecida.',
+    deepDive: [
+      'Chrome é o mais poderoso e o mais sensível: um agente que age em páginas precisa de política clara de sites permitidos e supervisão — prompt injection em página maliciosa é vetor real.',
+      'Excel: o caso matador é explicar e auditar planilhas herdadas — a dor universal do financeiro.',
+      'Disponibilidade e requisitos variam por plano — confirme na documentação antes de prometer no rollout.',
+    ],
+    pitfalls: [
+      'Liberar o agente de navegador sem política de sites e supervisão.',
+      'Demonstrar no Excel genérico em vez de na planilha real (e dolorosa) do cliente.',
+    ],
     practiceSteps: [
-      'Instale a extensão do Chrome do Claude na sua máquina.',
-      'Use o atalho de leitura em uma página longa de documentação.',
-      'Monte um roteiro curto de como a extensão acelera revisões de textos.',
+      'Teste os três com uma tarefa real de cada área.',
+      'Mapeie: para cada área do seu cliente, qual agente embarcado atacaria a maior dor?',
     ],
     projectContext:
-      'Ofereça treinamentos das extensões de rotinas de escritório para as equipes não técnicas do cliente para aumentar a produtividade geral da empresa.',
-    xp: xpMap.media,
+      'Esses agentes viram frentes do mapeamento de processos: a automação chega onde a área já trabalha, sem migração de ferramenta.',
+    references: [
+      { label: 'Central de ajuda — Claude nos apps', url: SUP, kind: 'doc' },
+      { label: 'Anthropic — novidades', url: 'https://www.anthropic.com/news', kind: 'artigo' },
+    ],
+    xp: 45,
+    estMinutes: 25,
   },
   {
     id: 'ca-15',
     index: 15,
     title: 'Claude Cowork',
     priority: 'media',
-    type: 'pratica',
-    shortDescription: 'Desenvolvimento colaborativo de arquivos.',
+    type: 'conceito',
+    shortDescription: 'O agente de trabalho para não-devs — e a diferença para o Claude Code.',
     concept:
-      'O Claude Cowork é uma interface otimizada para pair-programming e cocriação de código que permite trabalhar cooperativamente no mesmo bloco de texto ou código em tempo real.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'Cowork é o Claude Code para trabalho de conhecimento: um app desktop onde o agente opera sobre PASTAS e ARQUIVOS (documentos, planilhas, PDFs) em vez de repositórios — organiza, extrai, cruza, gera relatórios e apresentações, executando tarefas multi-etapa com a mesma mecânica de plano e revisão. O público é o analista, o jurídico, o financeiro: gente que tem processos repetitivos sobre arquivos e nunca vai abrir um terminal. Na prática da consultoria, Cowork é a resposta para "e o resto da empresa?" depois que os devs já adotaram Claude Code.',
+    deepDive: [
+      'Mesmo DNA: instruções, skills e plugins funcionam no Cowork — o investimento em metodologia transfere.',
+      'Caso típico: pasta com 80 currículos → tabela comparativa com critérios; pasta de notas fiscais → planilha consolidada.',
+      'A fronteira: automação sobre arquivos locais → Cowork; código e repositórios → Claude Code; os dois convivem no mesmo cliente.',
+    ],
+    pitfalls: [
+      'Apresentar como "Claude Code simplificado" — é outro público e outro caso de uso.',
+      'Soltar em dados sensíveis sem as mesmas conversas de governança do resto.',
+    ],
     practiceSteps: [
-      'Use la interface do Cowork para escrever um script em conjunto.',
-      'Analise o histórico de edições do arquivo.',
-      'Documente os atalhos de uso do painel.',
+      'Faça o curso introdutório de Cowork na Anthropic Academy.',
+      'Automatize uma tarefa real de arquivos sua (organizar propostas, consolidar planilhas).',
     ],
     projectContext:
-      'Essa interface diminui a fricção de reuniões de code review na equipe do cliente.',
-    xp: xpMap.media,
+      'Cowork expande o contrato para as áreas de negócio — o mapeamento de processos administrativo vira implantação, não só relatório.',
+    references: [
+      { label: 'Introduction to Claude Cowork — Academy', url: ACAD + '/', kind: 'curso' },
+      { label: 'Central de ajuda — Cowork', url: SUP, kind: 'doc' },
+    ],
+    xp: 45,
+    estMinutes: 25,
   },
   {
     id: 'ca-16',
     index: 16,
-    title: 'Anthropic Academy',
+    title: 'Anthropic Academy: trilhas e certificações',
     priority: 'media',
     type: 'pratica',
-    shortDescription: 'Certificações e capacitações oficiais.',
+    shortDescription: 'O catálogo gratuito, a ordem recomendada e os certificados.',
     concept:
-      'A Anthropic Academy disponibiliza trilhas gratuitas de engenharia de prompt, arquitetura de sistemas com IA e governança corporativa, ideais para obter selos oficiais de competência.',
-    references: [
-      { label: 'Portal Educacional da Anthropic', url: 'https://anthropic.skilljar.com' },
+      'A Anthropic Academy (anthropic.skilljar.com) é o hub oficial de cursos — gratuitos, com certificado ao passar no quiz final, adicionáveis ao LinkedIn. O catálogo cobre de AI Fluency (fundamentos para qualquer perfil) a Claude Code 101/in Action, Cowork, Subagents, Skills, MCP (introdutório e avançado) e Building with the Claude API. Ordem que recomendamos para consultores: AI Fluency → Claude 101 → Claude Code 101 → Claude Code in Action → MCP → API. Certificados oficiais do fabricante valem sinalização real no mercado — e são a credencial que o cliente reconhece.',
+    deepDive: [
+      'Os cursos são a extensão natural desta trilha: cada tópico daqui tem um curso oficial para aprofundar — use os links das etapas.',
+      'Para o time do cliente, montar a "trilha Academy" por perfil (dev, analista, gestor) é entregável de capacitação pronto.',
+      'Conteúdo em inglês; o material é vídeo + quiz, autoguiado.',
+    ],
+    pitfalls: [
+      'Colecionar certificados sem praticar — o quiz passa, o cliente percebe.',
+      'Ignorar os cursos de MCP achando que são "só para devs" — consultor de integração precisa deles.',
     ],
     practiceSteps: [
-      'Cadastre-se na Anthropic Academy com o e-mail corporativo.',
-      'Complete os módulos iniciais de engenharia de prompt.',
-      'Valide o certificado obtido.',
+      'Crie sua conta e complete o primeiro curso da ordem recomendada.',
+      'Monte a matriz perfil × cursos para o próximo treinamento de cliente.',
     ],
     projectContext:
-      'Certificações da Anthropic chancelam a autoridade técnica da consultoria frente a clientes corporativos exigentes.',
-    xp: xpMap.media,
+      'A Academy é o material didático oficial e gratuito que sustenta os treinamentos que a consultoria vende — curadoria é o seu valor agregado.',
+    references: [
+      { label: 'Anthropic Academy (catálogo)', url: ACAD + '/', kind: 'curso' },
+      { label: 'Anthropic Learn', url: 'https://www.anthropic.com/learn', kind: 'doc' },
+    ],
+    xp: 45,
+    estMinutes: 20,
   },
   {
     id: 'ca-17',
@@ -341,126 +529,217 @@ export const claudeAiTopics: Topic[] = [
     title: 'Apps desktop e mobile',
     priority: 'media',
     type: 'pratica',
-    shortDescription: 'Diferenças de interface no celular e computador.',
+    shortDescription: 'Diferenças para o web, ditado, atalhos e o Claude no bolso.',
     concept:
-      'Os apps nativos oferecem recursos integrados como ditado por voz simplificado e atalhos rápidos de teclado locais no Desktop, úteis para alternância de janelas.',
-    references: [{ label: 'Aprenda sobre o Claude', url: 'https://www.anthropic.com/learn' }],
+      'Os apps nativos adicionam o que o navegador não dá: no desktop, atalho global para invocar o Claude de qualquer lugar, captura de tela/janela direto para o chat e integração com o sistema; no mobile, ditado por voz (transformando deslocamentos em sessões de trabalho), câmera para analisar documentos físicos e — o recurso subestimado — acompanhar e dirigir sessões do Claude Code remotamente. Para o consultor em campo, o mobile é ferramenta de trabalho: fotografar o quadro branco da reunião de mapeamento e sair com o processo digitalizado.',
+    deepDive: [
+      'O atalho global do desktop muda o padrão de uso: o Claude vira reflexo, não destino.',
+      'Voz no mobile: reuniões debriefadas por áudio no caminho viram notas estruturadas ao chegar.',
+      'Claude Code remoto pelo app: dispare/acompanhe tarefas longas fora da mesa — o recurso favorito de quem opera múltiplos projetos.',
+    ],
+    pitfalls: [
+      'Nunca configurar o atalho global e continuar alt-tabando para o navegador.',
+      'Fotografar documentos confidenciais do cliente sem pensar na política de dados combinada.',
+    ],
     practiceSteps: [
-      'Instale o app de celular do Claude.',
-      'Use o ditado por voz para transcrever uma ideia de feature.',
-      'Envie o resultado para o computador.',
+      'Instale desktop + mobile; configure o atalho global e use por uma semana.',
+      'Fotografe um diagrama de quadro branco e transforme em documento estruturado.',
     ],
     projectContext:
-      'Treine os consultores a utilizarem o app mobile para capturar observações rápidas de calls com clientes em tempo real.',
-    xp: xpMap.media,
+      'No rollout, apps nativos aumentam frequência de uso — e frequência é a métrica que sustenta a renovação do contrato.',
+    references: [
+      { label: 'Downloads — Claude apps', url: 'https://claude.ai/download', kind: 'tool' },
+      { label: 'Central de ajuda — apps', url: SUP, kind: 'doc' },
+    ],
+    xp: 45,
+    estMinutes: 15,
   },
   {
     id: 'ca-18',
     index: 18,
     title: 'Prompt caching e Batch API',
     priority: 'baixa',
-    type: 'quiz',
-    shortDescription: 'Otimizando custos de grandes volumes de requisição.',
+    type: 'conceito',
+    shortDescription: 'As duas alavancas que derrubam o custo de produção do cliente.',
     concept:
-      'O Prompt Caching armazena blocos de contexto gigantes (como documentações inteiras) nos servidores da Anthropic por um período determinado. Chamadas consecutivas que carregam o mesmo contexto economizam até 90% em custos de tokens de entrada. A Batch API processa requisições não urgentes de forma assíncrona em até 24 horas por metade do custo normal.',
-    references: [
-      {
-        label: 'Prompt Caching Guide (Docs)',
-        url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching',
-      },
+      'Duas otimizações que todo produto sério usa: prompt caching guarda prefixos estáveis do prompt (system prompt gigante, documentos fixos, definições de ferramentas) e cobra uma fração pela releitura — em assistentes com contexto grande e repetido, corta a fatura dramaticamente; a Batch API processa lotes assíncronos (até 24h de prazo) com 50% de desconto — perfeita para o que não precisa de resposta imediata: classificação noturna, relatórios agendados, backfill de análises. Saber que existem e quando aplicar é diferença de milhares de reais/mês na operação do cliente.',
+    deepDive: [
+      'Caching exige ordenar o prompt: estável primeiro (cacheável), variável no fim — decisão de arquitetura, não flag mágica.',
+      'A conta do batch: 100k classificações que podiam esperar até amanhã custando metade — pergunte sempre "isso precisa ser síncrono?".',
+      'Os dois combinam: batch com prompts cacheados é o piso de custo por tarefa.',
+    ],
+    pitfalls: [
+      'Prompt com conteúdo variável no início invalidando o cache silenciosamente.',
+      'Rodar cargas noturnas na API síncrona por desconhecimento do batch.',
     ],
     practiceSteps: [
-      'Desenhe a chamada de API contendo o bloco de cache nas opções.',
-      'Faça requisições consecutivas e compare a propriedade `cached_tokens` nos metadados.',
-      'Calcule a economia em escala para 1000 chamadas diárias.',
+      'Leia as docs de caching e batch; identifique no produto de um cliente onde cada um se aplica.',
+      'Estime a economia mensal — e leve o número para a reunião.',
     ],
     projectContext:
-      'Se o cliente possui um robô de RAG com banco de dados fixo grande, implementar Prompt Caching reduz a fatura dele drasticamente.',
-    xp: xpMap.baixa,
+      '"Reduzi sua fatura de IA em 60% com duas mudanças de arquitetura" é o e-mail de renovação de contrato perfeito.',
+    references: [
+      {
+        label: 'Docs — prompt caching',
+        url: DOCS + '/en/docs/build-with-claude/prompt-caching',
+        kind: 'doc',
+      },
+      {
+        label: 'Docs — Batch API',
+        url: DOCS + '/en/docs/build-with-claude/batch-processing',
+        kind: 'doc',
+      },
+    ],
+    xp: 30,
+    estMinutes: 25,
   },
   {
     id: 'ca-19',
     index: 19,
     title: 'Rate limits da API',
     priority: 'baixa',
-    type: 'quiz',
-    shortDescription: 'Prevenindo erros de requisições excedidas em produção.',
+    type: 'conceito',
+    shortDescription: 'Tiers, como escalam e o que fazer com o erro 429.',
     concept:
-      'A API possui limites rigorosos de chamadas por minuto (RPM) e tokens por minuto (TPM), divididos em Tiers de faturamento (de 1 a 5). Atingir esses limites retorna erros HTTP 429. Implementar tratamento de retry com backoff exponencial no código do backend evita falhas de experiência do usuário.',
-    references: [
-      { label: 'API Rate Limits and Tiers', url: 'https://docs.anthropic.com/en/api/rate-limits' },
+      'A API limita por requisições/minuto e tokens/minuto, organizados em tiers que sobem automaticamente com o histórico de gasto (depósitos/uso desbloqueiam tiers maiores). O erro 429 é o sintoma: too many requests — e a resposta correta do lado do cliente é retry com backoff exponencial (as SDKs oficiais já fazem), não martelar. Para produção com volume, o planejamento de capacidade entra no desenho: qual tier o lançamento exige, quanto tempo até alcançá-lo, e se picos justificam conversar com a Anthropic sobre limites maiores.',
+    deepDive: [
+      'Limites são por workspace/organização — mais um motivo para separar clientes em workspaces.',
+      'O header da resposta informa o estado dos limites — monitoramento básico de produção.',
+      '429 recorrente em produto novo geralmente é falta de fila/batch no design, não limite baixo demais.',
+    ],
+    pitfalls: [
+      'Lançar campanha de marketing que 10x o tráfego sem checar o tier atual.',
+      'Tratar 429 como erro fatal para o usuário final em vez de enfileirar e tentar de novo.',
     ],
     practiceSteps: [
-      'Verifique seu Tier de uso atual no dashboard do Console.',
-      'Simule requisições paralelas rápidas e ateste o erro 429.',
-      'Escreva um wrapper de chamada com lógica de backoff exponencial.',
+      'Localize no Console o tier e os limites atuais do seu workspace.',
+      'Escreva o checklist de capacidade pré-lançamento para produtos de cliente.',
     ],
     projectContext:
-      'Antes do go-live do produto do cliente, certifique-se de que a conta dele tem Tier de faturamento adequado ao tráfego estimado de usuários.',
-    xp: xpMap.baixa,
+      'Planejamento de capacidade é parte do go-live de qualquer produto com IA que a consultoria entrega — o 429 no dia do lançamento é evitável.',
+    references: [{ label: 'Docs — rate limits', url: DOCS + '/en/api/rate-limits', kind: 'doc' }],
+    xp: 30,
+    estMinutes: 20,
   },
   {
     id: 'ca-20',
     index: 20,
-    title: 'Privacidade e retenção',
+    title: 'Privacidade e retenção de dados',
     priority: 'baixa',
-    type: 'quiz',
-    shortDescription: 'Regras de tratamento de dados corporativos.',
+    type: 'conceito',
+    shortDescription:
+      'O que a Anthropic guarda, treinamento com dados e as configs de Team/Enterprise.',
     concept:
-      'A Anthropic segue regras de segurança claras. Chaves de API e dados trafegados na API Messages por padrão não são utilizados para treinamento de novos modelos, garantindo conformidade para empresas com restrições rígidas de privacidade de código.',
-    references: [
-      { label: 'Políticas de Privacidade e Confiança', url: 'https://www.anthropic.com/trust' },
+      'A pergunta que decide contratos corporativos: "o que acontece com os nossos dados?". O mapa de resposta: consumidor (Free/Pro/Max) tem configurações de uso de dados que o usuário controla; comercial (Team/Enterprise/API) segue termos comerciais — por padrão, dados de clientes comerciais não treinam modelos; Enterprise adiciona retenção configurável, SSO, auditoria e o aparato de compliance (SOC 2, certificações no Trust Center). A regra de ouro do consultor: NUNCA responda de memória — políticas evoluem; abra trust.anthropic.com e a política vigente na frente do cliente e responda com a fonte.',
+    deepDive: [
+      'Distinga os planos na resposta: a política de consumidor ≠ comercial — misturar os dois é o erro que o jurídico do cliente pega.',
+      'Trust Center: certificações, subprocessadores, DPA — os documentos que o compliance vai pedir; saiba onde estão.',
+      'Zero data retention e residência de dados são conversas de Enterprise/vendas — saiba que existem para encaminhar.',
+    ],
+    pitfalls: [
+      'Afirmar política de dados de memória em proposta escrita.',
+      'Não distinguir claude.ai consumidor de API comercial na resposta.',
     ],
     practiceSteps: [
-      'Estude a documentação de compliance da Anthropic.',
-      'Prepare um resumo de privacidade de dados para o setor jurídico de um cliente.',
-      'Identifique as diferenças das políticas de planos Free vs API.',
+      'Navegue o Trust Center e a política de privacidade; monte seu doc de respostas com links e data.',
+      'Simule a reunião: responda as 5 perguntas clássicas de compliance com fontes.',
     ],
     projectContext:
-      'Ter este material jurídico de privacidade estruturado e pronto resolve reuniões de auditoria com setores jurídicos de grandes empresas na primeira semana de projeto.',
-    xp: xpMap.baixa,
+      'A reunião com jurídico/segurança é gate de todo projeto corporativo — quem chega com fontes oficiais passa; quem improvisa espera 3 meses.',
+    references: [
+      { label: 'Trust Center da Anthropic', url: 'https://trust.anthropic.com/', kind: 'doc' },
+      {
+        label: 'Política de privacidade',
+        url: 'https://www.anthropic.com/legal/privacy',
+        kind: 'doc',
+      },
+    ],
+    xp: 30,
+    estMinutes: 25,
   },
   {
     id: 'ca-21',
     index: 21,
     title: 'Agent SDK',
     priority: 'baixa',
-    type: 'quiz',
-    shortDescription: 'O framework oficial para agentes autônomos.',
+    type: 'conceito',
+    shortDescription: 'O que é, o que resolve e quando um cliente precisaria.',
     concept:
-      'O Agent SDK da Anthropic é um framework projetado para construir sistemas de agentes robustos com estados de conversação persistentes, gerenciamento de loops de execução e suporte nativo a ferramentas.',
-    references: [
-      {
-        label: 'Anthropic SDK no GitHub',
-        url: 'https://github.com/anthropics/anthropic-sdk-typescript',
-      },
+      'O Claude Agent SDK expõe o motor do Claude Code como biblioteca (Python/TypeScript): o loop agêntico completo — ferramentas de arquivo e bash, permissões, MCP, subagentes, gestão de contexto — para construir agentes PRÓPRIOS em produção. A distinção de escopo: a Messages API dá o modelo cru (você constrói o loop); o Agent SDK dá o agente pronto (você customiza ferramentas e políticas). Um cliente precisa dele quando quer um agente de produção com as capacidades do Claude Code dentro do produto/infra dele — não para chatbots simples, onde a API basta.',
+    deepDive: [
+      'Herda o que este programa ensinou: CLAUDE.md, permissões, hooks e MCP funcionam no SDK — o conhecimento transfere direto.',
+      'Casos: agente de suporte que abre PRs de correção, agente de onboarding que configura ambientes, automações internas profundas.',
+      'Decisão de arquitetura: API (controle total, mais trabalho) vs Agent SDK (loop pronto, opinião embutida) vs headless CLI (mais simples ainda) — escadinha de complexidade.',
+    ],
+    pitfalls: [
+      'Recomendar SDK para um FAQ bot — bazuca em mosquito.',
+      'Esquecer que agente em produção herda TODAS as conversas de permissão e sandbox deste programa.',
     ],
     practiceSteps: [
-      'Instale o Agent SDK em um repositório node.',
-      'Crie um agente simples com 2 ferramentas conectadas.',
-      'Monitore o loop de decisões do agente no log do terminal.',
+      'Leia a visão geral do Agent SDK e desenhe um caso de uso real de um cliente seu.',
+      'Escreva o critério de 5 linhas: quando API, quando SDK, quando headless.',
     ],
     projectContext:
-      'Para projetos de robôs de atendimento autônomos complexos com tomada de decisão em tempo real, use o SDK oficial para estruturar a engenharia.',
-    xp: xpMap.baixa,
+      'É a fase 3 da maturidade do cliente: depois de usar agentes, ele quer TER agentes — e a consultoria escopa esse projeto.',
+    references: [
+      { label: 'Docs — Agent SDK', url: DOCS + '/en/api/agent-sdk/overview', kind: 'doc' },
+      {
+        label: 'Anthropic Engineering — building agents',
+        url: 'https://www.anthropic.com/engineering',
+        kind: 'artigo',
+      },
+    ],
+    xp: 30,
+    estMinutes: 25,
   },
   {
     id: 'ca-22',
     index: 22,
-    title: 'Status e incidentes',
+    title: 'Status e incidentes: "é o Claude ou sou eu?"',
     priority: 'baixa',
-    type: 'quiz',
-    shortDescription: 'Diagnóstico rápido de quedas dos serviços.',
+    type: 'pratica',
+    shortDescription: 'status.anthropic.com e o fluxo de diagnóstico em 2 minutos.',
     concept:
-      'As interrupções de serviço dos servidores da Anthropic ou de provedores de CDN podem causar erros de conexões e travamentos de requisições. O portal de status monitora o status dos endpoints em tempo real.',
-    references: [{ label: 'Portal de Status do Endpoint', url: 'https://status.anthropic.com' }],
+      'Quando "o Claude parou", o diagnóstico profissional leva 2 minutos e segue ordem fixa: (1) status.claude.com / status.anthropic.com — incidente ativo? Qual serviço (claude.ai, API, Claude Code)?; (2) é geral ou só um usuário? (outro colega reproduz?); (3) é a conta? (limite atingido — checar /usage ou o indicador do plano); (4) é a rede/ambiente? (proxy corporativo, VPN, extensões). Com incidente confirmado: informar o cliente com o link do status, ETA se houver, e plano B (outro modelo, outra superfície, API). Assine os updates do status por e-mail/RSS e saiba de incidentes antes do cliente.',
+    deepDive: [
+      'O histórico de incidentes da página dá contexto para conversas de SLA e expectativa em contratos.',
+      'Plano B preparado (fallback de modelo/provedor para fluxos críticos) é desenho de arquitetura, não improviso do dia do incidente.',
+      'Erros de API têm códigos: 429 é limite, 529 é sobrecarga, 500 é servidor — cada um com resposta própria; a doc de erros é o mapa.',
+    ],
+    pitfalls: [
+      'Debugar 2 horas de "bug" que a página de status explicava.',
+      'Comunicar "caiu tudo" ao cliente sem verificar se era só o seu proxy.',
+    ],
     practiceSteps: [
-      'Acesse status.anthropic.com e verifique o histórico recente de incidentes.',
-      'Assine a newsletter de incidentes técnicos.',
-      'Escreva um script de monitoramento básico de saúde do endpoint.',
+      'Assine os updates da página de status agora.',
+      'Documente o fluxo de diagnóstico em 4 passos e cole no canal do time.',
     ],
     projectContext:
-      'Se a API de um cliente cair em produção, o primeiro passo antes de alterar qualquer código é conferir a saúde dos servidores da Anthropic.',
-    xp: xpMap.baixa,
+      'Suporte de implantação com diagnóstico rápido e comunicação transparente é o que constrói a reputação da consultoria em crise.',
+    references: [
+      { label: 'Status — Anthropic', url: 'https://status.anthropic.com/', kind: 'tool' },
+      { label: 'Docs — erros da API', url: DOCS + '/en/api/errors', kind: 'doc' },
+    ],
+    xp: 30,
+    estMinutes: 15,
+  },
+  {
+    id: 'ca-boss',
+    index: 23,
+    title: 'BOSS: Mestre do Ecossistema Claude',
+    priority: 'alta',
+    type: 'boss',
+    shortDescription:
+      'Desafio final — planos, Projects, conectores, API e as respostas corporativas.',
+    concept:
+      'O boss do ecossistema Claude testa a visão completa: dimensionar planos, montar Projects que funcionam, conectores com governança, o essencial da API e as respostas de privacidade que destravam contratos. Acerte 4 de 5 para vencer.',
+    deepDive: [],
+    pitfalls: [],
+    practiceSteps: [],
+    projectContext:
+      'Aprovação indica prontidão para desenhar e vender implantações completas do ecossistema Claude.',
+    references: [],
+    xp: 120,
+    estMinutes: 15,
   },
 ]

@@ -1,204 +1,170 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Map, Trophy, LogOut, Shield, Menu, X } from 'lucide-react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Flame, Home, Map, Trophy, Shield, LogOut, Zap } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { useAppStore } from '@/hooks/use-app-store'
-import { useState } from 'react'
+import { ConfettiEffect } from '@/components/ConfettiEffect'
+import { cn } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/trails', icon: Map, label: 'Trilhas' },
-  { to: '/achievements', icon: Trophy, label: 'Conquistas' },
+  { to: '/', label: 'Início', icon: Home, end: true },
+  { to: '/trails', label: 'Trilhas', icon: Map, end: false },
+  { to: '/achievements', label: 'Conquistas', icon: Trophy, end: false },
 ]
 
 export function Layout() {
-  const { user, signOut, isAdmin } = useAuth()
-  const { levelInfo, totalXP } = useAppStore()
-  const location = useLocation()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { isAdmin, signOut } = useAuth()
+  const { totalXP, streak, levelInfo, newAchievement, clearNewAchievement } = useAppStore()
+  const navigate = useNavigate()
+
+  const handleSignOut = () => {
+    signOut()
+    navigate('/login')
+  }
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 border-r border-border/50 glass-card rounded-none min-h-screen fixed left-0 top-0 z-40">
-        {/* Logo */}
-        <div className="p-6 border-b border-border/30">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-              <span className="text-xl">🚀</span>
+    <div className="min-h-dvh">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+        <div className="container flex h-16 items-center justify-between gap-3">
+          <NavLink to="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary btn-glow">
+              <Zap className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
             </div>
-            <div>
-              <h1
-                className="font-bold text-lg tracking-tight"
-                style={{ fontFamily: 'Space Grotesk' }}
+            <div className="hidden sm:block">
+              <span className="font-display text-sm font-bold leading-none">Trilha IA</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Consultores
+              </span>
+            </div>
+          </NavLink>
+
+          <nav className="hidden items-center gap-1 md:flex">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  cn(
+                    'flex h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors',
+                    isActive
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )
+                }
               >
-                Antigravity
-              </h1>
-              <p className="text-[11px] text-muted-foreground font-medium tracking-wider uppercase">
-                Trilha de Aprendizado
-              </p>
-            </div>
-          </div>
-        </div>
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </NavLink>
+            ))}
+            {isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  cn(
+                    'flex h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors',
+                    isActive
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )
+                }
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </NavLink>
+            )}
+          </nav>
 
-        {/* User card */}
-        <div className="p-4 mx-4 mt-4 rounded-xl bg-secondary/30 border border-border/30">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-lg">
-              {levelInfo.icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm truncate">{user?.name || 'Consultor'}</p>
-              <p className="text-xs text-muted-foreground">
-                Nv.{levelInfo.level} · {levelInfo.title}
-              </p>
-            </div>
-          </div>
-          {/* XP Bar */}
-          <div className="mt-3">
-            <div className="flex justify-between text-[10px] font-medium text-muted-foreground mb-1">
-              <span>{totalXP} XP</span>
-              <span>{levelInfo.progress}%</span>
-            </div>
-            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-primary to-emerald-400 rounded-full transition-all duration-700"
-                style={{ width: `${levelInfo.progress}%` }}
+          <div className="flex items-center gap-2">
+            <span className="pill" title="Sequência de dias">
+              <Flame
+                className={cn(
+                  'h-3.5 w-3.5',
+                  streak > 0 ? 'text-orange-400' : 'text-muted-foreground',
+                )}
               />
-            </div>
+              {streak}
+            </span>
+            <span className="pill pill-glow" title="XP total">
+              <Zap className="h-3.5 w-3.5" />
+              {totalXP.toLocaleString('pt-BR')} XP
+            </span>
+            <span className="pill hidden sm:inline-flex" title={`Nível ${levelInfo.level}`}>
+              {levelInfo.icon} {levelInfo.title}
+            </span>
+            <button
+              onClick={handleSignOut}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              title="Sair"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
-        </div>
-
-        {/* Nav */}
-        <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-primary/10 text-primary border border-primary/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                }`
-              }
-            >
-              <item.icon size={18} />
-              {item.label}
-            </NavLink>
-          ))}
-          {isAdmin && (
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                }`
-              }
-            >
-              <Shield size={18} />
-              Admin
-            </NavLink>
-          )}
-        </nav>
-
-        {/* Sign out */}
-        <div className="p-4 border-t border-border/30">
-          <button
-            onClick={signOut}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/5 w-full transition-all"
-          >
-            <LogOut size={18} />
-            Sair
-          </button>
-        </div>
-      </aside>
-
-      {/* Mobile Header */}
-      <header className="lg:hidden flex items-center justify-between p-4 border-b border-border/50 glass-card rounded-none sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🚀</span>
-          <h1 className="font-bold text-lg" style={{ fontFamily: 'Space Grotesk' }}>
-            Antigravity
-          </h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-muted-foreground">Nv.{levelInfo.level}</span>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1">
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </header>
 
-      {/* Mobile dropdown menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[65px] z-40 glass-card rounded-none border-b border-border/50 p-4 space-y-1 animate-fade-in">
-          {navItems.map((item) => (
+      <main className="container pb-28 pt-8 md:pb-16">
+        <Outlet />
+      </main>
+
+      {/* Mobile bottom nav */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/90 backdrop-blur-xl md:hidden">
+        <div className="flex h-16 items-center justify-around px-2">
+          {[
+            ...navItems,
+            ...(isAdmin ? [{ to: '/admin', label: 'Admin', icon: Shield, end: false }] : []),
+          ].map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/'}
-              onClick={() => setMobileMenuOpen(false)}
+              end={item.end}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground'
-                }`
+                cn(
+                  'flex h-12 min-w-16 flex-col items-center justify-center gap-0.5 rounded-xl px-3 text-[10px] font-bold uppercase tracking-wide transition-colors',
+                  isActive ? 'text-primary' : 'text-muted-foreground',
+                )
               }
             >
-              <item.icon size={18} />
+              <item.icon className="h-5 w-5" />
               {item.label}
             </NavLink>
           ))}
-          {isAdmin && (
-            <NavLink
-              to="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground"
-            >
-              <Shield size={18} /> Admin
-            </NavLink>
-          )}
-          <button
-            onClick={() => {
-              signOut()
-              setMobileMenuOpen(false)
-            }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 w-full"
-          >
-            <LogOut size={18} /> Sair
-          </button>
         </div>
-      )}
-
-      {/* Main Content */}
-      <main className="flex-1 lg:ml-72">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
-          <Outlet />
-        </div>
-      </main>
-
-      {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 glass-card rounded-none border-t border-border/50 flex z-40">
-        {navItems.map((item) => {
-          const isActive =
-            item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={`flex-1 flex flex-col items-center py-3 gap-1 text-[10px] font-medium transition-colors ${
-                isActive ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              <item.icon size={20} />
-              {item.label}
-            </NavLink>
-          )
-        })}
       </nav>
+
+      {/* Achievement unlock dialog */}
+      <Dialog open={!!newAchievement} onOpenChange={(open) => !open && clearNewAchievement()}>
+        <DialogContent className="glass max-w-sm border-primary/30 text-center">
+          {newAchievement && (
+            <>
+              <ConfettiEffect />
+              <DialogHeader className="items-center">
+                <div className="animate-pop mx-auto mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 text-5xl animate-pulse-glow">
+                  {newAchievement.icon}
+                </div>
+                <span className="kicker justify-center">Conquista desbloqueada</span>
+                <DialogTitle className="font-display text-2xl">{newAchievement.title}</DialogTitle>
+                <DialogDescription className="text-base">
+                  {newAchievement.description}
+                </DialogDescription>
+              </DialogHeader>
+              <Button
+                onClick={clearNewAchievement}
+                className="btn-glow mx-auto mt-2 h-11 w-full font-semibold"
+              >
+                Continuar
+              </Button>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

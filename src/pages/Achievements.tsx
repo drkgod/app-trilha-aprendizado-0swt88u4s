@@ -1,86 +1,51 @@
+import { Trophy } from 'lucide-react'
 import { useAppStore, ACHIEVEMENTS } from '@/hooks/use-app-store'
-import { Trophy, Zap, Flame, CheckCircle2, Target } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function Achievements() {
-  const { unlockedAchievements, totalXP, streak, longestStreak, getOverallProgress } = useAppStore()
-  const overall = getOverallProgress()
+  const { unlockedAchievements } = useAppStore()
 
   return (
-    <div className="space-y-8 animate-fade-in-up pb-20 lg:pb-0">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3">
-          <Trophy className="text-amber-400" /> Conquistas
+    <div className="space-y-8">
+      <header className="animate-fade-up">
+        <span className="kicker">Sala de troféus</span>
+        <h1 className="font-display mt-3 text-3xl font-bold sm:text-4xl">
+          Conquistas{' '}
+          <span className="text-primary text-glow">
+            {unlockedAchievements.length}/{ACHIEVEMENTS.length}
+          </span>
         </h1>
-        <p className="text-muted-foreground mt-1">
-          Desbloqueie badges completando tópicos e mantendo consistência
+        <p className="mt-3 text-muted-foreground">
+          Cada marco da jornada fica registrado aqui. As apagadas ainda esperam por você.
         </p>
-      </div>
+      </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="stat-card">
-          <Zap size={20} className="text-amber-400" />
-          <div>
-            <p className="text-xs text-muted-foreground">XP Total</p>
-            <p className="font-bold">{totalXP.toLocaleString()}</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <Flame size={20} className="text-orange-400" />
-          <div>
-            <p className="text-xs text-muted-foreground">Maior Ofensiva</p>
-            <p className="font-bold">{longestStreak} dias</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <CheckCircle2 size={20} className="text-primary" />
-          <div>
-            <p className="text-xs text-muted-foreground">Tópicos</p>
-            <p className="font-bold">
-              {overall.completed}/{overall.total}
-            </p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <Target size={20} className="text-purple-400" />
-          <div>
-            <p className="text-xs text-muted-foreground">Conquistas</p>
-            <p className="font-bold">
-              {unlockedAchievements.length}/{ACHIEVEMENTS.length}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Achievements Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ACHIEVEMENTS.map((ach, i) => {
           const unlocked = unlockedAchievements.includes(ach.id)
           return (
             <div
               key={ach.id}
-              className={`glass-card p-5 flex items-start gap-4 transition-all animate-fade-in-up ${
-                unlocked ? 'border-primary/20' : 'opacity-50 grayscale'
-              }`}
-              style={{ animationDelay: `${i * 50}ms` }}
+              className={cn(
+                'glass animate-fade-up flex items-center gap-4 p-5 transition-all',
+                unlocked ? 'border-primary/25' : 'opacity-45 grayscale',
+              )}
+              style={{ animationDelay: `${i * 40}ms` }}
             >
               <div
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 ${
-                  unlocked
-                    ? 'bg-primary/10 border border-primary/20'
-                    : 'bg-secondary border border-border'
-                }`}
-              >
-                {unlocked ? ach.icon : '🔒'}
-              </div>
-              <div>
-                <h3 className="font-bold text-sm">{ach.title}</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">{ach.description}</p>
-                {unlocked && (
-                  <span className="inline-flex items-center gap-1 mt-2 text-[10px] font-bold text-primary uppercase tracking-wider">
-                    <CheckCircle2 size={12} /> Desbloqueado
-                  </span>
+                className={cn(
+                  'flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl',
+                  unlocked ? 'bg-primary/12 bg-primary/10' : 'bg-secondary',
                 )}
+                style={
+                  unlocked ? { boxShadow: '0 0 20px -6px hsl(151 100% 45% / 0.5)' } : undefined
+                }
+              >
+                {unlocked ? ach.icon : <Trophy className="h-6 w-6 text-muted-foreground" />}
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-display truncate font-bold">{ach.title}</h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">{ach.description}</p>
               </div>
             </div>
           )

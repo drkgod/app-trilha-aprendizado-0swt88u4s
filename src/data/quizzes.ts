@@ -1,526 +1,448 @@
 import type { QuizQuestion } from './types'
 
-export const quizzes: Record<string, QuizQuestion[]> = {
-  // CLAUDE CODE QUIZZES
-  'cc-1': [
+const quizzes: Record<string, QuizQuestion[]> = {
+  'fu-boss': [
     {
-      question:
-        'Um desenvolvedor está rodando o Claude Code dentro do WSL2 (Ubuntu) e tenta interagir com arquivos no host Windows (ex: C:\\Users\\Projects). O agente relata que não encontra os arquivos ou falha ao executar comandos npm locales. Qual é a causa raiz e a solução recomendada?',
+      question: 'Por que um chat muito longo faz o modelo "ficar burro" no final?',
       options: [
-        'O Claude Code não é compatível com WSL2; o desenvolvedor deve usar o cmd nativo do Windows.',
-        'O WSL2 monta o drive Windows em /mnt/c/Users, mas links simbólicos de arquivos como node_modules no lado Windows podem causar falhas de permissão no Linux. A solução é clonar o repositório diretamente no filesystem nativo do Linux do WSL2 (~/projects) para obter compatibilidade e performance máxima.',
-        'O Claude Code exige a variável de ambiente WIN_PATH setada no Linux.',
-        'O desenvolvedor deve desativar o sandbox do Claude no Windows executando a flag --no-sandbox.',
+        'O modelo aprende com a conversa e fica confuso',
+        'Todo o histórico é reprocessado a cada turno e a atenção se dilui no contexto inchado',
+        'O servidor limita a velocidade de contas que falam demais',
+        'Tokens antigos são apagados automaticamente',
       ],
       correctIndex: 1,
       explanation:
-        'Acessar arquivos do host Windows a partir do WSL2 através de /mnt/c gera sérios gargalos de I/O e quebra a integridade de links simbólicos e permissões de node_modules. Para rodar ferramentas com agentes, clone o repositório diretamente no filesystem ext4 do WSL2 (ex: ~/projects).',
+        'Modelos são stateless: cada resposta reprocessa a janela inteira. Contexto grande e desorganizado dilui a atenção — por isso a disciplina de sessões focadas.',
     },
     {
-      question:
-        'Ao tentar rodar o Claude Code em um container Docker headless em um pipeline de CI/CD (sem terminal interativo), o processo falha imediatamente ou fica travado no boot. Quais flags e variáveis de ambiente devem ser configuradas para rodar o agente corretamente nesse cenário?',
+      question: 'O que um embedding representa?',
       options: [
-        'Deve-se usar a flag --dangerously-skip-permissions e setar a variável de ambiente ANTHROPIC_API_KEY no container, além de invocar com a flag --headless.',
-        'Basta rodar o comando claude login com um token de sessão estático.',
-        'O Claude CLI exige obrigatoriamente um pseudoterminal (TTY) ativo e não pode rodar em pipelines de CI/CD.',
-        'Deve-se configurar a variável VITE_POCKETBASE_URL e rodar com a flag --force.',
-      ],
-      correctIndex: 0,
-      explanation:
-        'No modo não-interativo (CI/CD/headless), a API Key da Anthropic deve ser fornecida via env var ANTHROPIC_API_KEY, a flag --dangerously-skip-permissions é exigida para evitar perguntas de permissão, e a flag -p (prompt) ou --headless deve ser passada para evitar que a CLI tente inicializar a TUI.',
-    },
-    {
-      question:
-        'Durante a execução de claude doctor em um servidor Linux de homologação, o comando retorna um aviso informando que o utilitário gh (GitHub CLI) não está instalado. Como isso impacta as capacidades do agente no Claude Code?',
-      options: [
-        'O Claude Code não conseguirá ler nenhum arquivo do repositório local.',
-        'O agente não poderá realizar operações locais de git commit ou git push.',
-        'O agente não conseguirá realizar interações avançadas com o GitHub remoto de forma autônoma, como criar Pull Requests, listar issues do repositório ou visualizar status de Actions.',
-        'Nenhum impacto, pois o Claude CLI usa requisições REST internas para o GitHub.',
+        'Uma compressão sem perdas do texto original',
+        'A tradução do texto para tokens',
+        'Um vetor numérico que captura o SIGNIFICADO do texto, permitindo comparar semelhança semântica',
+        'Um hash único usado para deduplicar documentos',
       ],
       correctIndex: 2,
       explanation:
-        'O Claude Code usa o executável local gh CLI para interagir com o GitHub. Sem ele, funções como /pr, criação de issues e automação de revisões diretas pelo terminal não estarão disponíveis.',
+        'Embedding é a posição do texto num espaço de significado: textos semanticamente próximos ficam próximos no espaço — a base da busca semântica e do RAG.',
     },
     {
       question:
-        'Se a instalação global via npm do Claude Code falhar com erros de EACCES no macOS ou Linux, qual é a prática recomendada de engenharia para solucionar o problema sem usar o comando sudo?',
+        'Num RAG, a resposta veio errada. O chunk com a informação correta NÃO estava entre os recuperados. Onde está o problema?',
       options: [
-        'Desativar o SIP (System Integrity Protection) do macOS.',
-        'Alterar as permissões da pasta /usr/local/lib/node_modules manualmente com chmod 777.',
-        'Reconfigurar o diretório padrão do npm para usar uma pasta no diretório home do usuário (ex: ~/.npm-global) ou utilizar um gerenciador de versão como o nvm (Node Version Manager).',
-        'Copiar os arquivos binários do Claude manualmente para a pasta /bin.',
+        'No prompt final — falta pedir mais atenção',
+        'No modelo de linguagem — é fraco demais',
+        'Na etapa de retrieval (chunking/busca) — o gerador nunca viu a informação',
+        'No banco de dados — Postgres não serve para isso',
       ],
       correctIndex: 2,
       explanation:
-        'Usar sudo para instalar pacotes globais via npm é uma má prática de segurança. Utilizar o nvm ou redefinir o prefixo global do npm para uma pasta no home do usuário resolve os problemas de permissão de gravação de forma segura.',
+        'RAG se debuga por etapas: se a busca não trouxe o chunk certo, o problema é retrieval (chunking, embeddings, busca) — nenhum prompt salva o que o modelo não recebeu.',
     },
     {
-      question:
-        'O Claude Code CLI avisa que há uma nova versão disponível. Qual é o perigo de continuar usando uma versão antiga em produção por mais de 3 semanas?',
+      question: 'Quando busca HÍBRIDA supera a busca vetorial pura?',
       options: [
-        'A CLI para de funcionar completamente e revoga as chaves API locais.',
-        'A Anthropic atualiza constantemente as definições de ferramentas e melhorias de prompt de sistema enviadas ao modelo. Usar versões desatualizadas pode fazer o agente alucinar em chamadas de ferramentas de novos MCPs ou falhar em prompts de formatação.',
-        'O repositório Git local pode ser corrompido.',
-        'Nenhum, as atualizações são apenas cosméticas.',
+        'Quando as perguntas usam sinônimos e paráfrases',
+        'Quando os usuários buscam termos exatos como códigos, siglas e nomes próprios',
+        'Quando o corpus é pequeno',
+        'Nunca — vetorial sempre vence',
       ],
       correctIndex: 1,
       explanation:
-        'Atualizações frequentes da CLI trazem ajustes críticos no prompt do sistema e na estrutura dos schemas de chamadas de ferramentas. Versões antigas perdem alinhamento com a inteligência do Sonnet/Opus.',
-    },
-  ],
-  'cc-2': [
-    {
-      question:
-        'Um cliente com plano Claude Pro relata que o Claude Code exibe a mensagem "limite de mensagens excedido" todos os dias no final da tarde. Como funciona o reset de limites do plano Pro e qual a melhor alternativa de contingência para este time?',
-      options: [
-        'O reset ocorre a cada 24 horas; a única solução é assinar mais de uma conta por desenvolvedor.',
-        'Os limites operam em janelas móveis de 5 horas baseadas no volume de tokens. A alternativa imediata é configurar o Claude Code para usar chaves de API do Console Anthropic (pay-as-you-go) com limites de faturamento escaláveis.',
-        'O limite é fixo por semana; a solução é migrar o projeto para a Web UI.',
-        'O limite só zera na segunda-feira.',
-      ],
-      correctIndex: 1,
-      explanation:
-        'O plano Pro utiliza janelas dinâmicas de 5 horas. Para times de desenvolvimento com alta demanda, a melhor alternativa é migrar a autenticação para chaves de API, pagando pelo consumo exato (pay-as-you-go).',
+        'Vetorial entende paráfrase mas escorrega em termos exatos (NF-4532, nomes, siglas); o full-text pega esses. A híbrida (com fusão tipo RRF) une os dois mundos.',
     },
     {
-      question:
-        'Ao rodar o comando /cost no Claude Code durante o uso de uma chave de API, o valor de custo de uma única requisição com Opus veio muito mais alto do que o esperado. Qual técnica abaixo reduz esse custo fixo de entrada?',
+      question: 'O que o MCP padroniza?',
       options: [
-        'Desconectar servidores MCP que não estão sendo utilizados na tarefa ativa (pois as definições de ferramentas de cada MCP ativo são enviadas na janela de contexto de toda mensagem).',
-        'Desativar o autocomplete de código no terminal.',
-        'Usar a chave de API anon do Supabase.',
-        'Apagar o arquivo package.json antes de iniciar o chat.',
-      ],
-      correctIndex: 0,
-      explanation:
-        'Cada servidor MCP configurado no escopo do projeto injeta o schema de todas as suas ferramentas disponíveis como mensagens do sistema na janela de contexto de toda chamada. Manter MCPs ociosos conectados gera custo fixo de tokens redundantes.',
-    },
-    {
-      question:
-        'Qual é a diferença de consumo de cota e comportamento entre o Claude 3.5 Sonnet e o Claude 3 Opus na CLI do Claude Code?',
-      options: [
-        'O Sonnet é exclusivo para a interface web e não roda na CLI.',
-        'O Opus consome muito menos cota por ser mais lento.',
-        'O Claude 3.5 Sonnet possui janela de contexto maior e consome consideravelmente menos créditos/mensagens por chamada do que o Opus, devendo ser o modelo padrão para desenvolvimento de rotina.',
-        'Não há diferença de preço ou cota entre os modelos na API.',
+        'O formato dos pesos dos modelos',
+        'A forma como modelos são treinados',
+        'O protocolo pelo qual agentes descobrem e usam ferramentas/dados externos',
+        'A sintaxe dos prompts',
       ],
       correctIndex: 2,
       explanation:
-        'O Sonnet é o padrão do Claude Code por ser mais rápido, inteligente em código e consumir muito menos cota/tokens do que o Opus. O Opus deve ser ativado apenas para lógicas complexas de design.',
-    },
-    {
-      question:
-        'Ao utilizar o Console Anthropic, como você pode garantir que o time de desenvolvedores não exceda o orçamento mensal do projeto corporativo por engano?',
-      options: [
-        'Bloqueando o acesso ao terminal dos desenvolvedores.',
-        'Configurando limites estritos de "Spend Limits" (Monthly Budget e Notification Threshold) diretamente nas configurações de faturamento (Billing) do Anthropic Console.',
-        'Exigindo login com senha em cada chamada de comando do Claude.',
-        'Rodando a CLI com a flag --low-cost.',
-      ],
-      correctIndex: 1,
-      explanation:
-        'O Anthropic Console permite configurar tetos rígidos de gastos mensais (hard limits) que cortam o acesso da API automaticamente ao atingir o limite configurado.',
-    },
-    {
-      question:
-        'O comando /usage exibe informações sobre o plano Pro. Se você estiver autenticado via API Key do Console, o que o comando exibirá?',
-      options: [
-        'O comando gerará um erro informando que não é compatível com chaves de API.',
-        'Ele exibirá informações sobre a quantidade de tokens consumidos na sessão atual e o custo estimado em dólares com base na tabela do modelo ativo.',
-        'Ele listará o saldo bancário da conta cadastrada.',
-        'Ele mostrará as chaves de API geradas no console.',
-      ],
-      correctIndex: 1,
-      explanation:
-        'O comando detecta o método de login. Se for via API Key, ele converte os tokens de entrada e saída em custo real em dólares da sessão.',
+        'MCP é o contrato aberto entre agentes (clientes) e servidores de ferramentas/dados — o mesmo servidor Supabase serve Claude Code, Codex e outros.',
     },
   ],
-  // SUPABASE QUIZZES
-  'sb-7': [
+  'cc-boss': [
     {
-      question:
-        'Um consultor está auditando um aplicativo de chat integrado ao Supabase. A tabela `messages` possui RLS ativo. O cliente afirma que o banco de dados está seguro porque a chave anon está protegida por RLS. No entanto, você nota que não existem policies configuradas na tabela. Qual é o comportamento do Supabase nesse caso?',
+      question: 'Qual a hierarquia de leitura do CLAUDE.md?',
       options: [
-        'Nenhum usuário consegue ler ou escrever dados na tabela `messages` através do SDK público (anon key). RLS habilitado sem policies ativas bloqueia o acesso por completo.',
-        'Qualquer usuário logado consegue ler todas as mensagens da tabela.',
-        'O Supabase gera um erro de banco corrompido.',
-        'O RLS é ignorado até que a primeira policy seja criada.',
-      ],
-      correctIndex: 0,
-      explanation:
-        'Habilitar o RLS em uma tabela e não criar nenhuma política de acesso (policy) equivale a trancar a tabela por completo. Nenhum SELECT, INSERT, UPDATE ou DELETE passará usando a anon key.',
-    },
-    {
-      question:
-        'Qual é o impacto de executar queries SQL no SQL Editor do dashboard do Supabase em tabelas com RLS habilitado?',
-      options: [
-        'As consultas do SQL Editor falham se o usuário logado no dashboard não for o dono da linha.',
-        'O SQL Editor do dashboard ignora completamente o RLS (utiliza privilégios administrativos / service_role do Postgres). Ele sempre lerá e escreverá todos os dados independente das policies.',
-        'O SQL Editor exige autenticação via JWT a cada execução.',
-        'O RLS se aplica igualmente ao SQL Editor.',
+        'Apenas o arquivo da raiz do repositório é lido',
+        'Global (~/.claude) → raiz do projeto → subpastas, com o mais específico prevalecendo',
+        'Somente o global do usuário vale',
+        'A ordem é aleatória a cada sessão',
       ],
       correctIndex: 1,
       explanation:
-        'O painel administrativo do Supabase e o SQL Editor rodam com privilégios de superusuário. O RLS se aplica apenas a requisições de clientes feitas pelas chaves anon/authenticated expostas na API.',
+        'Os arquivos se somam em camadas: global, projeto e subpastas — instruções mais próximas do código em edição têm precedência prática.',
     },
     {
-      question:
-        'Como a chave `service_role` se comporta em tabelas que possuem RLS ativado com policies restritivas de posse?',
+      question: 'Quando usar um HOOK em vez de uma instrução no CLAUDE.md?',
       options: [
-        'A `service_role` é bloqueada caso a policy não dê permissão explícita para ela.',
-        'A `service_role` ignora totalmente as políticas de RLS e RLS_BYPASS, acessando todos os dados. Por isso ela deve ser mantida restrita no backend e nunca ir pro frontend.',
-        'Ela gera erros de integridade de token JWT.',
-        'A chave `service_role` só lê dados públicos.',
+        'Quando a regra é uma preferência de estilo',
+        'Quando a garantia precisa ser determinística — instrução pode ser esquecida; hook SEMPRE executa',
+        'Hooks e instruções são equivalentes',
+        'Quando se quer economizar tokens',
       ],
       correctIndex: 1,
       explanation:
-        'A chave `service_role` foi criada para execuções administrativas no backend de sua aplicação. Ela bypassa as políticas de RLS e tem acesso total à leitura e escrita da base de dados.',
+        'Instrução é probabilística (o modelo pode não seguir); hook é código que roda sempre no evento. Regra inegociável (bloquear comando, rodar formatter) = hook.',
     },
     {
-      question:
-        'Ao criar tabelas pelo Table Editor do Supabase, o que acontece com a segurança das tabelas criadas por padrão nas versões recentes?',
+      question: 'Para rodar dois agentes em paralelo no mesmo repositório sem colisão, o padrão é:',
       options: [
-        'O RLS é ativado automaticamente por padrão para garantir segurança desde o início.',
-        'A tabela é criada com permissões abertas e RLS desativado, exigindo ativação manual do desenvolvedor.',
-        'A tabela exige criptografia de ponta a ponta na chave primária.',
-        'O Supabase proíbe a criação de tabelas sem policies configuradas.',
+        'Dois clones completos do repositório',
+        'Os dois na mesma pasta, em branches diferentes',
+        'git worktree — um diretório de trabalho isolado por agente/branch',
+        'Rodar um de cada vez',
       ],
-      correctIndex: 0,
+      correctIndex: 2,
       explanation:
-        'Nas versões recentes, o Supabase ativa o RLS automaticamente ao criar tabelas no Table Editor para evitar que dados sejam expostos acidentalmente por desenvolvedores iniciantes.',
+        'Worktrees dão checkouts paralelos do mesmo repo (compartilhando o .git): cada agente na sua pasta e branch, sem colisão de working tree.',
     },
     {
-      question:
-        'Qual ferramenta integrada do Supabase dashboard você deve rodar para identificar de forma rápida tabelas sem políticas de RLS ativas em um repositório legado?',
+      question: 'O modo plan (planejar antes de codar) serve principalmente para:',
       options: [
-        'Postgres Logs',
-        'Database Advisor (Security Advisor)',
-        'SQL Editor',
-        'Auth Manager',
+        'Economizar tokens em qualquer tarefa',
+        'Revisar e corrigir a ABORDAGEM antes de o agente tocar em arquivos — barato errar no plano, caro errar no código',
+        'Deixar o modelo mais rápido',
+        'Evitar o uso de ferramentas',
       ],
       correctIndex: 1,
       explanation:
-        'O Security Advisor varre o esquema do banco de dados e avisa sobre tabelas na base que não possuem RLS ativado, listando os riscos de vazamento.',
+        'Em tarefas médias e grandes, aprovar o plano primeiro evita a categoria mais cara de retrabalho: execução perfeita da abordagem errada.',
+    },
+    {
+      question: '--dangerously-skip-permissions é aceitável em qual cenário?',
+      options: [
+        'No laptop pessoal, para agilizar',
+        'Em qualquer repositório privado',
+        'Em ambiente isolado e descartável (container/CI) sem credenciais sensíveis',
+        'Nunca, em hipótese alguma',
+      ],
+      correctIndex: 2,
+      explanation:
+        'Autonomia total é para ambientes onde o pior caso é descartar o container. Na máquina com credenciais de cliente, as permissões são o cinto de segurança.',
     },
   ],
-
-  // CONSULTORIA NA PRÁTICA
-  'co-1': [
+  'cx-boss': [
     {
-      question:
-        'No mapeamento de processos, por que a entrevista de descoberta deve ser feita com quem EXECUTA o processo, e não apenas com o gestor?',
+      question: 'No Codex, o AGENTS.override.md serve para:',
       options: [
-        'Porque o gestor não tem tempo para reuniões.',
-        'Porque quem executa conhece as exceções, gambiarras e gargalos reais que não aparecem no processo "oficial" descrito pelo gestor.',
-        'Porque o executor decide o orçamento do projeto.',
-        'Não faz diferença: o processo é o mesmo para todos.',
+        'Traduzir o AGENTS.md para outro idioma',
+        'Substituir o AGENTS.md do mesmo nível — útil para exceções sem editar o arquivo principal',
+        'Acelerar o carregamento das instruções',
+        'Nada — é um arquivo ignorado',
       ],
       correctIndex: 1,
       explanation:
-        'O processo real quase nunca é o processo documentado. As exceções e gambiarras — que só o executor conhece — são exatamente onde a automação quebra se não forem mapeadas.',
+        'Quando presente, o override substitui o AGENTS.md daquele nível da hierarquia — mecanismo de exceção controlada.',
     },
     {
-      question:
-        'Ao classificar as etapas de um processo mapeado, qual é a tríade correta de classificação que evita a promessa irreal de "automação total"?',
+      question: 'A diferença fundamental entre rodar o Codex local e no Codex Cloud é:',
       options: [
-        'Rápida / média / lenta',
-        'Automatizável (agente executa) / assistida (humano com IA) / humana (permanece manual)',
-        'Barata / cara / gratuita',
-        'Frontend / backend / banco de dados',
+        'O Cloud usa um modelo diferente',
+        'Local usa SEU ambiente e arquivos; Cloud executa em containers na infra da OpenAI com um environment que você configura',
+        'O Cloud não consegue criar PRs',
+        'Não há diferença prática',
       ],
       correctIndex: 1,
       explanation:
-        'A tríade automatizável/assistida/humana calibra a expectativa do cliente: nem tudo vira agente, e etapas assistidas costumam gerar o maior ganho com o menor risco.',
+        'A distinção define tudo: setup do environment, gestão de segredos e a conversa de compliance sobre onde o código pode rodar.',
     },
     {
-      question:
-        'Qual é o artefato final de um mapeamento de processos bem feito — aquele que transforma a conversa em contrato?',
+      question: 'Pré-aprovar comandos (allowlist de permissões) serve para:',
       options: [
-        'A gravação bruta das entrevistas',
-        'O mapa AS-IS + o TO-BE redesenhado + o backlog de oportunidades priorizado por impacto × esforço',
-        'Um protótipo funcional completo',
-        'A lista de softwares que o cliente usa',
+        'Dar full access de forma disfarçada',
+        'Deixar o agente rodar sem parar os comandos confiáveis (testes, lint, leitura de git), mantendo aprovação para o resto',
+        'Desligar o sandbox',
+        'Acelerar o download de dependências',
       ],
       correctIndex: 1,
       explanation:
-        'AS-IS mostra que você entendeu, TO-BE mostra a visão, e o backlog priorizado define o escopo dos próximos projetos — é o documento que vira proposta comercial.',
-    },
-  ],
-  'co-2': [
-    {
-      question:
-        'Um cliente tem uma dor de processo simples: consultar 20 documentos internos estáveis para responder dúvidas da equipe. Qual entregável resolve com o menor custo de arquitetura?',
-      options: [
-        'Um app completo com RAG, banco vetorial e API',
-        'Um Project no Claude.ai com os documentos no knowledge e instruções bem escritas',
-        'Fine-tuning de um modelo próprio',
-        'Um agente com 6 MCPs conectados',
-      ],
-      correctIndex: 1,
-      explanation:
-        'Nem toda dor precisa de software: volume pequeno e estável de documentos cabe num Project. Superdimensionar arquitetura queima orçamento e credibilidade.',
+        'A allowlist granular elimina interrupções de baixo risco e multiplica o tempo de autonomia útil — sem abrir mão do controle sobre o perigoso.',
     },
     {
-      question:
-        'O que é o "critério de pronto" numa proposta de projeto — e por que ele protege a margem da consultoria?',
+      question: 'Um comentário "@codex corrija os testes" numa PR do GitHub:',
       options: [
-        'A data de entrega do projeto',
-        'Uma frase mensurável que o cliente assina ("pronto quando X acontece com Y de precisão") — sem ela, o escopo nunca fecha e o projeto nunca termina',
-        'O valor total do contrato',
-        'A lista de tecnologias usadas',
+        'Não faz nada — é só convenção',
+        'Aciona o agente no Cloud, que trabalha e responde no próprio fluxo do GitHub',
+        'Roda o Codex na máquina de quem comentou',
+        'Fecha a PR automaticamente',
       ],
       correctIndex: 1,
       explanation:
-        'Sem critério de pronto explícito e mensurável, todo ajuste vira "faz parte do combinado". Com ele, o fim do escopo é objetivo — e mudança vira aditivo.',
+        'Com a integração instalada, a menção delega a tarefa ao Codex Cloud — o agente opera dentro do fluxo que o time já usa.',
     },
     {
-      question:
-        'Quando a estrutura de repo pai + submodules é a escolha certa na arquitetura de um projeto de cliente?',
+      question: 'A resposta profissional para "Codex ou Claude Code?" é:',
       options: [
-        'Sempre — é o padrão moderno',
-        'Quando módulos/libs são compartilhados entre projetos e cada projeto precisa travar a versão exata que usa',
-        'Quando o projeto tem mais de 10 arquivos',
-        'Nunca — monorepo resolve tudo',
+        'Sempre Codex — é mais novo',
+        'Sempre Claude Code — é mais popular',
+        'Piloto com tarefas reais no código do cliente + critérios (custo no plano atual, desempenho, perfil do time, compliance) — frequentemente os dois convivem',
+        'Tanto faz, são idênticos',
       ],
-      correctIndex: 1,
+      correctIndex: 2,
       explanation:
-        'Submodule é ponteiro pra commit específico: compartilhamento com versão travada por projeto. Projeto isolado não precisa dessa burocracia — repo simples basta.',
+        'Paridade conceitual é alta; a decisão certa sai de evidência no contexto do cliente — e instruções/MCPs padronizados protegem o investimento em qualquer cenário.',
     },
   ],
-  'co-3': [
+  'ca-boss': [
     {
-      question:
-        'Qual é o diferencial central do Google Antigravity em relação a uma IDE com IA tradicional?',
+      question: 'Qual a diferença entre Project knowledge e anexar um arquivo num chat?',
       options: [
-        'Ser pago e exclusivo para empresas',
-        'A visão Manager: um painel para orquestrar múltiplos agentes em paralelo, que produzem Artifacts (planos, screenshots, walkthroughs) para revisão',
-        'Funcionar apenas offline',
-        'Não usar modelos de linguagem',
+        'Nenhuma — é o mesmo recurso',
+        'Knowledge do Project fica disponível para TODAS as conversas do projeto; o anexo vale só naquele chat',
+        'Anexos são mais seguros',
+        'Project knowledge não consome contexto',
       ],
       correctIndex: 1,
       explanation:
-        'O Manager é a assinatura do Antigravity: supervisão visual de vários agentes trabalhando ao mesmo tempo, com verificação via Artifacts fazendo parte do fluxo.',
+        'Material recorrente vai para o Project (uma vez, todas as conversas); material pontual vai de anexo. Os dois consomem contexto — cure o essencial.',
+    },
+    {
+      question: 'Por que a fatura de uma API de chat cresce conforme a conversa fica longa?',
+      options: [
+        'O preço por token sobe com o tempo',
+        'A API é stateless: cada chamada reenvia (e cobra) o histórico inteiro como tokens de entrada',
+        'O modelo fica mais lento e cobra por tempo',
+        'Não cresce — o custo é fixo por mensagem',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Cada turno reprocessa a conversa toda. É também por isso que prompt caching (prefixos estáveis) derruba o custo de assistentes com contexto grande.',
+    },
+    {
+      question: 'No tool use (function calling), quem executa a ação real?',
+      options: [
+        'O modelo executa diretamente no servidor da Anthropic',
+        'A SUA aplicação — o modelo apenas PEDE a chamada com parâmetros estruturados',
+        'O navegador do usuário',
+        'Ninguém — é simulação',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O modelo decide e pede; seu código executa e devolve o resultado. Esse loop é a base de todos os agentes — e o motivo de existirem camadas de aprovação.',
     },
     {
       question:
-        'Cliente pergunta "qual é a melhor ferramenta de agente de código?". Qual é a resposta de consultoria agnóstica?',
+        'Cliente pergunta: "vocês treinam modelos com os nossos dados?" A postura correta do consultor é:',
       options: [
-        'Sempre Claude Code, sem exceção',
-        'Depende do perfil do time: terminal e automação profunda → Claude Code; delegação em nuvem e 4 superfícies → Codex; orquestração visual multi-agente → Antigravity; transição suave do VS Code → Cursor/Windsurf',
-        'A mais barata',
-        'A que tiver mais hype no momento',
+        'Garantir de memória que nunca acontece',
+        'Dizer que é impossível saber',
+        'Distinguir plano consumidor de comercial e responder com a política vigente e o Trust Center abertos, citando a fonte',
+        'Mudar de assunto',
+      ],
+      correctIndex: 2,
+      explanation:
+        'Políticas evoluem e diferem por tipo de conta. A resposta profissional cita a fonte oficial atual — nunca a memória.',
+    },
+    {
+      question:
+        'Para 100 mil classificações que podem esperar até amanhã, a arquitetura de menor custo usa:',
+      options: [
+        'Opus em chamadas síncronas',
+        'Batch API (50% de desconto, prazo de até 24h) com o modelo mais barato que resolve, ex: Haiku',
+        'O chat do Claude.ai em loop',
+        'Streaming com temperatura zero',
       ],
       correctIndex: 1,
       explanation:
-        'Consultoria agnóstica não vende ferramenta, vende adequação: a recomendação nasce do perfil do time, do fluxo existente e do orçamento — com matriz comparativa própria.',
+        'Volume + tolerância a espera = Batch API; tarefa mecânica = tier econômico. As duas alavancas juntas definem o piso de custo.',
     },
   ],
-  'co-4': [
+  'gh-boss': [
     {
-      question: 'Por que o .gitignore precisa existir ANTES do primeiro commit no setup padrão?',
+      question: 'O que o repositório PAI realmente guarda sobre um submodule?',
       options: [
-        'Por estética do repositório',
-        'Porque arquivo já commitado (como .env com credenciais) não sai do histórico só com .gitignore — prevenir é a única proteção barata',
-        'Porque o GitHub exige',
-        'Para o repo ficar menor',
+        'Uma cópia completa dos arquivos do submodule',
+        'Um PONTEIRO para um commit específico do submodule (mais a URL no .gitmodules)',
+        'Apenas o nome da pasta',
+        'A branch mais recente do submodule',
       ],
       correctIndex: 1,
       explanation:
-        'O .gitignore não age retroativamente: segredo commitado fica no histórico e exige revogação de chave + limpeza. No dia 1, é prevenção de graça.',
+        'O pai pina um commit exato — não acompanha o submodule automaticamente. Esse modelo mental explica pasta vazia, detached HEAD e o fluxo de 2 commits.',
     },
     {
-      question: 'Qual é o teste de qualidade definitivo do template de projeto da consultoria?',
+      question: 'Você alterou código dentro do submodule. A ordem CORRETA é:',
       options: [
-        'Passar no lint',
-        'Um colega clonar e conseguir rodar uma tarefa com agente SEM fazer nenhuma pergunta — cada dúvida dele é um buraco no template',
-        'Ter mais de 50 arquivos',
-        'Usar todas as ferramentas da stack ao mesmo tempo',
+        'Commit no pai primeiro, depois no submodule',
+        'Commit + PUSH dentro do submodule primeiro; só então commit do ponteiro no pai',
+        'Um único commit no pai resolve os dois',
+        'Tanto faz a ordem',
       ],
       correctIndex: 1,
       explanation:
-        'Template bom elimina perguntas. O teste do clone silencioso simula exatamente o que acontece quando o time do cliente recebe o projeto.',
+        'Se o pai apontar para um commit não publicado do submodule, o clone/update de todo o resto do time quebra. push do filho antes do push do pai — sempre.',
+    },
+    {
+      question: 'Um segredo foi commitado e pushado. O PRIMEIRO passo é:',
+      options: [
+        'Deletar o arquivo e commitar "remove secret"',
+        'REVOGAR a credencial no provedor imediatamente — só depois pensar em limpar o histórico',
+        'Fazer force push da branch',
+        'Tornar o repositório privado',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O histórico, forks e clones já carregam o segredo — e bots varrem o GitHub em segundos. Revogar primeiro; limpeza de histórico (filter-repo) é etapa posterior e opcional.',
+    },
+    {
+      question: 'Para desfazer um commit que JÁ está na main compartilhada, use:',
+      options: [
+        'git reset --hard e force push',
+        'git revert — cria um commit inverso sem reescrever a história pública',
+        'Deletar a branch e recriar',
+        'git stash',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Reescrever história compartilhada quebra o repo dos outros. revert desfaz o efeito ADICIONANDO história — o único caminho seguro em branch pública.',
     },
     {
       question:
-        'No setup padrão, qual é a configuração inicial correta do MCP do Supabase no repo do cliente?',
+        'O CI passa local mas falha no GitHub Actions com "arquivos faltando" num projeto com submodules. A causa provável:',
       options: [
-        'Escopo local com acesso total a produção',
-        'Escopo project (.mcp.json versionado) em modo read-only — escrita liberada conscientemente, por tarefa, em ambiente de dev',
-        'Sem MCP: agente não pode ver banco',
-        'service_role no frontend para simplificar',
+        'O runner está sem memória',
+        'O actions/checkout não traz submodules por padrão — falta with: submodules: recursive',
+        'O Node está desatualizado',
+        'A branch está protegida',
       ],
       correctIndex: 1,
       explanation:
-        'Escopo project faz o time herdar a configuração no clone; read-only elimina o risco de destruição acidental até que a escrita seja uma decisão explícita.',
+        'O checkout padrão deixa as pastas de submodule vazias no runner. Declarar submodules: recursive (e token com acesso, se privado) resolve o clássico.',
     },
   ],
-  'co-5': [
+  'sb-boss': [
     {
-      question:
-        'Cliente liga em pânico: "commitei uma API key ontem no repo". Qual é a estrutura correta da sua resposta de bate-pronto?',
+      question: 'Onde a service_role key PODE viver?',
       options: [
-        '"Apaga o arquivo e commita de novo que resolve."',
-        'Diagnóstico → causa → ação: a chave está comprometida onde o histórico existir; apagar do código não remove do histórico nem dos clones; REVOGAR a chave no provedor agora e só depois limpar histórico.',
-        '"Torna o repo privado que ninguém vê."',
-        '"Troca de repositório e segue o jogo."',
+        'No frontend, desde que ofuscada',
+        'Em variável NEXT_PUBLIC_/VITE_ para facilitar',
+        'Apenas em ambiente servidor (Edge Functions, backend, CI) — ela ignora RLS e dá acesso total',
+        'Em qualquer lugar, pois o RLS protege',
+      ],
+      correctIndex: 2,
+      explanation:
+        'A service_role passa por cima de todo RLS. No navegador ela expõe o banco inteiro — o vazamento clássico. Frontend usa a anon/publishable key.',
+    },
+    {
+      question: 'Por que a anon key ser pública NÃO é uma falha de segurança?',
+      options: [
+        'Porque ela é criptografada',
+        'Porque a segurança do modelo vem do RLS: as policies decidem o que cada usuário autenticado pode ver/fazer',
+        'Porque ninguém consegue descobri-la',
+        'É uma falha, sim',
       ],
       correctIndex: 1,
       explanation:
-        'A estrutura diagnóstico → causa → ação é o padrão das 10 respostas crônicas. Neste caso, a ação real é a revogação imediata — o resto é complemento.',
+        'A anon key só identifica o projeto. Com RLS habilitado e policies corretas, o banco decide linha a linha — na última camada, impossível de contornar pelo cliente.',
+    },
+    {
+      question: 'Numa policy de UPDATE, para que serve o WITH CHECK além do USING?',
+      options: [
+        'É redundante — os dois fazem o mesmo',
+        'USING filtra o que pode ser tocado; WITH CHECK valida como a linha pode FICAR — sem ele, o usuário pode editar a própria linha transferindo-a para outro dono',
+        'WITH CHECK só vale para SELECT',
+        'Melhora a performance do índice',
+      ],
+      correctIndex: 1,
+      explanation:
+        'UPDATE tem duas pontas: o estado atual (USING) e o estado final (WITH CHECK). Esquecer o segundo abre a brecha da "transferência" de posse.',
     },
     {
       question:
-        '"O chat do Claude ficou lento e burro" — qual é o diagnóstico e a ação de bate-pronto?',
+        'A vantagem decisiva do pgvector sobre um banco vetorial separado, em apps Supabase:',
       options: [
-        'Servidor da Anthropic caiu; aguardar',
-        'Conversa longa demais degradando qualidade e velocidade; abrir chat novo (o Project preserva o conhecimento)',
-        'O plano expirou; renovar assinatura',
-        'Vírus no navegador; formatar a máquina',
+        'É sempre mais rápido que qualquer alternativa',
+        'Filtro relacional + busca semântica NA MESMA query (com RLS por cima) — sem sincronizar dois bancos',
+        'Não precisa de índice nunca',
+        'Gera os embeddings sozinho',
       ],
       correctIndex: 1,
       explanation:
-        'Conversa quilométrica é a causa nº 1 desse sintoma. Chat novo zera o peso do histórico sem perder o knowledge do Project.',
+        'WHERE cliente_id = X AND ... ORDER BY embedding <=> q — metadados, permissões e semântica juntos no Postgres que você já opera.',
     },
     {
       question:
-        'Por que vale mais decorar a ESTRUTURA das 10 respostas (diagnóstico → causa → ação) do que decorar números e detalhes?',
+        'Migração destrutiva (DROP COLUMN) precisa ir para produção. O fluxo profissional é:',
       options: [
-        'Porque números impressionam menos',
-        'Porque detalhes e limites mudam toda hora — a estrutura permanece, e a resposta profissional aponta a fonte oficial para o número atual',
-        'Porque clientes não entendem números',
-        'Não vale: o certo é decorar tudo',
+        'Rodar direto no SQL Editor de produção, rápido',
+        'Testar numa BRANCH de desenvolvimento do banco, validar, e só então mergear/aplicar — com backup/PITR dimensionado por trás',
+        'Pedir para o agente rodar via MCP com escrita',
+        'Evitar migrações para sempre',
       ],
       correctIndex: 1,
       explanation:
-        'Preços, limites e versões mudam mensalmente. Quem domina a estrutura responde qualquer variação da pergunta; quem decora número velho responde errado com confiança.',
+        'Branch de banco torna o erro barato; backup/PITR é a rede final. As camadas de defesa se desenham antes do incidente, não durante.',
     },
   ],
-  'co-6': [
+  'pj-boss': [
     {
-      question: 'Qual é a causa número 1 de churn em consultoria de IA — e o antídoto?',
+      question: 'No discovery, a fonte mais confiável sobre como o processo REALMENTE funciona é:',
       options: [
-        'Bugs no código; mais testes',
-        'Falta de adoção (o time volta ao jeito antigo); campeão interno + treinamento por perfil + métricas de adoção combinadas em contrato',
-        'Preço alto; dar desconto',
-        'Falta de features; adicionar mais telas',
+        'O organograma da empresa',
+        'A descrição do gestor',
+        'Quem EXECUTA o processo no dia a dia — validando o mapa com essa pessoa',
+        'O manual de procedimentos de 2019',
       ],
-      correctIndex: 1,
+      correctIndex: 2,
       explanation:
-        'Projeto que funciona mas não é usado é projeto cancelado. Adoção é gerenciada: dono interno, treino específico por perfil e métrica acompanhada em ritual quinzenal.',
+        'O as-is real vive na operação. Mapa validado por quem executa é o que passa no teste do "é exatamente assim".',
     },
     {
-      question: 'Por que treinamento "genérico de IA" não funciona na adoção do time do cliente?',
+      question: 'A decisão mais crítica de um blueprint de automação com agente é:',
       options: [
-        'Porque IA é impossível de ensinar',
-        'Porque cada perfil precisa de um recorte diferente: gestor aprende a pedir e avaliar; operador aprende o fluxo diário dele; dev aprende a manter o setup',
-        'Porque treinamento deve ser sempre pago à parte',
-        'Porque vídeo não ensina ninguém',
+        'A cor da interface',
+        'Quais ações o agente executa direto vs quais exigem aprovação humana — e o desenho do fluxo de erro',
+        'O nome do agente',
+        'Usar o modelo mais caro disponível',
       ],
       correctIndex: 1,
       explanation:
-        'Treinamento gruda quando fala da tarefa da pessoa. O gestor não precisa de CLAUDE.md e o operador não precisa de árvore de decisão de planos — cada um recebe o seu recorte.',
-    },
-  ],
-  'co-7': [
-    {
-      question:
-        'No desafio final, por que a feature via Claude Code e a feature via Codex devem entrar por PRs revisados pelo colega?',
-      options: [
-        'Para gastar mais tempo',
-        'Porque revisão cruzada de PR (inclusive de agente) é o fluxo real de projeto profissional — e treina o olhar para os red flags de código gerado por IA',
-        'Porque agentes não sabem commitar',
-        'Para o GitHub liberar o merge automático',
-      ],
-      correctIndex: 1,
-      explanation:
-        'O desafio simula a operação real: branch protection + PR + revisão humana é a governança que entregamos em cliente — praticá-la internamente é o ensaio geral.',
+        'Humano-no-loop e tratamento de exceção definem o risco real do sistema. Produção é 80% exceção — o blueprint que só descreve o caminho feliz falha.',
     },
     {
-      question:
-        'Qual é o destino correto do material produzido no desafio final (repo, proposta, vídeo)?',
+      question: 'Antes de construir o RAG, a prática que protege contra "otimização no achismo" é:',
       options: [
-        'Arquivar e esquecer',
-        'Virar portfólio vivo da consultoria: material de reunião comercial para fechar clientes novos',
-        'Deletar por segurança',
-        'Enviar pro cliente fictício',
+        'Escolher o modelo mais novo',
+        'Montar ANTES o conjunto de teste: perguntas reais + onde está cada resposta — e medir cada mudança contra ele',
+        'Usar chunks os maiores possíveis',
+        'Pular o full-text search',
       ],
       correctIndex: 1,
       explanation:
-        'O desafio não é exercício de aluno: cada entregável vira ativo comercial. É a filosofia de toda a trilha — estudar produzindo o que a empresa usa.',
+        'O eval de bolso (10-20 perguntas com gabarito) transforma "parece melhor" em número — e orienta chunking, busca e prompt com evidência.',
+    },
+    {
+      question: 'Num PR grande gerado por agente, os testes devem ser lidos PRIMEIRO porque:',
+      options: [
+        'São mais curtos',
+        'Revelam o que o agente ENTENDEU do pedido — desalinho de intenção aparece ali antes do código',
+        'Testes nunca mentem',
+        'É a ordem alfabética dos arquivos',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Código de agente é sintaticamente limpo; o risco é semântico. Os testes contam a interpretação da tarefa — e denunciam asserts de fachada.',
+    },
+    {
+      question: 'O pacote de entrega profissional de um projeto inclui, além do código:',
+      options: [
+        'Apenas um e-mail de encerramento',
+        'Release taggeada + README de operação + runbook de incidentes + docs de arquitetura + handover com offboarding de acessos',
+        'Um vídeo institucional',
+        'O histórico de chats com o agente',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Entrega que sustenta contrato recorrente: o cliente opera sem você de plantão, os acessos morrem limpos, e as decisões estão documentadas.',
     },
   ],
 }
 
-// Fallback dynamic quiz generator to guarantee EVERY topic has a 5-question quiz
-export function getQuizForTopic(
-  topicId: string,
-  topicTitle: string,
-  trailName: string,
-): QuizQuestion[] {
-  // If we have hardcoded high-quality questions, use them
-  if (quizzes[topicId]) {
-    return quizzes[topicId]
-  }
-
-  // Otherwise, return a dynamically generated, highly-technical fallback quiz specific to the topic details
-  return [
-    {
-      question: `Considerando o tópico "${topicTitle}" na trilha ${trailName}, qual é o principal red flag ou erro comum de arquitetura que um consultor sênior deve auditar ao implantar essa tecnologia em um cliente corporativo de grande porte?`,
-      options: [
-        'Utilizar a tecnologia sem monitoramento, ignorando rate limits e o comportamento de consumo de tokens/recursos.',
-        'Deixar as configurações no modo padrão, vazando credenciais em arquivos não ignorados e misturando contextos de produção e desenvolvimento no mesmo repositório.',
-        'Não documentar o processo no CLAUDE.md do projeto, fazendo com que agentes que entrem no repositório percam o contexto das diretrizes de estilo do time.',
-        'Todas as opções acima representam falhas graves de governança que o consultor deve corrigir.',
-      ],
-      correctIndex: 3,
-      explanation: `Em consultoria técnica de alto nível, os erros mais frequentes envolvem a falta de isolamento de ambientes, chaves de API expostas por falta de gitignore correto e a falta de instruções contextuais (CLAUDE.md) que orientem os agentes de IA de forma coordenada.`,
-    },
-    {
-      question: `No contexto de "${topicTitle}", qual das seguintes práticas de engenharia de software garante a maior segurança, estabilidade e repetibilidade do ambiente ao trabalhar com equipes distribuídas e agentes de IA?`,
-      options: [
-        'Versionar as configurações críticas (como .mcp.json, migrations de banco, e scripts de hook) no repositório Git, estabelecendo políticas estritas de branch protection e revisões de Pull Request.',
-        'Permitir que cada desenvolvedor configure seu ambiente local de forma independente e sem padronização.',
-        'Desativar o uso de sandboxes e permissões locais para acelerar a velocidade de escrita do código pelo agente.',
-        'Utilizar commits diretamente na branch main para agilizar a integração contínua.',
-      ],
-      correctIndex: 0,
-      explanation: `A repetibilidade e a segurança dependem do versionamento de configurações (como infraestrutura como código e definições de MCP). Isso garante que toda a equipe (e os agentes) rodem sob as mesmas premissas de execução.`,
-    },
-    {
-      question: `Durante uma homologação técnica de "${topicTitle}" com o cliente, o sistema apresenta falhas de conexões intermitentes ou bloqueios. Qual deve ser o primeiro passo sistemático de depuração adotado pelo consultor?`,
-      options: [
-        'Reiniciar as chaves de API e reinstalar a CLI global.',
-        'Consultar os painéis de status dos provedores envolvidos e analisar detalhadamente as saídas de logs do terminal (ex: comandos /mcp, logs de API do console, backoff HTTP 429).',
-        'Refazer o código de toda a rota de conexão.',
-        'Desabilitar as políticas de segurança de rede (firewalls e proxies).',
-      ],
-      correctIndex: 1,
-      explanation: `Diagnóstico profissional exige isolamento de hipóteses. Inspecionar logs locais, status de servidores externos (como status.anthropic.com) e checar os Advisors do console aponta a causa raiz sem código descartável.`,
-    },
-    {
-      question: `Considerando o tema "${topicTitle}", como você avalia o impacto de latência e custo ao escalar essa implementação para 10.000 usuários ativos por dia na empresa?`,
-      options: [
-        'A latência e o custo não sofrem alterações na nuvem.',
-        'A falta de mecanismos de cache (como prompt caching) e queries não otimizadas sem índices corretos gerará gargalos severos de processamento e faturamento de tokens redundantes.',
-        'O ideal é desativar todas as camadas de segurança para aliviar o servidor do cliente.',
-        'Deve-se migrar toda a base de dados relacional para planilhas locais para evitar latência.',
-      ],
-      correctIndex: 1,
-      explanation:
-        'A escalabilidade depende da eficiência do uso de cache e otimização do banco. No Supabase, índices corretos e no Claude, o Prompt Caching são chaves para otimizar tempo e orçamento.',
-    },
-    {
-      question: `Para garantir a conformidade jurídica em um projeto envolvendo "${topicTitle}", qual política de retenção de dados deve ser recomendada ao setor jurídico do cliente corporativo?`,
-      options: [
-        'Não há riscos jurídicos no uso de serviços de inteligência artificial de terceiros.',
-        'Deve-se exigir acordos comerciais (B2B) que garantam que os dados trafegados via API não sejam usados para treinar modelos públicos de IA, mantendo retenções seguras e encriptadas no banco do cliente.',
-        'Exigir que todas as chamadas sejam feitas pelo plano gratuito comum.',
-        'Permitir o vazamento de chaves service_role em repositórios abertos.',
-      ],
-      correctIndex: 1,
-      explanation:
-        'As políticas comerciais da Anthropic e OpenAI garantem que os dados trafegados nas APIs corporativas não são usados para treinar modelos. Isso é fundamental para a governança de dados.',
-    },
-  ]
+export function getQuizForTopic(topicId: string): QuizQuestion[] {
+  return quizzes[topicId] ?? []
 }

@@ -115,6 +115,13 @@ export const ACHIEVEMENTS: Achievement[] = [
     condition: (s) => s.streak >= 30,
   },
   {
+    id: 'fundamentos-done',
+    title: 'Base Sólida',
+    description: 'Complete toda a trilha Fundamentos de IA',
+    icon: '🧠',
+    condition: (s) => isTrailComplete(s, 'fundamentos'),
+  },
+  {
     id: 'claude-code-done',
     title: 'Claude Whisperer',
     description: 'Complete toda a trilha Claude Code',
@@ -150,9 +157,26 @@ export const ACHIEVEMENTS: Achievement[] = [
     condition: (s) => isTrailComplete(s, 'supabase'),
   },
   {
+    id: 'projetos-done',
+    title: 'Missão Cumprida',
+    description: 'Complete todas as missões de Projetos na Prática',
+    icon: '🟡',
+    condition: (s) => isTrailComplete(s, 'projetos'),
+  },
+  {
+    id: 'boss-slayer',
+    title: 'Caçador de Bosses',
+    description: 'Derrote todos os 7 bosses das trilhas',
+    icon: '⚔️',
+    condition: (s) => {
+      const bosses = trails.flatMap((tr) => tr.topics.filter((t) => t.type === 'boss'))
+      return bosses.length > 0 && bosses.every((b) => s.completedTopicIds.includes(b.id))
+    },
+  },
+  {
     id: 'full-stack',
     title: 'Full Stack Consultant',
-    description: 'Complete tópicos em todas as 5 trilhas',
+    description: 'Complete tópicos em todas as trilhas',
     icon: '🌍',
     condition: (s) => {
       return trails.every((trail) => trail.topics.some((t) => s.completedTopicIds.includes(t.id)))
