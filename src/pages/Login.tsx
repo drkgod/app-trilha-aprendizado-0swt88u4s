@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Zap, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
@@ -87,6 +87,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="h-12 rounded-xl bg-secondary/60"
             />
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                Esqueci a senha
+              </Link>
+            </div>
           </div>
 
           {error && (
@@ -103,6 +111,12 @@ export default function Login() {
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Entrar na trilha'}
           </Button>
 
+          <p className="text-center text-xs text-muted-foreground">
+            Não tem conta?{' '}
+            <Link to="/signup" className="font-semibold text-primary hover:underline">
+              Criar conta
+            </Link>
+          </p>
           <p className="text-center text-xs text-muted-foreground">
             Acesso restrito. Fale com o administrador para receber suas credenciais.
           </p>

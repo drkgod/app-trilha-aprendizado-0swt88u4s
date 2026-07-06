@@ -6,7 +6,12 @@ interface AuthContextType {
   isAuthenticated: boolean
   isAdmin: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
+  signUp: (name: string, email: string, password: string) => Promise<{ error: any }>
   signOut: () => void
+  requestPasswordReset: (email: string) => Promise<{ error: any }>
+  confirmPasswordReset: (token: string, password: string) => Promise<{ error: any }>
+  requestEmailChange: (newEmail: string) => Promise<{ error: any }>
+  confirmEmailChange: (token: string, password: string) => Promise<{ error: any }>
   loading: boolean
 }
 
@@ -51,14 +56,90 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const signUp = async (name: string, email: string, password: string) => {
+    try {
+      if (!email.toLowerCase().endsWith('@adapta.org')) {
+        return { error: new Error('Apenas e-mails @adapta.org são permitidos.') }
+      }
+      await pb.collection('users').create({
+        email,
+        password,
+        passwordConfirm: password,
+        name,
+        role: 'consultant',
+        emailVisibility: true,
+      })
+      try {
+        await pb.collection('users').requestVerification(email)
+      } catch {
+        // best-effort — don't block signup
+      }
+      await pb.collection('users').authWithPassword(email, password)
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
+  }
+
   const signOut = () => {
     pb.authStore.clear()
+  }
+
+  const requestPasswordReset = async (email: string) => {
+    try {
+      await pb.collection('users').requestPasswordReset(email)
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
+  }
+
+  const confirmPasswordReset = async (token: string, password: string) => {
+    try {
+      await pb.collection('users').confirmPasswordReset(token, password, password)
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
+  }
+
+  const requestEmailChange = async (newEmail: string) => {
+    try {
+      await pb.collection('users').requestEmailChange(newEmail)
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
+  }
+
+  const confirmEmailChange = async (token: string, password: string) => {
+    try {
+      await pb.collection('users').confirmEmailChange(token, password)
+      pb.authStore.clear()
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
   }
 
   const isAdmin = user?.role === 'admin'
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isAdmin, signIn, signOut, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        isAdmin,
+        signIn,
+        signUp,
+        signOut,
+        requestPasswordReset,
+        confirmPasswordReset,
+        requestEmailChange,
+        confirmEmailChange,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

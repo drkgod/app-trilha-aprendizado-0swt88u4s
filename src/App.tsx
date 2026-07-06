@@ -12,6 +12,12 @@ import Achievements from './pages/Achievements'
 import TrailsList from './pages/TrailsList'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
+import VerifyEmail from './pages/VerifyEmail'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import AccountEmail from './pages/AccountEmail'
+import ConfirmEmailChange from './pages/ConfirmEmailChange'
 import NotFound from './pages/NotFound'
 import { Loader2 } from 'lucide-react'
 
@@ -36,6 +42,11 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/confirm-email-change" element={<ConfirmEmailChange />} />
             <Route
               element={
                 <ProtectedRoute>
@@ -49,6 +60,7 @@ const App = () => (
               <Route path="/trail/:trailId/topic/:topicId" element={<TopicDetail />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/account/email" element={<AccountEmail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

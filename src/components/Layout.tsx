@@ -1,5 +1,5 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Flame, Home, Map, Trophy, Shield, LogOut, Zap } from 'lucide-react'
+import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom'
+import { Flame, Home, Map, Trophy, Shield, LogOut, Zap, Settings } from 'lucide-react'
 import brandLogo from '@/assets/yj4kqowzrp9i82gt0moaelynprc-3747b.svg'
 import { useAuth } from '@/hooks/use-auth'
 import { useAppStore } from '@/hooks/use-app-store'
@@ -92,6 +92,13 @@ export function Layout() {
             <span className="pill hidden sm:inline-flex" title={`Nível ${levelInfo.level}`}>
               {levelInfo.icon} {levelInfo.title}
             </span>
+            <Link
+              to="/account/email"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              title="Configurações"
+            >
+              <Settings className="h-4 w-4" />
+            </Link>
             <button
               onClick={handleSignOut}
               className="flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
