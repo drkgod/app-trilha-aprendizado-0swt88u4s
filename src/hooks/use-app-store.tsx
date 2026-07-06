@@ -261,6 +261,7 @@ interface AppState {
   newAchievement: Achievement | null
   clearNewAchievement: () => void
   isTopicCompleted: (topicId: string) => boolean
+  isTopicUnlocked: (trailId: string, topicId: string) => boolean
   getTrailProgress: (trailId: string) => { completed: number; total: number; percent: number }
   toggleTopic: (topic: Topic, trailId: string) => Promise<void>
   getNextTopic: (trailId: string) => Topic | null
@@ -352,6 +353,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const isTopicCompleted = useCallback(
     (topicId: string) => completedTopicIds.includes(topicId),
+    [completedTopicIds],
+  )
+
+  // Uma etapa só desbloqueia quando TODAS as anteriores da trilha estão concluídas.
+  // A primeira etapa está sempre liberada. Isso impede pular bolinhas (no mapa e por URL direta).
+  const isTopicUnlocked = useCallback(
+    (trailId: string, topicId: string) => {
+      const trail = trails.find((t) => t.id === trailId)
+      if (!trail) return false
+      const idx = trail.topics.findIndex((t) => t.id === topicId)
+      if (idx <= 0) return true
+      return trail.topics.slice(0, idx).every((t) => completedTopicIds.includes(t.id))
+    },
     [completedTopicIds],
   )
 
@@ -448,6 +462,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       newAchievement,
       clearNewAchievement: () => setNewAchievement(null),
       isTopicCompleted,
+      isTopicUnlocked,
       getTrailProgress,
       toggleTopic,
       getNextTopic,
@@ -462,6 +477,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       unlockedAchievements,
       newAchievement,
       isTopicCompleted,
+      isTopicUnlocked,
       getTrailProgress,
       toggleTopic,
       getNextTopic,

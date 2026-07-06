@@ -7,7 +7,7 @@ import { TrailIcon } from '@/components/TrailIcon'
 
 export default function TrailView() {
   const { trailId } = useParams<{ trailId: string }>()
-  const { isTopicCompleted, getTrailProgress, getNextTopic } = useAppStore()
+  const { isTopicCompleted, isTopicUnlocked, getTrailProgress, getNextTopic } = useAppStore()
 
   const trail = trailId ? getTrailById(trailId) : undefined
   if (!trail) return <Navigate to="/trails" replace />
@@ -75,6 +75,7 @@ export default function TrailView() {
         <TrailMap
           trail={trail}
           isTopicCompleted={isTopicCompleted}
+          isTopicUnlocked={isTopicUnlocked}
           nextTopicId={nextTopic?.id ?? null}
         />
       </section>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams, Navigate, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -60,10 +60,17 @@ const priorityStyle: Record<string, { label: string; className: string }> = {
 export default function TopicDetail() {
   const { trailId, topicId } = useParams<{ trailId: string; topicId: string }>()
   const navigate = useNavigate()
-  const { isTopicCompleted, toggleTopic } = useAppStore()
+  const { isTopicCompleted, isTopicUnlocked, toggleTopic } = useAppStore()
   const [checked, setChecked] = useState<Record<number, boolean>>({})
   const [celebrate, setCelebrate] = useState(false)
   const [saving, setSaving] = useState(false)
+
+  // Reseta os checkboxes de prática ao trocar de etapa — sem isso o React
+  // reaproveita o componente e as marcações vazam para a próxima etapa.
+  useEffect(() => {
+    setChecked({})
+    setCelebrate(false)
+  }, [topicId])
 
   const { trail, topic } =
     trailId && topicId ? getTopicById(trailId, topicId) : { trail: undefined, topic: undefined }
@@ -71,6 +78,8 @@ export default function TopicDetail() {
   useActivityTracker(trail?.id ?? '', topic?.id ?? '', completed)
 
   if (!trail || !topic) return <Navigate to="/trails" replace />
+  // Bloqueia acesso direto por URL a etapas ainda travadas (as anteriores não foram concluídas).
+  if (!isTopicUnlocked(trail.id, topic.id)) return <Navigate to={`/trail/${trail.id}`} replace />
   const isBoss = topic.type === 'boss'
   const quiz = isBoss ? getQuizForTopic(topic.id) : []
 
