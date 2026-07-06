@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T13:38:46.166Z",
+  "generatedAt": "2026-07-06T18:00:08.321Z",
   "collections": [
     {
       "name": "users",
@@ -177,6 +177,93 @@
         }
       ],
       "indexes": ["CREATE UNIQUE INDEX idx_streaks_user ON user_streaks (user_id)"]
+    },
+    {
+      "name": "activity_logs",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "view": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id = user_id",
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "trail_id",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "topic_id",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "start_time",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "end_time",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "total_duration_seconds",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "active_duration_seconds",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "visibility_switches",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "is_completed",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_activity_user ON activity_logs (user_id)",
+        "CREATE INDEX idx_activity_trail ON activity_logs (trail_id)",
+        "CREATE INDEX idx_activity_topic ON activity_logs (topic_id)"
+      ]
     }
   ]
 }

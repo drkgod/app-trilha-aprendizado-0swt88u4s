@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom'
-import { Flame, Home, Map, Trophy, Shield, LogOut, Zap, Settings } from 'lucide-react'
+import { Activity, Flame, Home, Map, Trophy, Shield, LogOut, Zap, Settings } from 'lucide-react'
 import brandLogo from '@/assets/yj4kqowzrp9i82gt0moaelynprc-3747b.svg'
 import { useAuth } from '@/hooks/use-auth'
 import { useAppStore } from '@/hooks/use-app-store'
@@ -73,6 +73,22 @@ export function Layout() {
                 Admin
               </NavLink>
             )}
+            {isAdmin && (
+              <NavLink
+                to="/admin/audit"
+                className={({ isActive }) =>
+                  cn(
+                    'flex h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors',
+                    isActive
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )
+                }
+              >
+                <Activity className="h-4 w-4" />
+                Auditoria
+              </NavLink>
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -119,7 +135,12 @@ export function Layout() {
         <div className="flex h-16 items-center justify-around px-2">
           {[
             ...navItems,
-            ...(isAdmin ? [{ to: '/admin', label: 'Admin', icon: Shield, end: false }] : []),
+            ...(isAdmin
+              ? [
+                  { to: '/admin', label: 'Admin', icon: Shield, end: false },
+                  { to: '/admin/audit', label: 'Auditoria', icon: Activity, end: false },
+                ]
+              : []),
           ].map((item) => (
             <NavLink
               key={item.to}

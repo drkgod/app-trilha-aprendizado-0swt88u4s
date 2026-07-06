@@ -11,6 +11,7 @@ import TopicDetail from './pages/TopicDetail'
 import Achievements from './pages/Achievements'
 import TrailsList from './pages/TrailsList'
 import Admin from './pages/Admin'
+import AdminAudit from './pages/AdminAudit'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import VerifyEmail from './pages/VerifyEmail'
@@ -60,6 +61,7 @@ const App = () => (
               <Route path="/trail/:trailId/topic/:topicId" element={<TopicDetail />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/audit" element={<AdminAudit />} />
               <Route path="/account/email" element={<AccountEmail />} />
             </Route>
             <Route path="*" element={<NotFound />} />

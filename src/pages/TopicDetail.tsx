@@ -25,6 +25,7 @@ import { getQuizForTopic } from '@/data/quizzes'
 import type { RefKind } from '@/data/types'
 import { QuizRunner } from '@/components/QuizRunner'
 import { ConfettiEffect } from '@/components/ConfettiEffect'
+import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -66,9 +67,10 @@ export default function TopicDetail() {
 
   const { trail, topic } =
     trailId && topicId ? getTopicById(trailId, topicId) : { trail: undefined, topic: undefined }
-  if (!trail || !topic) return <Navigate to="/trails" replace />
+  const completed = topic ? isTopicCompleted(topic.id) : false
+  useActivityTracker(trail?.id ?? '', topic?.id ?? '', completed)
 
-  const completed = isTopicCompleted(topic.id)
+  if (!trail || !topic) return <Navigate to="/trails" replace />
   const isBoss = topic.type === 'boss'
   const quiz = isBoss ? getQuizForTopic(topic.id) : []
 
