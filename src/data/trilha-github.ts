@@ -339,7 +339,7 @@ export const githubTopics: Topic[] = [
     references: [
       {
         label: 'Docs — memória do Claude Code (hierarquia)',
-        url: 'https://docs.claude.com/en/docs/claude-code/memory',
+        url: 'https://code.claude.com/docs/en/memory',
         kind: 'doc',
       },
       {
@@ -504,8 +504,8 @@ export const githubTopics: Topic[] = [
     references: [
       { label: 'Referência — git worktree', url: GIT + '/docs/git-worktree', kind: 'doc' },
       {
-        label: 'Claude Code — fluxos com worktrees',
-        url: 'https://docs.claude.com/en/docs/claude-code/common-workflows',
+        label: 'Claude Code — rodar sessões paralelas com worktrees',
+        url: 'https://code.claude.com/docs/en/worktrees',
         kind: 'doc',
       },
     ],

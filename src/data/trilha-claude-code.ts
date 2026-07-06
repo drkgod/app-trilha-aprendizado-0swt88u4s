@@ -1,6 +1,6 @@
 import type { Topic } from './types'
 
-const D = 'https://docs.claude.com/en/docs/claude-code'
+const D = 'https://code.claude.com/docs/en'
 const ACAD = 'https://anthropic.skilljar.com'
 
 export const claudeCodeTopics: Topic[] = [
@@ -68,7 +68,7 @@ export const claudeCodeTopics: Topic[] = [
       'Na implantação, a matriz de superfícies define o rollout: quem recebe o quê no time do cliente e qual treinamento cada grupo precisa.',
     references: [
       { label: 'Docs — visão geral do Claude Code', url: D + '/overview', kind: 'doc' },
-      { label: 'Docs — IDEs (VS Code/JetBrains)', url: D + '/ide-integrations', kind: 'doc' },
+      { label: 'Docs — Claude Code no VS Code', url: D + '/vs-code', kind: 'doc' },
     ],
     xp: 60,
     estMinutes: 25,
@@ -100,7 +100,7 @@ export const claudeCodeTopics: Topic[] = [
       'Toda proposta de implantação inclui a seção "licenciamento e custos" — dominar esses dois caminhos evita surpresa de fatura no cliente.',
     references: [
       { label: 'Docs — planos e setup', url: D + '/setup', kind: 'doc' },
-      { label: 'Preços Anthropic', url: 'https://www.anthropic.com/pricing', kind: 'doc' },
+      { label: 'Planos e preços do Claude', url: 'https://claude.com/pricing', kind: 'doc' },
     ],
     xp: 60,
     estMinutes: 25,
@@ -413,7 +413,7 @@ export const claudeCodeTopics: Topic[] = [
       'No treinamento de cliente, uma sessão de 30 minutos só de atalhos multiplica a adoção — fluência percebida vira confiança na ferramenta.',
     references: [
       { label: 'Docs — modo interativo', url: D + '/interactive-mode', kind: 'doc' },
-      { label: 'Docs — slash commands', url: D + '/slash-commands', kind: 'doc' },
+      { label: 'Docs — comandos e slash commands', url: D + '/commands', kind: 'doc' },
     ],
     xp: 60,
     estMinutes: 25,
@@ -475,7 +475,7 @@ export const claudeCodeTopics: Topic[] = [
     projectContext:
       'Uma biblioteca de comandos da consultoria (review, kickoff, handover, security-check) é ativo reutilizável que padroniza entregas entre projetos.',
     references: [
-      { label: 'Docs — slash commands customizados', url: D + '/slash-commands', kind: 'doc' },
+      { label: 'Docs — comandos e skills customizados', url: D + '/commands', kind: 'doc' },
     ],
     xp: 45,
     estMinutes: 30,
@@ -541,7 +541,7 @@ export const claudeCodeTopics: Topic[] = [
     references: [
       {
         label: 'Docs — Agent Skills',
-        url: 'https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview',
+        url: 'https://code.claude.com/docs/en/skills',
         kind: 'doc',
       },
       { label: 'Curso de Skills — Anthropic Academy', url: ACAD + '/', kind: 'curso' },
@@ -608,7 +608,7 @@ export const claudeCodeTopics: Topic[] = [
     references: [
       {
         label: 'Docs — visão geral de modelos',
-        url: 'https://docs.claude.com/en/docs/about-claude/models/overview',
+        url: 'https://platform.claude.com/docs/en/about-claude/models/overview',
         kind: 'doc',
       },
       { label: 'Docs — custos', url: D + '/costs', kind: 'doc' },
@@ -780,7 +780,11 @@ export const claudeCodeTopics: Topic[] = [
     projectContext:
       'Automações headless são upsell natural: depois do rollout interativo, o cliente quer o agente rodando sozinho nos processos mapeados.',
     references: [
-      { label: 'Docs — Claude Code SDK / headless', url: D + '/sdk', kind: 'doc' },
+      {
+        label: 'Docs — rodar Claude Code programaticamente (headless)',
+        url: D + '/headless',
+        kind: 'doc',
+      },
       { label: 'Docs — referência CLI', url: D + '/cli-reference', kind: 'doc' },
     ],
     xp: 30,
@@ -839,7 +843,11 @@ export const claudeCodeTopics: Topic[] = [
     projectContext:
       'Em enterprise, quem responde a TI com precisão na primeira reunião ganha o projeto; quem enrola entra na fila do compliance por 3 meses.',
     references: [
-      { label: 'Docs — configuração corporativa', url: D + '/corporate-proxy', kind: 'doc' },
+      {
+        label: 'Docs — configuração de rede corporativa (proxy/CA/mTLS)',
+        url: D + '/network-config',
+        kind: 'doc',
+      },
       { label: 'Docs — Bedrock e Vertex', url: D + '/third-party-integrations', kind: 'doc' },
     ],
     xp: 30,

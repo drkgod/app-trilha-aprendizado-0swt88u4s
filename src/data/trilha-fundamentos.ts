@@ -42,7 +42,7 @@ export const fundamentosTopics: Topic[] = [
       },
       {
         label: 'Docs Claude — visão geral de modelos',
-        url: 'https://docs.claude.com/en/docs/about-claude/models/overview',
+        url: 'https://platform.claude.com/docs/en/about-claude/models/overview',
         kind: 'doc',
       },
     ],
@@ -85,7 +85,7 @@ export const fundamentosTopics: Topic[] = [
       },
       {
         label: 'Docs Claude — context windows',
-        url: 'https://docs.claude.com/en/docs/build-with-claude/context-windows',
+        url: 'https://platform.claude.com/docs/en/build-with-claude/context-windows',
         kind: 'doc',
       },
       {
@@ -127,7 +127,7 @@ export const fundamentosTopics: Topic[] = [
     references: [
       {
         label: 'OpenAI — guia de embeddings',
-        url: 'https://platform.openai.com/docs/guides/embeddings',
+        url: 'https://developers.openai.com/api/docs/guides/embeddings',
         kind: 'doc',
       },
       { label: 'Supabase — AI & Vectors', url: 'https://supabase.com/docs/guides/ai', kind: 'doc' },
@@ -271,7 +271,7 @@ export const fundamentosTopics: Topic[] = [
       },
       {
         label: 'OpenAI — Retrieval e File Search',
-        url: 'https://platform.openai.com/docs/guides/retrieval',
+        url: 'https://developers.openai.com/api/docs/guides/retrieval',
         kind: 'doc',
       },
     ],
@@ -447,7 +447,11 @@ export const fundamentosTopics: Topic[] = [
       'O vault é o ativo de conhecimento da consultoria: propostas, padrões de solução e lições aprendidas conectadas — e consultáveis por IA. Times que fazem isso param de reinventar projeto a projeto.',
     references: [
       { label: 'Obsidian (site oficial)', url: 'https://obsidian.md/', kind: 'tool' },
-      { label: 'Obsidian Help — comece aqui', url: 'https://help.obsidian.md/', kind: 'doc' },
+      {
+        label: 'Obsidian Help — Canvas',
+        url: 'https://help.obsidian.md/plugins/canvas',
+        kind: 'doc',
+      },
       { label: 'Obsidian Canvas', url: 'https://obsidian.md/canvas', kind: 'tool' },
     ],
     xp: 45,
@@ -540,8 +544,8 @@ export const fundamentosTopics: Topic[] = [
         kind: 'curso',
       },
       {
-        label: 'OpenAI — guia de agents',
-        url: 'https://platform.openai.com/docs/guides/agents',
+        label: 'Anthropic — como construir agentes eficazes',
+        url: 'https://www.anthropic.com/research/building-effective-agents',
         kind: 'doc',
       },
     ],
@@ -630,9 +634,9 @@ export const fundamentosTopics: Topic[] = [
         kind: 'artigo',
       },
       {
-        label: 'OpenAI — guia de evals',
-        url: 'https://platform.openai.com/docs/guides/evals',
-        kind: 'doc',
+        label: 'Anthropic — evals para agentes de IA (na prática)',
+        url: 'https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents',
+        kind: 'artigo',
       },
       {
         label: 'Anthropic — Trust Center e privacidade',

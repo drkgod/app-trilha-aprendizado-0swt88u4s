@@ -247,7 +247,11 @@ export const codexTopics: Topic[] = [
     projectContext:
       'A matriz sandbox × aprovação é a resposta técnica ao medo nº 1 do cliente ("e se a IA destruir algo?") — mostre, não prometa.',
     references: [
-      { label: 'Docs — sandbox e aprovações', url: CX + '/security', kind: 'doc' },
+      {
+        label: 'Docs — aprovações e segurança do agente',
+        url: CX + '/agent-approvals-security',
+        kind: 'doc',
+      },
       {
         label: 'Docs — referência CLI (flags de sandbox)',
         url: CX + '/cli/reference',
@@ -282,8 +286,12 @@ export const codexTopics: Topic[] = [
     projectContext:
       'Regras de permissão versionadas por projeto são parte do pacote de governança entregue — produtividade com trilho.',
     references: [
-      { label: 'Docs — permissões e regras', url: CX + '/security', kind: 'doc' },
-      { label: 'Docs — configuração', url: CX + '/config', kind: 'doc' },
+      {
+        label: 'Docs — aprovações e segurança do agente',
+        url: CX + '/agent-approvals-security',
+        kind: 'doc',
+      },
+      { label: 'Docs — configuração (básico)', url: CX + '/config-basic', kind: 'doc' },
     ],
     xp: 60,
     estMinutes: 25,
@@ -375,7 +383,7 @@ export const codexTopics: Topic[] = [
       'Cloud é a resposta para o backlog de tarefas pequenas do cliente: dezenas de fixes delegados sem ocupar máquina de consultor.',
     references: [
       { label: 'Docs — Codex Cloud', url: CX + '/cloud', kind: 'doc' },
-      { label: 'Docs — environments', url: CX + '/cloud/environments', kind: 'doc' },
+      { label: 'Docs — Codex na nuvem (environments)', url: CX + '/cloud', kind: 'doc' },
     ],
     xp: 45,
     estMinutes: 35,
@@ -406,7 +414,7 @@ export const codexTopics: Topic[] = [
       'É o mecanismo de escala da implantação: o time inteiro do cliente delegando pelo GitHub enquanto só os power users usam CLI.',
     references: [
       { label: 'Docs — integração GitHub', url: CX + '/integrations/github', kind: 'doc' },
-      { label: 'Docs — code review', url: CX + '/cloud/code-review', kind: 'doc' },
+      { label: 'Docs — code review no GitHub', url: CX + '/integrations/github', kind: 'doc' },
     ],
     xp: 45,
     estMinutes: 25,
@@ -682,8 +690,8 @@ export const codexTopics: Topic[] = [
     projectContext:
       'Setup-como-código é maturidade operacional: onboarding de consultor novo (ou máquina nova) em 10 minutos.',
     references: [
-      { label: 'Docs — config básica', url: CX + '/config', kind: 'doc' },
-      { label: 'Docs — config avançada', url: CX + '/config/advanced', kind: 'doc' },
+      { label: 'Docs — config básica', url: CX + '/config-basic', kind: 'doc' },
+      { label: 'Docs — config avançada', url: CX + '/config-advanced', kind: 'doc' },
     ],
     xp: 30,
     estMinutes: 25,
@@ -713,7 +721,7 @@ export const codexTopics: Topic[] = [
     projectContext:
       'Automações headless são a fase 2 do contrato: os processos mapeados na consultoria viram pipelines que rodam sozinhos.',
     references: [
-      { label: 'Docs — codex exec (automação)', url: CX + '/cli/exec', kind: 'doc' },
+      { label: 'Docs — CLI (codex exec e flags)', url: CX + '/cli/reference', kind: 'doc' },
       { label: 'Docs — referência CLI', url: CX + '/cli/reference', kind: 'doc' },
     ],
     xp: 30,
@@ -747,7 +755,7 @@ export const codexTopics: Topic[] = [
       { label: 'Docs Codex', url: CX, kind: 'doc' },
       {
         label: 'Docs Claude Code',
-        url: 'https://docs.claude.com/en/docs/claude-code/overview',
+        url: 'https://code.claude.com/docs/en/overview',
         kind: 'doc',
       },
     ],

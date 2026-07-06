@@ -75,7 +75,7 @@ export const projetosTopics: Topic[] = [
       },
       {
         label: 'Docs — tool use',
-        url: 'https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview',
+        url: 'https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview',
         kind: 'doc',
       },
     ],
@@ -111,7 +111,7 @@ export const projetosTopics: Topic[] = [
     references: [
       {
         label: 'Claude Code — memória e settings',
-        url: 'https://docs.claude.com/en/docs/claude-code/memory',
+        url: 'https://code.claude.com/docs/en/memory',
         kind: 'doc',
       },
       {
@@ -193,7 +193,7 @@ export const projetosTopics: Topic[] = [
     references: [
       {
         label: 'Claude Code — workflows comuns',
-        url: 'https://docs.claude.com/en/docs/claude-code/common-workflows',
+        url: 'https://code.claude.com/docs/en/common-workflows',
         kind: 'doc',
       },
       {
@@ -311,7 +311,7 @@ export const projetosTopics: Topic[] = [
     references: [
       {
         label: 'Docs Claude Code',
-        url: 'https://docs.claude.com/en/docs/claude-code/overview',
+        url: 'https://code.claude.com/docs/en/overview',
         kind: 'doc',
       },
       { label: 'Docs Codex', url: 'https://developers.openai.com/codex', kind: 'doc' },

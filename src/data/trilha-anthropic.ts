@@ -1,7 +1,7 @@
 import type { Topic } from './types'
 
 const SUP = 'https://support.claude.com'
-const DOCS = 'https://docs.claude.com'
+const DOCS = 'https://platform.claude.com/docs'
 const ACAD = 'https://anthropic.skilljar.com'
 
 export const claudeAiTopics: Topic[] = [
@@ -30,7 +30,7 @@ export const claudeAiTopics: Topic[] = [
     projectContext:
       'Licenciamento é a primeira planilha do projeto de implantação — errar o plano mina a adoção antes do primeiro treinamento.',
     references: [
-      { label: 'Preços — Anthropic', url: 'https://www.anthropic.com/pricing', kind: 'doc' },
+      { label: 'Planos e preços do Claude', url: 'https://claude.com/pricing', kind: 'doc' },
       { label: 'Central de ajuda — planos e limites', url: SUP, kind: 'doc' },
     ],
     xp: 60,
@@ -63,7 +63,7 @@ export const claudeAiTopics: Topic[] = [
     references: [
       {
         label: 'Docs — visão geral de modelos',
-        url: DOCS + '/en/docs/about-claude/models/overview',
+        url: DOCS + '/en/about-claude/models/overview',
         kind: 'doc',
       },
       { label: 'Claude 101 — Anthropic Academy', url: ACAD + '/claude-101', kind: 'curso' },
@@ -422,7 +422,7 @@ export const claudeAiTopics: Topic[] = [
     references: [
       {
         label: 'Docs — tool use',
-        url: DOCS + '/en/docs/agents-and-tools/tool-use/overview',
+        url: DOCS + '/en/agents-and-tools/tool-use/overview',
         kind: 'doc',
       },
       { label: 'Cursos de API/MCP — Academy', url: ACAD + '/', kind: 'curso' },
@@ -581,12 +581,12 @@ export const claudeAiTopics: Topic[] = [
     references: [
       {
         label: 'Docs — prompt caching',
-        url: DOCS + '/en/docs/build-with-claude/prompt-caching',
+        url: DOCS + '/en/build-with-claude/prompt-caching',
         kind: 'doc',
       },
       {
         label: 'Docs — Batch API',
-        url: DOCS + '/en/docs/build-with-claude/batch-processing',
+        url: DOCS + '/en/build-with-claude/batch-processing',
         kind: 'doc',
       },
     ],
