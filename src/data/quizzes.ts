@@ -441,6 +441,130 @@ const quizzes: Record<string, QuizQuestion[]> = {
         'Entrega que sustenta contrato recorrente: o cliente opera sem você de plantão, os acessos morrem limpos, e as decisões estão documentadas.',
     },
   ],
+  'ce-boss': [
+    {
+      question: 'Qual frase captura a filosofia central do Compound Engineering?',
+      options: [
+        'Escrever código mais rápido usando IA como autocomplete',
+        'Cada unidade de trabalho entregue deve tornar a PRÓXIMA mais fácil, não mais difícil',
+        'Substituir todos os desenvolvedores por agentes autônomos',
+        'Combinar vários modelos num único sistema composto',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Compound engineering inverte a dívida técnica: cada bug corrigido, padrão criado e lição de review vira capacidade permanente que acelera o trabalho futuro. Não é digitar mais rápido — é ensinar o sistema.',
+    },
+    {
+      question: 'No loop plan-work-review-compound, qual é o papel da fase COMPOUND?',
+      options: [
+        'Executar o plano aprovado o mais rápido possível',
+        'Revisar a sintaxe e o estilo do código gerado',
+        'Transformar cada lição do review em regra permanente (CLAUDE.md, hook, teste, subagente)',
+        'Compor vários agentes num sistema único',
+      ],
+      correctIndex: 2,
+      explanation:
+        'A fase compound é o que dá nome e poder ao método: sem ela, você corrige o mesmo erro pra sempre; com ela, cada erro morre na origem e o sistema fica mais inteligente a cada iteração.',
+    },
+    {
+      question: 'Segundo a escada de 5 estágios de adoção de IA, qual é o erro fatal?',
+      options: [
+        'Começar escrevendo código sem IA no estágio 1',
+        'Pular estágios — cada degrau constrói os modelos mentais que o próximo exige',
+        'Usar mais de um agente ao mesmo tempo',
+        'Permitir que o agente execute sem permissão',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Pular degraus não funciona: quem tenta ir direto ao estágio 5 (agentes autônomos, review multi-agente) sem a base se sente desconfortável, não confia na ferramenta e desiste. Diagnostique onde cada um está e construa a partir dali.',
+    },
+    {
+      question: 'Na fase REVIEW madura do compound engineering, o revisor humano deve focar em:',
+      options: [
+        'Sintaxe, estilo e vulnerabilidades de segurança',
+        'Intenção e arquitetura — "isto corresponde ao que combinamos construir?"',
+        'Reescrever o código do agente do zero',
+        'Contar quantas linhas foram alteradas',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Quando os agentes de review já pegaram bugs, segurança e estilo, o olho humano vira insubstituível no alto nível: alinhamento com a intenção e decisões de arquitetura. Corrigir vírgula manualmente é sinal de rede de segurança incompleta.',
+    },
+    {
+      question: 'O que significa "a pasta é o agente"?',
+      options: [
+        'Cada agente precisa de um servidor dedicado',
+        'Uma pasta com CLAUDE.md, skills e contexto acumulado transforma um modelo genérico em especialista naquele domínio',
+        'Os agentes só funcionam dentro de pastas versionadas no Git',
+        'Cada arquivo do projeto vira um agente independente',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O composto vive na pasta: o contexto acumulado em meses de compound engineering (CLAUDE.md, skills, lições) é o que especializa o modelo. Por isso Klaassen roda dezenas de "pastas-agente" — cada uma carrega o conhecimento acumulado.',
+    },
+  ],
+  'sd-boss': [
+    {
+      question: 'Qual é a inversão central do Spec-Driven Development?',
+      options: [
+        'O código continua sendo a fonte de verdade, com docs geradas depois',
+        'A especificação vira a fonte de verdade, e o código passa a ser a saída gerada que serve a spec',
+        'A IA decide sozinha o que construir sem intervenção humana',
+        'Testes substituem completamente a especificação',
+      ],
+      correctIndex: 1,
+      explanation:
+        'No SDD, a spec deixa de ser doc morta e vira o contrato executável — fonte de verdade que os agentes usam para gerar, testar e validar o código. O código serve a spec, não o contrário.',
+    },
+    {
+      question: 'Quais são as quatro fases do fluxo do Spec Kit, na ordem correta?',
+      options: [
+        'Plan, Code, Test, Deploy',
+        'Specify, Plan, Tasks, Implement',
+        'Constitution, Code, Review, Ship',
+        'Ideate, Prototype, Build, Launch',
+      ],
+      correctIndex: 1,
+      explanation:
+        'Specify (o quê) → Plan (como) → Tasks (quebra em unidades testáveis) → Implement (executa e verifica). Cada fase tem checkpoint: você não avança sem validar a anterior, e cada uma produz um artefato markdown que alimenta a próxima.',
+    },
+    {
+      question: 'Qual o papel da constituição (constitution.md) no SDD?',
+      options: [
+        'É o arquivo de configuração da CLI',
+        'Estabelece os princípios inegociáveis do projeto que guiam TODAS as fases seguintes',
+        'Lista as tarefas a implementar',
+        'Guarda o histórico de commits do repositório',
+      ],
+      correctIndex: 1,
+      explanation:
+        'A constituição é o topo da hierarquia: princípios inegociáveis (qualidade, testes, segurança, compliance, convenções) que spec, plano e tarefas devem respeitar. É onde a governança do cliente vira artefato executável.',
+    },
+    {
+      question: 'Na fase Specify, o que a spec deve conter — e o que deve EVITAR?',
+      options: [
+        'Deve conter a stack e as bibliotecas; evitar descrever comportamento',
+        'Deve conter comportamento, critérios de aceite e casos de borda; evitar decisões de implementação',
+        'Deve conter o código pronto; evitar markdown',
+        'Deve conter apenas o nome da feature; evitar qualquer detalhe',
+      ],
+      correctIndex: 1,
+      explanation:
+        'A spec captura o QUÊ (comportamento, critérios, jornadas, casos de borda) sem vazar o COMO (framework, biblioteca) — isso é fase Plan. Misturar amarra a implementação cedo demais e polui o contrato.',
+    },
+    {
+      question: 'Por que se recomenda rodar /speckit.analyze antes de implementar?',
+      options: [
+        'Para acelerar a geração de código',
+        'Para checar consistência e cobertura entre spec, plano e tarefas, pegando contradições e violações da constituição antes de gerar código',
+        'Para escolher automaticamente a melhor linguagem de programação',
+        'Para publicar a spec num site externo',
+      ],
+      correctIndex: 1,
+      explanation:
+        'O analyze é o gate de consistência: pega contradições entre os artefatos e violações constitucionais antes de qualquer código ser gerado — evita descobrir na implementação que o plano contradizia a spec.',
+    },
+  ],
 }
 
 export function getQuizForTopic(topicId: string): QuizQuestion[] {

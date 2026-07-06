@@ -6,6 +6,8 @@ import { claudeAiTopics } from './trilha-anthropic'
 import { githubTopics } from './trilha-github'
 import { supabaseTopics } from './trilha-supabase'
 import { projetosTopics } from './trilha-projetos'
+import { compoundTopics } from './trilha-compound'
+import { specDrivenTopics } from './trilha-spec-driven'
 
 export type { Trail, Topic, QuizQuestion, ReferenceLink } from './types'
 
@@ -45,6 +47,30 @@ export const trails: Trail[] = [
     description:
       'As quatro superfícies do Codex, AGENTS.md, sandbox, delegação ao Cloud, @codex em PRs e o comparativo honesto com o Claude Code.',
     topics: codexTopics,
+  },
+  {
+    id: 'compound',
+    name: 'Compound Engineering',
+    slug: 'compound',
+    icon: 'Infinity',
+    color: '#EF7D57',
+    colorGlow: 'rgba(239, 125, 87, 0.35)',
+    tagline: 'O trabalho que compõe: plan, work, review, compound',
+    description:
+      'A filosofia AI-native de Kieran Klaassen (Every): cada entrega torna a próxima mais fácil. Os cinco princípios, a escada de adoção, o loop completo e a pasta que vira agente — o método que sustenta o Adapta Native.',
+    topics: compoundTopics,
+  },
+  {
+    id: 'spec-driven',
+    name: 'Spec-Driven Development',
+    slug: 'spec-driven',
+    icon: 'FileCode2',
+    color: '#818CF8',
+    colorGlow: 'rgba(129, 140, 248, 0.35)',
+    tagline: 'A spec como fonte de verdade executável',
+    description:
+      'O método do GitHub Spec Kit: constituição, specify, plan, tasks e implement com checkpoints. Separar o o-quê do como e entregar um contrato que o agente executa — a espinha dorsal da entrega Adapta Native.',
+    topics: specDrivenTopics,
   },
   {
     id: 'claude-ai',

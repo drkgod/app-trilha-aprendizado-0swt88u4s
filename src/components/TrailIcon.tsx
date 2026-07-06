@@ -6,6 +6,8 @@ import {
   GitBranch,
   Database,
   Rocket,
+  Infinity as InfinityIcon,
+  FileCode2,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -17,6 +19,8 @@ const iconMap: Record<string, LucideIcon> = {
   GitBranch,
   Database,
   Rocket,
+  Infinity: InfinityIcon,
+  FileCode2,
 }
 
 export function TrailIcon({
