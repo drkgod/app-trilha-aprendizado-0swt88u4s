@@ -26,6 +26,8 @@ export function useEvalIntegrity(active: boolean): IntegrityTracker {
 
   const startRef = useRef<number>(Date.now())
   const questionStartRef = useRef<number>(Date.now())
+  // Garante UMA contagem por episódio de ausência: só reconta depois que o foco volta.
+  const awayRef = useRef<boolean>(false)
 
   const reset = useCallback(() => {
     setVisibilitySwitches(0)
@@ -35,6 +37,7 @@ export function useEvalIntegrity(active: boolean): IntegrityTracker {
     setShowWarning(false)
     startRef.current = Date.now()
     questionStartRef.current = Date.now()
+    awayRef.current = false
   }, [])
 
   const markQuestionStart = useCallback(() => {
@@ -56,24 +59,27 @@ export function useEvalIntegrity(active: boolean): IntegrityTracker {
     return () => clearInterval(t)
   }, [active])
 
-  // Saída de aba / perda de foco
+  // Saída de aba. Conta UMA vez por episódio: incrementa ao esconder e só rearma ao voltar.
+  // Usa apenas visibilitychange (sinal confiável de troca de aba/minimizar); o evento
+  // window.blur foi removido porque dispara em falsos positivos (focar um input, teclado
+  // do mobile) e, somado ao visibilitychange, contava a mesma saída 2-3 vezes.
   useEffect(() => {
     if (!active) return
     const onVisibility = () => {
       if (document.hidden) {
-        setVisibilitySwitches((n) => n + 1)
-        setShowWarning(true)
+        if (!awayRef.current) {
+          awayRef.current = true
+          setVisibilitySwitches((n) => n + 1)
+          setShowWarning(true)
+        }
+      } else {
+        // Voltou à aba: rearma para o próximo episódio.
+        awayRef.current = false
       }
     }
-    const onBlur = () => {
-      setVisibilitySwitches((n) => n + 1)
-      setShowWarning(true)
-    }
     document.addEventListener('visibilitychange', onVisibility)
-    window.addEventListener('blur', onBlur)
     return () => {
       document.removeEventListener('visibilitychange', onVisibility)
-      window.removeEventListener('blur', onBlur)
     }
   }, [active])
 
