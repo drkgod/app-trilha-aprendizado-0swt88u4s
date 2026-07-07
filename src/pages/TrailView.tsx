@@ -1,7 +1,8 @@
 import { Link, useParams, Navigate } from 'react-router-dom'
-import { ArrowLeft, Zap } from 'lucide-react'
+import { ArrowLeft, Zap, ShieldCheck } from 'lucide-react'
 import { useAppStore } from '@/hooks/use-app-store'
 import { getTrailById } from '@/data/trails'
+import { hasEvalBank } from '@/data/eval-banks'
 import { TrailMap } from '@/components/TrailMap'
 import { TrailIcon } from '@/components/TrailIcon'
 
@@ -79,6 +80,31 @@ export default function TrailView() {
           nextTopicId={nextTopic?.id ?? null}
         />
       </section>
+
+      {hasEvalBank(trail.id) && (
+        <section className="animate-fade-up" style={{ animationDelay: '200ms' }}>
+          <div className="glass flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/15">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg font-bold">Modo Avaliação</h3>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  A prova séria da trilha: questões sorteadas de um banco extenso, com discursivas
+                  avaliadas por IA e selo de integridade.
+                </p>
+              </div>
+            </div>
+            <Link
+              to={`/trail/${trail.id}/exam`}
+              className="btn-glow inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold"
+            >
+              <ShieldCheck className="h-4 w-4" /> Fazer avaliação
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { Layout } from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import TrailView from './pages/TrailView'
 import TopicDetail from './pages/TopicDetail'
+import TrailExam from './pages/TrailExam'
 import Achievements from './pages/Achievements'
 import TrailsList from './pages/TrailsList'
 import Admin from './pages/Admin'
@@ -59,6 +60,7 @@ const App = () => (
               <Route path="/trails" element={<TrailsList />} />
               <Route path="/trail/:trailId" element={<TrailView />} />
               <Route path="/trail/:trailId/topic/:topicId" element={<TopicDetail />} />
+              <Route path="/trail/:trailId/exam" element={<TrailExam />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/audit" element={<AdminAudit />} />
