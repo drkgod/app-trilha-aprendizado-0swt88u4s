@@ -21,7 +21,7 @@ migrate(
           name: 'attempt_id',
           type: 'relation',
           required: true,
-          collectionId: 'eval_attempts',
+          collectionId: app.findCollectionByNameOrId('eval_attempts').id,
           cascadeDelete: true,
           maxSelect: 1,
         },
