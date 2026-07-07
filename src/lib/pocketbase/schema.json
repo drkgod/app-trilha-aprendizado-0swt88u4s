@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T18:00:08.321Z",
+  "generatedAt": "2026-07-07T03:24:39.130Z",
   "collections": [
     {
       "name": "users",
@@ -29,21 +29,29 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         },
         {
           "name": "role",
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["admin", "consultant"]
+          "selectValues": [
+            "admin",
+            "consultant"
+          ]
         }
       ],
       "indexes": [
@@ -98,14 +106,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": [
@@ -166,17 +179,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE UNIQUE INDEX idx_streaks_user ON user_streaks (user_id)"]
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_streaks_user ON user_streaks (user_id)"
+      ]
     },
     {
       "name": "activity_logs",
@@ -249,20 +269,275 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": [
         "CREATE INDEX idx_activity_user ON activity_logs (user_id)",
         "CREATE INDEX idx_activity_trail ON activity_logs (trail_id)",
         "CREATE INDEX idx_activity_topic ON activity_logs (topic_id)"
+      ]
+    },
+    {
+      "name": "eval_attempts",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "view": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id = user_id",
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "trail_id",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "checkpoint_key",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "question_count",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "correct_count",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "score_percent",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "passed",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "attempt_number",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "total_duration_seconds",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "active_duration_seconds",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "visibility_switches",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "paste_blocks",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "copy_blocks",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "integrity_seal",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "started_at",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "finished_at",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_eval_attempts_user ON eval_attempts (user_id)",
+        "CREATE INDEX idx_eval_attempts_trail ON eval_attempts (trail_id)",
+        "CREATE INDEX idx_eval_attempts_kind ON eval_attempts (kind)"
+      ]
+    },
+    {
+      "name": "eval_answers",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "view": "@request.auth.role = \"admin\" || @request.auth.id = user_id",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.id = user_id",
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "attempt_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "eval_attempts"
+        },
+        {
+          "name": "question_id",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "question_type",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "question_text",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "answer_text",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "answer_index",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "is_correct",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ai_score",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ai_verdict",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ai_feedback",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "time_spent_seconds",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_eval_answers_user ON eval_answers (user_id)",
+        "CREATE INDEX idx_eval_answers_attempt ON eval_answers (attempt_id)"
       ]
     }
   ]
