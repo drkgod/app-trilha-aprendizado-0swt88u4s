@@ -4,6 +4,7 @@ import { useAppStore } from '@/hooks/use-app-store'
 import { getTrailById } from '@/data/trails'
 import { hasEvalBank } from '@/data/eval-banks'
 import { TrailMap } from '@/components/TrailMap'
+import { TrailTutor } from '@/components/TrailTutor'
 import { TrailIcon } from '@/components/TrailIcon'
 
 export default function TrailView() {
@@ -79,6 +80,10 @@ export default function TrailView() {
           isTopicUnlocked={isTopicUnlocked}
           nextTopicId={nextTopic?.id ?? null}
         />
+      </section>
+
+      <section className="animate-fade-up" style={{ animationDelay: '180ms' }}>
+        <TrailTutor trail={trail} />
       </section>
 
       {hasEvalBank(trail.id) && (
