@@ -82,9 +82,7 @@ export default function TrailView() {
         />
       </section>
 
-      <section className="animate-fade-up" style={{ animationDelay: '180ms' }}>
-        <TrailTutor trail={trail} />
-      </section>
+      <TrailTutor trail={trail} />
 
       {hasEvalBank(trail.id) && (
         <section className="animate-fade-up" style={{ animationDelay: '200ms' }}>

@@ -24,6 +24,7 @@ import { getTopicById } from '@/data/trails'
 import { getQuizForTopic } from '@/data/quizzes'
 import type { RefKind } from '@/data/types'
 import { QuizRunner } from '@/components/QuizRunner'
+import { TrailTutor } from '@/components/TrailTutor'
 import { ConfettiEffect } from '@/components/ConfettiEffect'
 import { useActivityTracker } from '@/hooks/use-activity-tracker'
 import { Button } from '@/components/ui/button'
@@ -352,6 +353,9 @@ export default function TopicDetail() {
           </button>
         </section>
       )}
+
+      {/* Tutor flutuante, com o contexto da etapa que está sendo lida */}
+      <TrailTutor trail={trail} topic={topic} />
     </div>
   )
 }
